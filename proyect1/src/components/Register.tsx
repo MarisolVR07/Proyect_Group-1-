@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 //import { useRouter } from "next/router";
 
 const Register = () => {
@@ -9,12 +9,11 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [bio, setBio] = useState("");
   const [agreement, setAgreement] = useState(false);
-  // const router = useRouter();
+  //const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission
-    //router.push("/dashboard");
+    //router.push("/Login");
   };
 
   return (
@@ -58,10 +57,4 @@ const Register = () => {
   );
 };
 
-const Wrapper = () => (
-  <div id="__next">
-    <Register />
-  </div>
-);
-
-export default Wrapper;
+export default Register;
