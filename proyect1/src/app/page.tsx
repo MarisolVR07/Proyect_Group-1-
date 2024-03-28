@@ -1,15 +1,14 @@
 import Image from "next/image";
-
+import Login from "@/components/Login";
 export default function Home() {
 
   return (
 
-<main className="justify-center items-center inline-flex">
-  <div className="w-80 h-96 flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-950 via-purple-900 to-purpleEnd">
-    HOLAAAAAAAAAA
+  <main className="w-full h-full flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-black via-100% via-violet-900  to-violet-800">
+  <div>
+    <Login/>
   </div>
-</main>
-
+  </main>
  
  );
 }
