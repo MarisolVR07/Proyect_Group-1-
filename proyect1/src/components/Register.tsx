@@ -23,7 +23,7 @@ const Register = () => {
           <div className="relative">
             <h2 className="text-white text-2xl mb-2">Regístrate</h2>
             <p className="text-amber-200 text-sm mb-6">¡Sé parte de la mejora continúa!</p>
-            
+
             <div className="grid grid-cols-2 gap-6">
               <div className="flex flex-col">
                 <label className="text-white text-sm leading-7">Nombre*</label>
@@ -46,9 +46,9 @@ const Register = () => {
                 <input type="password" className="p-2 w-full h-12 rounded border border-zinc-900" />
               </div>
             </div>
-  
+
             <p className="text-white text-sm mt-8">Tus datos personales se usarán para gestionar eficazmente el riesgo institucional y facilitar las funciones gubernamentales, tal como se describe en nuestra <span className="text-amber-200">política de privacidad</span>.</p>
-  
+
             <button type="submit" className="btn mt-6 px-8 py-2 bg-zinc-900 rounded-lg text-white text-lg">Registrarse</button>
           </div>
         </div>
