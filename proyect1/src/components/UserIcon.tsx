@@ -4,7 +4,7 @@ const UserIcon: React.FC = () => {
   return (
     <div>
       <svg
-        className="h-32 w-32 text-black bg-slate-100 rounded-full shadow-xl"
+        className="h-32 w-32 text-black bg-slate-100 rounded-full shadow-xl "
         fill="none"
         viewBox="0 0 24 26"
         stroke="currentColor"
