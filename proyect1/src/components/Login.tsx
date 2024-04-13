@@ -2,12 +2,12 @@ import React from "react";
 
 const Login = () => {
   return (
-    <div className="form-control p-6 w-full items-center justify-center bg-slate-700 rounded-2xl font-poppins font-semibold max-w-md drop-shadow-xl text-center">
+    <div className="form-control p-6 w-screen items-center justify-center bg-slate-700 rounded-2xl font-poppins font-semibold max-w-md drop-shadow-xl text-center">
       <div>
         <svg
           className="h-32 w-32 text-black bg-slate-100 rounded-full shadow-xl"
           fill="none"
-          viewBox="0 0 24 26"
+          viewBox="0 0 24 30"
           stroke="currentColor"
         >
           <path
