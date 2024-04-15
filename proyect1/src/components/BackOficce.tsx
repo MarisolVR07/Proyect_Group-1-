@@ -35,15 +35,14 @@ export default function Page() {
         </h1>
 
         <div className="w-full flex flex-col items-center">
-          <Button onClick={() => console.log("Institution")} className="mb-2 w-full">
+          <Link href="/institution/" passHref>
+            <Button className="mb-2 w-full">
             Institution
-           
-          </Button>
-
+            </Button>
+          </Link>
           <Button onClick={toggleDropdown} className="mb-2 w-full">
             Departments
           </Button>
-
           <div className="relative w-full">
             {isDropdownOpen && (
               <div className="absolute z-10 w-full bg-white rounded-md shadow-lg">
@@ -73,9 +72,12 @@ export default function Page() {
               Self-Assessment
             </Button>
           </Link>
-          <Button onClick={() => console.log("Users")} className="mb-2 w-full">
-            Users
-          </Button>
+          <Link href="/users/" passHref>
+            <Button className="mb-2 w-full">
+              Users
+            </Button>
+          </Link>
+
           <Button
             onClick={() => console.log("Reports")}
             className="mb-2 w-full"
