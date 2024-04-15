@@ -16,15 +16,15 @@
   }
 }
 
+
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-image: linear-gradient(to top, #1a1c2c, #453a94);
+  min-height: 100vh; 
+  margin: 0;
+  padding: 0;
+  height: 100vh;
 }
+
 
 @layer utilities {
   .text-balance {
