@@ -11,7 +11,7 @@ const MantQuestion: React.FC<MantQuestionProps> = ({ number }) => {
             <div className="flex ">
                 <h1 className="p-5">{number}</h1>
                 <div>
-                    <TextArea id={"1.1.1"} />
+                    <TextArea id={number} />
                 </div>
             </div>
         </>

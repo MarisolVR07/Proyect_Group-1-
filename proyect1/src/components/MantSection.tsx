@@ -32,16 +32,12 @@ const MantSection: React.FC<MantSectionProps> = ({ number }) => {
             </div>
             <div>
                 <h2>Questions</h2>
-                {[...Array(questionCount)].map((_, index) => (
-                    <MantQuestion key={index} number={`1.1.${index + 1}`} />
-                ))}
-                <div className="space-x-3">
-                    <SmallButton onClick={handleRemoveQuestion}>-</SmallButton>
-                    <SmallButton onClick={handleAddQuestion}>+</SmallButton>
-                </div>
+                <MantQuestion key={'${number}.1'} number={`${number}.1`} />
+                <MantQuestion key={'${number}.2'} number={`${number}.2`} />
+                <MantQuestion key={'${number}.3'} number={`${number}.3`} />
+                <MantQuestion key={'${number}.4'} number={`${number}.4`} />
             </div>
         </>
     );
 };
-
 export default MantSection;

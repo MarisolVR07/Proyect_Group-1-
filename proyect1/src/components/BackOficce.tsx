@@ -35,7 +35,7 @@ export default function Page() {
         </h1>
 
         <div className="w-full flex flex-col items-center">
-          <Link href="/institution/" passHref>
+          <Link href="/backoffice/institution/" passHref>
             <Button className="mb-2 w-full">
             Institution
             </Button>
@@ -72,7 +72,7 @@ export default function Page() {
               Self-Assessment
             </Button>
           </Link>
-          <Link href="/users/" passHref>
+          <Link href="/backoffice/users" passHref>
             <Button className="mb-2 w-full">
               Users
             </Button>
