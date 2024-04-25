@@ -56,7 +56,7 @@ model rc_parameters {
 model rc_questions {
   QES_Id      Int          @id @unique(map: "QES_Id") @default(autoincrement())
   QES_Text    String       @db.VarChar(1000)
-  QES_Number  Int
+  QES_Number  String       @db.VarChar(5)
   QES_Section Int
   rc_answers  rc_answers[]
   rc_sections rc_sections  @relation(fields: [QES_Section], references: [SEC_Id], onUpdate: Restrict, map: "Section Questions")
@@ -68,6 +68,7 @@ model rc_sections {
   SEC_Id              Int                @id @unique(map: "SEC_Id") @default(autoincrement())
   SEC_Name            String             @db.VarChar(30)
   SEC_SelfAssessments Int
+  SEC_Number          String             @db.VarChar(5)
   rc_questions        rc_questions[]
   rc_selfassessments  rc_selfassessments @relation(fields: [SEC_SelfAssessments], references: [SAT_Id], onUpdate: Restrict, map: "SelfAssessment Sections")
 
