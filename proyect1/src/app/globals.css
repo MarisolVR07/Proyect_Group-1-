@@ -20,7 +20,6 @@
 
 body {
   background-image: linear-gradient(to top, #1a1c2c, #453a94);
-  min-height: 100vh;
   margin: 0;
   padding: 0;
 }

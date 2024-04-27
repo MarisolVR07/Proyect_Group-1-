@@ -1,7 +1,7 @@
 import React from "react";
 
 import InputField from './InputField';
-import Button from './Button';
+import Button from './PrimaryButton';
 
 
 const LoginForm = () => (
@@ -10,7 +10,7 @@ const LoginForm = () => (
     <InputField label="Email:" type="email" placeholder="example@example.com" />
     <InputField label="Password:" type="password" placeholder="your password" />
     <div className="mt-7 mb-16">
-      <Button>SIGN IN</Button>
+      <Button className="rounded-md">SIGN IN</Button>
     </div>
 
   </div>

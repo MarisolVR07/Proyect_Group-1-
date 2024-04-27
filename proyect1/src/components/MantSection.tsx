@@ -1,43 +1,55 @@
-"use client"
-import React, { useState } from "react";
-import InputField from "./InputField";
-import SmallButton from "./SmallButton";
-import MantQuestion from "./MantQuestion";
+import React from "react";
+import InputForm from "./InputForms";
+import TextArea from "./TextAreaForms";
 
 interface MantSectionProps {
     number: string;
+    sectionData: { sectionName: string; questions: string[] };
+    setSectionData: (data: { sectionName: string; questions: string[] }) => void;
 }
 
-const MantSection: React.FC<MantSectionProps> = ({ number }) => {
-    const [questionCount, setQuestionCount] = useState<number>(1);
-
-    const handleAddQuestion = () => {
-        setQuestionCount(questionCount + 1);
+const MantSection: React.FC<MantSectionProps> = ({ number, sectionData, setSectionData }) => {
+    const handleSectionNameChange = (value: string) => {
+        setSectionData({ ...sectionData, sectionName: value });
     };
 
-    const handleRemoveQuestion = () => {
-        if (questionCount > 1) {
-            setQuestionCount(questionCount - 1);
-        }
+    const handleQuestionTextChange = (value: string, index: number) => {
+        const updatedQuestions = [...sectionData.questions];
+        updatedQuestions[index] = value;
+        setSectionData({ ...sectionData, questions: updatedQuestions });
     };
+
     return (
-        <>
-            <div className="flex">
-                <h1 className="pt-10 pe-4">Section Name:</h1>
-                <div>
-                    <InputField label={ number }
+        <div className="w-full text-center">
+            <div className="bg-gray-700 w-full h-10 p-1 text-center">
+                <h2 className="text-white text-base">Section</h2>
+            </div>
+            <div className="bg-gray-700 w-full px-3 pb-3 mb-1">
+                <InputForm
+                    label={number}
                     type={"text"}
-                    placeholder={"Section"}/>
-                </div>
+                    value={sectionData.sectionName}
+                    onChange={handleSectionNameChange}
+                    className="w-full"
+                />
             </div>
-            <div>
-                <h2>Questions</h2>
-                <MantQuestion key={'${number}.1'} number={`${number}.1`} />
-                <MantQuestion key={'${number}.2'} number={`${number}.2`} />
-                <MantQuestion key={'${number}.3'} number={`${number}.3`} />
-                <MantQuestion key={'${number}.4'} number={`${number}.4`} />
+            <div className="bg-gray-700 w-full py-2 h-10">
+                <h2 className="text-white text-base">Questions</h2>
             </div>
-        </>
+            <div className="bg-gray-700 w-full px-3 pb-3 mb-1 rounded-b-xl">
+                {sectionData.questions.map((question, index) => (
+                    <TextArea
+                        key={index}
+                        id={`${number}.${index + 1}`}
+                        spam={`${number}.${index + 1}`}
+                        value={question}
+                        onChange={(value) => handleQuestionTextChange(value, index)}
+                        className="w-[530px] mb-1"
+                    />
+                ))}
+            </div>
+        </div>
     );
 };
+
 export default MantSection;

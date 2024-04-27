@@ -1,6 +1,6 @@
 "use client";
 import Header from "@/components/Header";
-import Button from "@/components/Button";
+import Button from "@/components/PrimaryButton";
 import React, { useState } from "react";
 import Link from 'next/link';
 
@@ -35,7 +35,7 @@ export default function Page() {
         </h1>
 
         <div className="w-full flex flex-col items-center">
-          <Link href="/backoffice/institution/" passHref>
+          <Link href="/backoffice/Institution/" passHref>
             <Button className="mb-2 w-full">
             Institution
             </Button>

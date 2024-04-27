@@ -16,7 +16,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, type, placeholder }) => 
       <input
         type={type}
         placeholder={placeholder}
-        className="input bg-white text-slate-700 input-bordered w-full h-8"
+        className="input bg-white text-gray-700 input-bordered w-full h-8"
       />
     </div>
   );
