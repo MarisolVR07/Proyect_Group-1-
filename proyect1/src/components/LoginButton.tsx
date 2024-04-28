@@ -2,66 +2,77 @@ import { useMsal } from '@azure/msal-react';
 import { loginRequest } from './msalConfig';
 import Button from './PrimaryButton';
 import { WindowsOutlined } from '@ant-design/icons';
-import { User } from '@/app/types/entities'
-import React, { useState } from 'react';
+import { User } from '@/app/types/entities';
+import React, { useState, useEffect } from 'react';
+import { AccountInfo } from '@azure/msal-browser';
 
 const LoginButton = () => {
-
-  const [user, setUser] = useState({
-    USR_Email: '',
-    USR_Name: '',
-    USR_FirstLastName: '',
-    USR_SecondLastName: '',
-    USR_Role: '',
-    USR_Department: null,
-  });
+  const [user, setUser] = useState<User | null>(null);
   const { instance } = useMsal();
 
   const handleLogin = async () => {
     try {
       const loginResponse = await instance.loginPopup(loginRequest);
-      
       const userInfo = loginResponse.account;
-      const response = await fetch('/api/rc_users/'+ userInfo.username);
-        if (response.ok) {
-          const data = await response.json();
-          
-        } else {
-          setUser({
-            USR_Email: userInfo.username,
-            USR_Name: userInfo.name || '',
-            USR_FirstLastName: '.',
-            USR_SecondLastName: '.',
-            USR_Role: '.',
-            USR_Department: null,
-          })
-          const response2 = await fetch('/api/rc_users', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user),
-          });
-          if (response2.ok) {
-            // El usuario se ha guardado correctamente
-            console.log('Usuario guardado exitosamente');
-            // Puedes realizar cualquier otra acción aquí, como redirigir a otra página o mostrar un mensaje de éxito
-          } else {
-            // Si la solicitud falla
-            console.error('Error al guardar el usuario:', response2.statusText);
-            // Puedes manejar el error de la manera que desees, por ejemplo, mostrando un mensaje de error al usuario
-          }
-        }
-      
-
+      await getUserInfo(userInfo);
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
     }
   };
 
-  return <Button onClick={handleLogin} className="rounded-md">
-     <WindowsOutlined /> SIGN IN
-  </Button>;
+  const getUserInfo = async (user: AccountInfo) => {
+    try {
+      const response = await fetch('/api/rc_users/' + user.username);
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data);
+      } else {
+        createUser(user.username, user.name || '');
+      }
+    } catch (error) {
+      console.error('Error al obtener información del usuario:', error);
+    }
+  };
+
+  const createUser = async (username: string, name: string) => {
+    try {
+      const userToCreate: User = {
+        USR_Email: username,
+        USR_Name: name,
+        USR_FirstLastName: '.',
+        USR_SecondLastName: '.',
+        USR_Role: '.',
+        USR_Department: null,
+      };
+      const response = await fetch('/api/rc_users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userToCreate),
+      });
+      if (response.ok) {
+        console.log('Usuario guardado exitosamente');
+      } else {
+        console.error('Error al guardar el usuario:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error al crear usuario:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      // Puedes realizar cualquier otra acción aquí, como redirigir a otra página o mostrar un mensaje de éxito
+      //opcional
+    }
+  }, [user]);
+
+  return (
+    <Button onClick={handleLogin} className="rounded-md">
+      <WindowsOutlined/> SIGN IN
+    </Button>
+  );
 };
 
 export default LoginButton;
