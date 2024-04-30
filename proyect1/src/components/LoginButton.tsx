@@ -5,10 +5,12 @@ import { WindowsOutlined } from '@ant-design/icons';
 import { User } from '@/app/types/entities';
 import React, { useState, useEffect } from 'react';
 import { AccountInfo } from '@azure/msal-browser';
+import useApi from '@/app/hooks/useApi';
 
 const LoginButton = () => {
   const [user, setUser] = useState<User | null>(null);
   const { instance } = useMsal();
+  const { callApi } = useApi<User>(); // Aquí se usa el hook useApi
 
   const handleLogin = async () => {
     try {
@@ -22,9 +24,9 @@ const LoginButton = () => {
 
   const getUserInfo = async (user: AccountInfo) => {
     try {
-      const response = await fetch('/api/rc_users/' + user.username);
-      if (response.ok) {
-        const data = await response.json();
+      // Reemplazamos el uso de fetch con callApi
+      const data = await callApi('GET', '/api/rc_users/' + user.username);
+      if (data) {
         setUser(data);
       } else {
         createUser(user.username, user.name || '');
@@ -44,17 +46,12 @@ const LoginButton = () => {
         USR_Role: '.',
         USR_Department: null,
       };
-      const response = await fetch('/api/rc_users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userToCreate),
-      });
-      if (response.ok) {
+      // Reemplazamos el uso de fetch con callApi
+      const response = await callApi('GET', '/api/rc_deparment');
+      if (response) {
         console.log('Usuario guardado exitosamente');
       } else {
-        console.error('Error al guardar el usuario:', response.statusText);
+        console.error('Error al guardar el usuario');
       }
     } catch (error) {
       console.error('Error al crear usuario:', error);
