@@ -1,16 +1,30 @@
 "use client";
-import Header from "@/components/Header";
+
 import Button from "@/components/PrimaryButton";
-import React from "react";
 import Label from "./Label";
 import TextArea from "./TextAreaForms";
-
+import InputForms from "./InputForms";
+import SecondaryButtom from "./SecondaryButton";
+import React, { useState } from "react";
 interface FormRowProps {
   label: string;
   id: string;
   type?: "text" | "checkbox" | "textarea";
 }
 
+interface SearchBarProps {
+  onSearch: (query: string) => void;
+}
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+  return (
+    <input
+      type="text"
+      placeholder="Search departments..."
+      onChange={(e) => onSearch(e.target.value)}
+      className="w-full p-2 rounded-md"
+    />
+  );
+};
 const FormRow: React.FC<FormRowProps> = ({ label, id, type = "text" }) => {
   return (
     <div
@@ -48,51 +62,121 @@ const handleDeleteClick = () => {
 };
 
 export default function Page() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    // Agrega la lógica para filtrar los datos de la tabla
+  };
+
   return (
     <main className="relative w-full flex flex-col items-center justify-center min-h-screen bg-gradient-to-t from-violet-950 to-black pt-24">
-      <Header />
-      <div
-        className="absolute top-20 mx-auto my-8 bg-gray-700 bg-opacity-50 backdrop-blur-sm rounded-2xl w-1/2 p-6 flex flex-col items-center"
-        style={{ minHeight: "32rem" }}
-      >
-        <h1 className="text-white text-3xl font-bold text-center mb-7">
-          Institution
-        </h1>
-        <form className="flex flex-col">
-          <FormRow label="Name" id="name" />
-          <FormRow label="Email" id="email" />
-          <FormRow label="Telephone" id="phone" />
-          <FormRow label="Address" id="address" type="textarea" />
-          <Button onClick={handleSaveClick} className="mb-2 w-full">
-            Save
-          </Button>
-          <h1 className="text-white text-3xl font-bold text-center mb-16 mt-16">
-            Department
-          </h1>
-          <FormRow label="Name" id="name" />
-          <FormRow label="State" id="state" type="checkbox" />
-        </form>
-        <div className="flex w-full space-x-2">
-          <Button onClick={handleAddClick} className="flex-1">
-            Add
-          </Button>
-          <Button onClick={handleDeleteClick} className="flex-1">
-            Delete
-          </Button>
-        </div>
-        <div className="w-full overflow-x-auto">
-          <table className="table-auto w-full">
-            <thead>
-              <tr className="bg-violet-800 text-white">
-                <th className="px-4 py-2">ID</th>
-                <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2">State</th>
-              </tr>
-            </thead>
-            <tbody>{/* Aquí se cargarán los datos dinámicamente */}</tbody>
-          </table>
-        </div>
-      </div>
+      <div className="container mx-auto flex justify-between my-8 p-4 max-w-7xl">
+       <div className="form-control flex-1 max-w-lg p-8 rounded-md items-center justify-center bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl">
+          <h1 className="text-2xl mb-5">INSTITUTION</h1>
+
+          <div className="w-full mb-4 text-center">
+            <div className="bg-gray-700 w-full h-10 py-1 rounded text-center">
+              <h2 className="text-white text-base">Name</h2>
+            </div>
+
+            <div className="bg-gray-700 w-full px-3 pb-3 mb-1">
+              <TextArea id={"FirstLastName"} className={"w-full rounded-md"} />
+            </div>
+            <div className="bg-gray-700 w-full h-10 py-1 text-center">
+              <h2 className="text-white text-base"> Email</h2>
+            </div>
+            <div className="bg-gray-700 w-full px-3 pb-3 mb-1">
+              <TextArea id={"SecondLastName"} className={"w-full rounded-md"} />
+            </div>
+            <div className="bg-gray-700 w-full h-10 py-1 text-center rounded-t-xl">
+              <h2 className="text-white text-base">Telephone</h2>
+            </div>
+            <div className="bg-gray-700 w-full px-3 pb-3 mb-1">
+              <InputForms type={"text"} className="w-full rounded-md" />
+            </div>
+            <div className="bg-gray-700 w-full h-10 py-1 text-center">
+              <h2 className="text-white text-base"> Adress</h2>
+            </div>
+            <div className="bg-gray-700 w-full px-3 pb-3 mb-1">
+              <TextArea id={"SecondLastName"} className={"w-full rounded-md"} />
+            </div>
+            <div className="relative  w-full h-10 flex flex-col space-y-4 rounded-xl bg-gray-700 py-1 px-3 my-4 items-center justify-center">
+              <div className="flex w-full space-x-3 rounded-xl  py-1 px-3 my-4 items-center justify-center">
+                <SecondaryButtom
+                  onClick={handleDeleteClick}
+                  className="rounded-xl"
+                >
+                  Delete
+                </SecondaryButtom>
+                <Button onClick={handleSaveClick} className="rounded-xl ">
+                  Save
+                </Button>
+              </div>
+            </div>
+          </div>
+          
+          </div>
+         
+
+            <div className="form-control flex-1 max-w-xl p-8 rounded-md bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl">
+            <div className=" w-full h-10 py-1 items-center justify-center text-center">
+              <h2 className="text-2xl text-white mb-5 ">DEPARTMENTS</h2>
+            </div>
+
+            <div className="bg-gray-700 w-full h-10 py-1 text-center rounded-t-xl">
+              <h2 className="text-white text-base">Name</h2>
+            </div>
+            <div className="bg-gray-700 w-full px-3 pb-3 mb-1">
+              <InputForms type={"text"} className="w-full rounded-md" />
+            </div>
+            <div className="bg-gray-700 w-full px-3 pb-3 flex items-center justify-start rounded-b-btn">
+              <label htmlFor="stateCheckbox" className="text-white ml-36">
+                State
+              </label>
+              <input
+                type="checkbox"
+                id="stateCheckbox"
+                name="stateCheckbox"
+                className="ml-2"
+              />
+            </div>
+            <div className="flex w-full space-x-3 rounded-xl  py-1 px-3 my-4 items-center justify-center">
+              <SecondaryButtom
+                onClick={handleDeleteClick}
+                className="rounded-xl"
+              >
+                Delete
+              </SecondaryButtom>
+              <Button onClick={handleSaveClick} className="rounded-xl ">
+                Save
+              </Button>
+            </div>
+            <div className=" w-full h-10 py-1 items-center justify-center text-center">
+                <h2 className="text-2xl text-white mb-5 ">
+                  {" "}
+                  SEARCH DEPARTMENTS
+                </h2>
+              </div>
+
+              <div className=" w-full px-3 pb-3 pt-4 mb-1 bg-gray-700 rounded-md items-center justify-center">
+                <SearchBar onSearch={handleSearchChange} />
+              </div>
+              <div className="overflow-x-auto mt-4 rounded-md">
+                <table className="table-auto w-full">
+                  <thead>
+                    <tr className="bg-violet-800 text-white">
+                      <th className="px-4 py-2">Name</th>
+                      <th className="px-4 py-2">State</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Aquí se cargarán los datos dinámicamente */}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            </div>
     </main>
   );
 }

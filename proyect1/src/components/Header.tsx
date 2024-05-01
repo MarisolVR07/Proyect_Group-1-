@@ -9,7 +9,7 @@ export default function Header() {
     const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
     return (
-        <header className="w-full bg-transparent text-white fixed py-4 px-8 top-0 z-10">
+        <header className="w-full bg-transparent text-white py-4 px-8 top-0 z-10">
         <div className="container mx-auto flex justify-between items-center">
               <div className="items-center">
                     <div className="text-4xl font-bold mr-4">SCI</div>
