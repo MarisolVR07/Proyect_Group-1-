@@ -7,14 +7,11 @@ import React, { useState } from "react";
 import InputForms from "./InputForms";
 
 import SecondaryButtom from "./SecondaryButton";
+import SearchBar from "./SearchBar";
 interface FormRowProps {
   label: string;
   id: string;
   type?: "text" | "checkbox" | "textarea";
-}
-
-interface SearchBarProps {
-  onSearch: (query: string) => void;
 }
 
 const FormRow: React.FC<FormRowProps> = ({ label, id, type = "text" }) => {
@@ -43,16 +40,7 @@ const FormRow: React.FC<FormRowProps> = ({ label, id, type = "text" }) => {
   );
 };
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  return (
-    <input
-      type="text"
-      placeholder="Search users..."
-      onChange={(e) => onSearch(e.target.value)}
-      className="w-full p-2 rounded-md"
-    />
-  );
-};
+
 
 const handleSaveClick = () => {
   console.log("Save");
@@ -71,7 +59,6 @@ export default function Page() {
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
-    // Agrega la lógica para filtrar los datos de la tabla
   };
 
   return (
