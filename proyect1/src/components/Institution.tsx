@@ -105,11 +105,11 @@ export default function Page() {
               <div className="flex w-full space-x-3 rounded-xl  py-1 px-3 my-4 items-center justify-center">
                 <SecondaryButtom
                   onClick={handleDeleteClick}
-                  className="rounded-xl"
+                  className="rounded-xl w-20"
                 >
                   Delete
                 </SecondaryButtom>
-                <Button onClick={handleSaveClick} className="rounded-xl ">
+                <Button onClick={handleSaveClick} className="rounded-xl w-44">
                   Save
                 </Button>
               </div>
@@ -144,11 +144,11 @@ export default function Page() {
             <div className="flex w-full space-x-3 rounded-xl  py-1 px-3 my-4 items-center justify-center">
               <SecondaryButtom
                 onClick={handleDeleteClick}
-                className="rounded-xl"
+              className="rounded-xl w-20 "
               >
                 Delete
               </SecondaryButtom>
-              <Button onClick={handleSaveClick} className="rounded-xl ">
+            <Button onClick={handleSaveClick} className="rounded-xl w-44">
                 Save
               </Button>
             </div>
@@ -171,7 +171,6 @@ export default function Page() {
                     </tr>
                   </thead>
                   <tbody>
-                    {/* Aquí se cargarán los datos dinámicamente */}
                   </tbody>
                 </table>
               </div>

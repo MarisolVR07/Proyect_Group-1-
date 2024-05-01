@@ -116,7 +116,7 @@ export default function Page() {
           <div className="relative  w-full h-10 flex flex-col space-y-4 rounded-xl bg-gray-700 py-1 px-3 my-4 items-center justify-center">
             <SecondaryButtom
               onClick={toggleDropdown}
-              className="rounded-xl w-40 "
+              className="rounded-xl w-40"
             >
               Roles
             </SecondaryButtom>
@@ -138,10 +138,10 @@ export default function Page() {
             )}
           </div>
           <div className="flex w-full space-x-3 rounded-xl  py-1 px-3 my-4 items-center justify-center">
-            <SecondaryButtom onClick={handleDeleteClick} className="rounded-xl">
+            <SecondaryButtom onClick={handleDeleteClick} className="rounded-xl w-20">
               Delete
             </SecondaryButtom>
-            <Button onClick={handleSaveClick} className="rounded-xl ">
+            <Button onClick={handleSaveClick} className="rounded-xl w-44">
               Save
             </Button>
           </div>

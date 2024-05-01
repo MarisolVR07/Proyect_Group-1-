@@ -66,7 +66,7 @@ const LoginButton = () => {
   }, [user]);
 
   return (
-    <Button onClick={handleLogin} className="rounded-md">
+    <Button onClick={handleLogin} className="rounded-md w-44">
       <WindowsOutlined/> SIGN IN
     </Button>
   );

@@ -9,7 +9,7 @@ interface PrimaryButtonProps {
 
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({ children, onClick, className }) => {
  
-  const buttonClasses = `text-white bg-violet-800 hover:bg-violet-700 h-8 w-44 ${className}`;
+  const buttonClasses = `text-white bg-violet-800 hover:bg-violet-700 h-8 ${className}`;
 
   return (
     <button className={buttonClasses} onClick={onClick}>

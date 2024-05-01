@@ -51,14 +51,13 @@ const MantSelfAssessment: React.FC = () => {
                     <TextArea id={"description"} className={"w-full rounded-md"} />
                 </div>
             </div>
-            {/* Renderiza la sección actual */}
             <MantSection
                 number={`1.${currentPage}`}
                 sectionData={sectionData[currentPage.toString()]}
                 setSectionData={(data) => setSectionData({ ...sectionData, [currentPage.toString()]: data })}
             />
             <div className="flex w-full space-x-3 rounded-xl bg-gray-700 py-1 px-3 my-4 items-center justify-center">
-                <SecondaryButtom onClick={handlePrevPage} className="rounded-xl">Previous</SecondaryButtom>
+                <SecondaryButtom onClick={handlePrevPage} className="rounded-xl w-20">Previous</SecondaryButtom>
                 <div className="space-x-3 rounded-xl bg-gray-800 p-1">
                     {[1, 2, 3, 4, 5].map((pageNumber) => (
                         <PageButton
@@ -70,9 +69,9 @@ const MantSelfAssessment: React.FC = () => {
                         />
                     ))}
                 </div>
-                <SecondaryButtom onClick={handleNextPage} className="rounded-xl">Next</SecondaryButtom>
+                <SecondaryButtom onClick={handleNextPage} className="rounded-xl w-20">Next</SecondaryButtom>
             </div>
-            <Button className="rounded-xl">Save</Button>
+            <Button className="rounded-xl w-44">Save</Button>
         </div>
     );
 };
