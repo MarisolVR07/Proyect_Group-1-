@@ -9,6 +9,7 @@ import SecondaryButtom from "./SecondaryButton";
 import PrimaryButton from "./PrimaryButton";
 import DownArrowIcon from "./DownArrowIcon";
 import DropdownMenu from "./DropdownMenu";
+import DateTimePicker from "./DateTimePicker";
 
 const MantSelfAssessment: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -88,7 +89,11 @@ const MantSelfAssessment: React.FC = () => {
                 </div>
                 <SecondaryButtom onClick={handleNextPage} className="rounded-xl w-20">Next</SecondaryButtom>
             </div>
-            <Button className="rounded-xl w-44">Save</Button>
+            <div className="flex space-x-40">
+                <DateTimePicker text="Select expiration date and time" />
+                <Button className="rounded-xl w-44 mt-4">Save</Button>
+            </div>
+
         </div>
     );
 };
