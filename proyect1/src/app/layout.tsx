@@ -2,7 +2,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { MsalProvider } from "@azure/msal-react"; // Importa MsalProvider
-import { msalInstance } from "../components/msalConfig"; // Importa tu configuración de MSAL
+import { msalInstance } from "./msalConfig"; // Importa tu configuración de MSAL
+import { SessionProvider } from "./providers/SessionProvider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -18,8 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
-        <body className={inter.className}>{children}</body>
-      </html>
+    <html lang="en">
+    <body className={inter.className}>
+      <SessionProvider
+    >{children}
+    </SessionProvider></body>
+  </html>
   );
 }

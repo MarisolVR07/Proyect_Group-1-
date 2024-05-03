@@ -1,5 +1,5 @@
 import { useMsal } from '@azure/msal-react';
-import { loginRequest } from './msalConfig';
+import { loginRequest } from '../app/msalConfig';
 import Button from './PrimaryButton';
 import { WindowsOutlined } from '@ant-design/icons';
 import { User } from '@/app/types/entities';
@@ -16,7 +16,8 @@ const LoginButton = () => {
     try {
       const loginResponse = await instance.loginPopup(loginRequest);
       const userInfo = loginResponse.account;
-      await getUserInfo(userInfo);
+      await getUserInfo(userInfo); 
+      window.location.href = '/dashboard';
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
     }
@@ -31,6 +32,8 @@ const LoginButton = () => {
       } else {
         createUser(user.username, user.name || '');
       }
+     
+
     } catch (error) {
       console.error('Error al obtener información del usuario:', error);
     }
@@ -43,11 +46,11 @@ const LoginButton = () => {
         USR_Name: name,
         USR_FirstLastName: '.',
         USR_SecondLastName: '.',
-        USR_Role: '.',
+        USR_Role: 'none',
         USR_Department: null,
       };
       // Reemplazamos el uso de fetch con callApi
-      const response = await callApi('GET', '/api/rc_deparment');
+      const response = await callApi('POST', '/api/rc_users', userToCreate);
       if (response) {
         console.log('Usuario guardado exitosamente');
       } else {
@@ -60,8 +63,7 @@ const LoginButton = () => {
 
   useEffect(() => {
     if (user) {
-      // Puedes realizar cualquier otra acción aquí, como redirigir a otra página o mostrar un mensaje de éxito
-      //opcional
+  
     }
   }, [user]);
 

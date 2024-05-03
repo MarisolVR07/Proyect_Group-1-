@@ -1,7 +1,7 @@
 "use client"
 import Login from "@/components/Login";
 import { MsalProvider } from "@azure/msal-react"; // Importa MsalProvider
-import { msalInstance } from "@/components/msalConfig";
+import { msalInstance } from "@/app/msalConfig";
 
 export default function Page() {
     
