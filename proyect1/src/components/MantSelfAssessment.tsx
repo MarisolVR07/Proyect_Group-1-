@@ -6,6 +6,9 @@ import TextArea from "./TextAreaForms";
 import Button from "./PrimaryButton";
 import PageButton from "./PageButton";
 import SecondaryButtom from "./SecondaryButton";
+import PrimaryButton from "./PrimaryButton";
+import DownArrowIcon from "./DownArrowIcon";
+import DropdownMenu from "./DropdownMenu";
 
 const MantSelfAssessment: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -16,6 +19,16 @@ const MantSelfAssessment: React.FC = () => {
         "4": { sectionName: "", questions: Array.from({ length: 4 }, () => "") },
         "5": { sectionName: "", questions: Array.from({ length: 4 }, () => "") },
     });
+
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+    const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
+
+    const dropdownLinks = [
+        { href: '', text: 'D1' },
+        { href: '', text: 'D2' },
+        { href: '', text: 'D3' }
+    ];
 
 
     const handlePageChange = (pageNumber: number) => {
@@ -37,6 +50,10 @@ const MantSelfAssessment: React.FC = () => {
     return (
         <div className="form-control my-3 py-8 px-16 w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
             <h1 className="text-2xl text-white mb-5">MAINTENANCE OF SELF-ASSESSMENTS</h1>
+            <div className="mb-5 px-3 rounded-md">
+                <PrimaryButton icon={<DownArrowIcon />} className='rounded-md w-40' onClick={toggleDropdown}>Department</PrimaryButton>
+                <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />
+            </div>
             <div className="w-full mb-4 text-center">
                 <div className="bg-gray-700 w-full h-10 py-1 text-center rounded-t-xl">
                     <h2 className="text-white text-base">Audit</h2>

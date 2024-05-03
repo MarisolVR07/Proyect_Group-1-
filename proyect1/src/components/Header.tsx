@@ -1,11 +1,19 @@
 'use client'
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import PrimaryButton from './PrimaryButton';
+import DropdownMenu from './DropdownMenu';
+import DownArrowIcon from './DownArrowIcon';
 export default function Header() {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
+
+    const dropdownLinks = [
+        { href: '/backoffice', text: 'Main' },
+        { href: '/backoffice/Institution', text: 'Institution' },
+        { href: '/backoffice/create-self-assessment', text: 'Self-Assessment' },
+        { href: '/backoffice/users', text: 'Users' }
+    ];
 
     return (
         <header className="w-full bg-transparent text-white py-3 top-0 z-10">
@@ -18,20 +26,8 @@ export default function Header() {
                     <ul className="flex space-x-4">
                         <PrimaryButton className="rounded-md w-36">DashBoard</PrimaryButton>
                         <li className="px-3 rounded-md">
-                            <PrimaryButton className='rounded-md w-40' onClick={toggleDropdown}>BackOffice</PrimaryButton>
-                            {isDropdownOpen && (
-                                <ul className="absolute text-center bg-white text-violet-700 py-2 rounded-md mt-1 ms-1">
-                                    <Link href="/backoffice/Institution/" passHref>
-                                        <li className="hover:bg-violet-700 hover:text-white  px-3 py-2">Institution</li>
-                                    </Link>
-                                    <Link href="/backoffice/create-self-assessment" passHref>
-                                        <li className="hover:bg-violet-700 hover:text-white  px-3 py-2">Self-Assessment</li>
-                                    </Link>
-                                    <Link href="/backoffice/users" passHref>
-                                        <li className="hover:bg-violet-700 hover:text-white  px-3 py-2">Users</li>
-                                    </Link>
-                                </ul>
-                            )}
+                            <PrimaryButton icon={<DownArrowIcon />} className='rounded-md w-40' onClick={toggleDropdown}>BackOffice</PrimaryButton>
+                            <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />
                         </li>
                         <PrimaryButton className="rounded-md w-36">Reports</PrimaryButton>
                     </ul>
