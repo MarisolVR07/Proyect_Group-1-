@@ -6,13 +6,14 @@ interface CardButtonProps {
     icon: any;
     title: string;
     description: string;
+    className?: string;
 }
 
-const CardComponent: React.FC<CardButtonProps> = ({ href, icon, title, description }) => (
+const CardComponent: React.FC<CardButtonProps> = ({ href, icon, title, description, className }) => (
     <Link href={href} passHref>
-        <div className="p-4 w-80 cursor-pointer border-2 border-white px-4 py-6 rounded-lg">
+        <div className={`cursor-pointer border-2 border-white px-4 py-6 rounded-lg hover:border-violet-700 hover:text-violet-400 ${className}`}>
                 {icon}
-                <h2 className="title-font font-medium text-3xl text-white">{title}</h2>
+            <h2 className="title-font font-medium text-4xl">{title}</h2>
                 <p className="leading-relaxed text-white">{description}</p>
         </div>
     </Link>

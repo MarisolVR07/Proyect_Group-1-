@@ -31,11 +31,15 @@ const BackOffice = () => {
       <div className="flex space-x-3 mt-3 mx-9 text-center justify-center">
         <div className="bg-gray-700 p-3 text-center items-center justify-center rounded-bl-xl">
           <h2 className="text-xl text-center text-white mb-3 font-semibold">APP ACTIVATION/DEACTIVATION DATE-TIME</h2>
-          <div className="flex space-x-40 items-center justify-center">
+          <div className="flex space-x-32 items-center justify-center">
             <DateTimePicker text="Select activation date and time" />
-            <DateTimePicker text="Select deactivation date and time" />
+            <DateTimePicker text="Select deactivation date and time"/>
           </div>
           <div className="mt-3">
+            <h2 className="text-xl text-center text-white font-semibold">EMAIL</h2>
+            <InputField type="email" label="" placeholder="Email" />
+          </div>
+          <div className="">
             <h2 className="text-xl text-center text-white mb-3 font-semibold">LOGO</h2>
             <input type="file" onChange={handleLogoChange} />
             {logoFile && (
@@ -46,11 +50,7 @@ const BackOffice = () => {
               </div>
             )}
           </div>
-          <div className="mt-3">
-            <h2 className="text-xl text-center text-white font-semibold">EMAIL</h2>
-            <InputField type="email" label="" placeholder="Email" />
-          </div>
-          <PrimaryButton className="w-44 rounded-md">
+          <PrimaryButton className="w-44 rounded-md mt-4">
             Save
           </PrimaryButton>
         </div>
