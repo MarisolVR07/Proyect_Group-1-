@@ -67,8 +67,8 @@ model rc_questions {
 model rc_sections {
   SEC_Id              Int                @id @unique(map: "SEC_Id") @default(autoincrement())
   SEC_Name            String             @db.VarChar(30)
-  SEC_SelfAssessments Int
   SEC_Number          String             @db.VarChar(5)
+  SEC_SelfAssessments Int
   rc_questions        rc_questions[]
   rc_selfassessments  rc_selfassessments @relation(fields: [SEC_SelfAssessments], references: [SAT_Id], onUpdate: Restrict, map: "SelfAssessment Sections")
 
@@ -81,6 +81,7 @@ model rc_selfassessments {
   SAT_Status              String                    @db.VarChar(1)
   SAT_Audit               String                    @db.VarChar(255)
   SAT_Description         String                    @db.VarChar(255)
+  SAT_Expiration          DateTime                  @db.Timestamp(0)
   SAT_Department          Int
   rc_sections             rc_sections[]
   rc_departments          rc_departments            @relation(fields: [SAT_Department], references: [DPT_Id], onUpdate: Restrict, map: "SelfAssessment Department")
@@ -102,13 +103,12 @@ model rc_selfassessmentsxuser {
 }
 
 model rc_users {
-  USR_Email          String          @id @db.VarChar(100)
-  USR_Name           String          @db.VarChar(30)
-  USR_FirstLastName  String          @db.VarChar(30)
-  USR_SecondLastName String          @db.VarChar(30)
-  USR_Role           String          @db.VarChar(30)
-  USR_Department     Int?
-  rc_departments     rc_departments? @relation(fields: [USR_Department], references: [DPT_Id], onDelete: Restrict, onUpdate: Restrict, map: "Departament users")
+  USR_Id         Int             @id @unique(map: "USR_Id") @default(autoincrement())
+  USR_Email      String          @unique(map: "USR_Email") @db.VarChar(100)
+  USR_FullName   String          @db.VarChar(100)
+  USR_Role       String          @db.VarChar(30)
+  USR_Department Int?
+  rc_departments rc_departments? @relation(fields: [USR_Department], references: [DPT_Id], onDelete: Restrict, onUpdate: Restrict, map: "Departament users")
 
   @@index([USR_Department], map: "IX_Relationship2")
 }
