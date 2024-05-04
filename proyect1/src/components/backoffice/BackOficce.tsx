@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import CardsSection from "./CardsSection";
+import CardsSection from "./CardsSectionBackoficce";
 import DateTimePicker from "../general/DateTimePicker";
 import SearchBar from "../maintenance/users/SearchBar";
 import Image from "next/image";
@@ -26,10 +26,10 @@ const BackOffice = () => {
   };
 
   return (
-    <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
+    <div className="items-center justify-center mb-4 font-poppins drop-shadow-xl">
       <CardsSection />
-      <div className="flex space-x-3 mt-3 mx-9 text-center justify-center">
-        <div className="bg-gray-700 p-3 text-center items-center justify-center rounded-bl-xl">
+      <div className="flex space-x-3 mx-9 text-center justify-center">
+        <div className="bg-gray-700 p-3 text-center items-center justify-center border-2 border-white rounded-xl">
           <h2 className="text-xl text-center text-white mb-3 font-semibold">APP ACTIVATION/DEACTIVATION DATE-TIME</h2>
           <div className="flex space-x-32 items-center justify-center">
             <DateTimePicker text="Select activation date and time" />
@@ -54,12 +54,12 @@ const BackOffice = () => {
             Save
           </PrimaryButton>
         </div>
-        <div className="form-control flex-1 p-8 rounded-br-xl bg-gray-700 text-white">
+        <div className="form-control flex-1 p-8 rounded-xl bg-gray-700 border-2 border-white text-white">
           <div className=" w-full h-10 py-1 items-center justify-center text-center">
             <h2 className="text-xl text-white font-semibold">NEW USERS</h2>
           </div>
 
-          <div className=" w-full px-3 pb-3 pt-4 mb-1 bg-gray-700 rounded-md items-center justify-center">
+          <div className=" w-full px-3 pb-3 pt-4 mb-1 bg-gray-600 rounded-md items-center justify-center">
             <SearchBar onSearch={handleSearchChange} />
           </div>
           <div className="overflow-x-auto mt-4 rounded-md">

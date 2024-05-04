@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import CardsSectionDashBoard from "../backoffice/CardsSectionDashboard";
+import CardsSectionDashBoard from "./CardsSectionDashboard";
 import DateTimePicker from "../general/DateTimePicker";
 import SearchBar from "../maintenance/users/SearchBar";
 import Image from "next/image";
@@ -28,10 +28,6 @@ const BackOffice = () => {
   return (
     <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
       <CardsSectionDashBoard />
-      <div className="flex space-x-3 mt-3 mx-9 text-center justify-center">
-      
-
-      </div>
     </div>
   );
 };
