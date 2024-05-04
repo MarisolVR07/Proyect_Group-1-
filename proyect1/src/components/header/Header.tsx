@@ -33,7 +33,9 @@ export default function Header() {
                             <PrimaryButton icon={<DownArrowIcon />} className='rounded-md w-40' onClick={toggleDropdown}>BackOffice</PrimaryButton>
                             <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />
                         </li>
-                        <PrimaryButton className="rounded-md w-36">Reports</PrimaryButton>
+                        <Link href="/reports" passHref>
+                            <PrimaryButton className="rounded-md w-36">Reports</PrimaryButton>
+                        </Link>
                     </ul>
                 </nav>
             </div>
