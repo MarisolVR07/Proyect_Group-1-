@@ -6,4 +6,8 @@ export type ErrorResponse = {
     params: { id: string };
   };
 
+  export type ParameterFullName = {
+    params: { fullname: string };
+  };
+
   
