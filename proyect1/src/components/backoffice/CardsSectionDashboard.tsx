@@ -18,21 +18,21 @@ const CardsSection = () => (
                     icon={<Icon><MantUsersIcon/></Icon>}
                     title="Backoffice"
                     description=""
-                    className='flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-800 rounded-lg shadow-lg mx-2'
+                    className='flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2'
                 />
                 <CardButton
                     href="/backoffice/create_self_assessment"
                     icon={<Icon><ListIcon/></Icon>}
                     title="Self-Assessment"
                     description=""
-                    className='flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-800 rounded-lg shadow-lg mx-2'
+                    className='flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2'
                 />
                 <CardButton
                     href="/reports"
                     icon={<Icon><DocExelIcon/></Icon>}
                     title="Reports"
                     description=""
-                    className='flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-800 rounded-lg shadow-lg mx-2'
+                    className='flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2'
                 />
             </div>
         </div>
