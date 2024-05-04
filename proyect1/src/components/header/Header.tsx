@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import PrimaryButton from '../general/PrimaryButton';
 import DropdownMenu from '../general/DropdownMenu';
 import DownArrowIcon from '../svg/DownArrowIcon';
+import Link from 'next/link';
+
 export default function Header() {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -10,7 +12,7 @@ export default function Header() {
 
     const dropdownLinks = [
         { href: '/backoffice', text: 'Main' },
-        { href: '/backoffice/institution', text: 'Institution' },
+        { href: '/backoffice/Institution', text: 'Institution' },
         { href: '/backoffice/create_self_assessment', text: 'Self-Assessment' },
         { href: '/backoffice/users', text: 'Users' }
     ];
@@ -24,7 +26,9 @@ export default function Header() {
                 </div>
                 <nav>
                     <ul className="flex space-x-4">
-                        <PrimaryButton className="rounded-md w-36">DashBoard</PrimaryButton>
+                    <Link href="/dashboard" passHref>
+                            <PrimaryButton className="rounded-md w-36">DashBoard</PrimaryButton>
+                        </Link>
                         <li className="px-3 rounded-md">
                             <PrimaryButton icon={<DownArrowIcon />} className='rounded-md w-40' onClick={toggleDropdown}>BackOffice</PrimaryButton>
                             <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />

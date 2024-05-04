@@ -7,39 +7,32 @@ import DocExelIcon from '../svg/DocExelIcon';
 import InstitutionIcon from '../svg/InstitutionIcon';
 
 const CardsSection = () => (
-    <section className="text-white body-font font-poppins drop-shadow-xl">
-        <div className="container px-5 py-10 mx-auto rounded-t-xl bg-gray-700">
+    <section className="text-white font-poppins drop-shadow-xl">
+        <div className="container px-5 py-10 mx-auto rounded-t-xl">
             <div className="flex flex-col text-center w-full mb-4">
-                <h1 className='text-3xl text-white font-semibold'>BACKOFFICE</h1>
+                <h1 className='text-3xl text-white font-semibold'>DASHBOARD</h1>
             </div>
-            <CardButton
-                href="/backoffice/Institution"
-                icon={<Icon><InstitutionIcon/></Icon>}
-                title="Institution"
-                description=""
-                className='w-full text-center text-2xl'
-            />
-            <div className="flex flex-wrap w-full m-4 space-x-4 items-center justify-center text-center">
+            <div className="flex flex-wrap justify-between items-center text-center w-full m-4">
                 <CardButton
-                    href="/backoffice/users"
+                    href="/backoffice"
                     icon={<Icon><MantUsersIcon/></Icon>}
-                    title="Users"
+                    title="Backoffice"
                     description=""
-                    className='w-60 text-center'
+                    className='flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-800 rounded-lg shadow-lg mx-2'
                 />
                 <CardButton
                     href="/backoffice/create_self_assessment"
                     icon={<Icon><ListIcon/></Icon>}
                     title="Self-Assessment"
                     description=""
-                    className='w-full text-center'
+                    className='flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-800 rounded-lg shadow-lg mx-2'
                 />
                 <CardButton
-                    href="/backoffice/users"
+                    href="/reports"
                     icon={<Icon><DocExelIcon/></Icon>}
                     title="Reports"
                     description=""
-                    className='w-60 text-center'
+                    className='flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-800 rounded-lg shadow-lg mx-2'
                 />
             </div>
         </div>
