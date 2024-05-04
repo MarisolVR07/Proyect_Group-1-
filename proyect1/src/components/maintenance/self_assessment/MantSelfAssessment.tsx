@@ -1,15 +1,15 @@
 "use client";
 import React, { useState } from "react";
 import MantSection from "./MantSection";
-import InputForms from "./InputForms";
-import TextArea from "./TextAreaForms";
-import Button from "./PrimaryButton";
-import PageButton from "./PageButton";
-import SecondaryButtom from "./SecondaryButton";
-import PrimaryButton from "./PrimaryButton";
-import DownArrowIcon from "./DownArrowIcon";
-import DropdownMenu from "./DropdownMenu";
-import DateTimePicker from "./DateTimePicker";
+import InputForms from "../../forms/InputForms";
+import TextArea from "../../forms/TextAreaForms";
+import Button from "../../general/PrimaryButton";
+import PageButton from "../../general/PageButton";
+import SecondaryButtom from "../../general/SecondaryButton";
+import PrimaryButton from "../../general/PrimaryButton";
+import DownArrowIcon from "../../svg/DownArrowIcon";
+import DropdownMenu from "../../general/DropdownMenu";
+import DateTimePicker from "../../general/DateTimePicker";
 
 const MantSelfAssessment: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);

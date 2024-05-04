@@ -1,6 +1,6 @@
 
-import BackOffice from "@/components/BackOficce";
-import Header from "@/components/Header";
+import BackOffice from "@/components/backoffice/BackOficce";
+import Header from "@/components/header/Header";
 
 
 export default function Page() {

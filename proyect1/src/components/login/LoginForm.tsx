@@ -2,8 +2,8 @@
 
 import React from "react";
 
-import InputField from './InputField';
-import Button from './PrimaryButton';
+import InputField from '../general/InputField';
+import Button from '../general/PrimaryButton';
 import LoginButton from "./LoginButton";
 
 

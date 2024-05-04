@@ -1,12 +1,12 @@
 "use client";
 
-import Button from "@/components/PrimaryButton";
-import Label from "./Label";
-import TextArea from "./TextAreaForms";
+import Button from "@/components/general/PrimaryButton";
+import Label from "../../general/Label";
+import TextArea from "../../forms/TextAreaForms";
 import React, { useState } from "react";
-import InputForms from "./InputForms";
+import InputForms from "../../forms/InputForms";
 
-import SecondaryButtom from "./SecondaryButton";
+import SecondaryButtom from "../../general/SecondaryButton";
 import SearchBar from "./SearchBar";
 interface FormRowProps {
   label: string;

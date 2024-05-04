@@ -1,6 +1,6 @@
 import { useMsal } from '@azure/msal-react';
-import { loginRequest } from '../app/msalConfig';
-import Button from './PrimaryButton';
+import { loginRequest } from '../../app/msalConfig';
+import Button from '../general/PrimaryButton';
 import { WindowsOutlined } from '@ant-design/icons';
 import { User } from '@/app/types/entities';
 import React, { useState, useEffect } from 'react';

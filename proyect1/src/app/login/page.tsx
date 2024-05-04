@@ -1,5 +1,5 @@
 "use client"
-import Login from "@/components/Login";
+import Login from "@/components/login/Login";
 import { MsalProvider } from "@azure/msal-react"; // Importa MsalProvider
 import { msalInstance } from "@/app/msalConfig";
 

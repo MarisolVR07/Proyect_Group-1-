@@ -1,5 +1,5 @@
-import Header from "@/components/Header";
-import MantSelfAssessment from "@/components/MantSelfAssessment";
+import Header from "@/components/header/Header";
+import MantSelfAssessment from "@/components/maintenance/self_assessment/MantSelfAssessment";
 
 
 export default function Page() {

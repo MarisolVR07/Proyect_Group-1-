@@ -1,8 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import PrimaryButton from './PrimaryButton';
-import DropdownMenu from './DropdownMenu';
-import DownArrowIcon from './DownArrowIcon';
+import PrimaryButton from '../general/PrimaryButton';
+import DropdownMenu from '../general/DropdownMenu';
+import DownArrowIcon from '../svg/DownArrowIcon';
 export default function Header() {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -10,8 +10,8 @@ export default function Header() {
 
     const dropdownLinks = [
         { href: '/backoffice', text: 'Main' },
-        { href: '/backoffice/Institution', text: 'Institution' },
-        { href: '/backoffice/create-self-assessment', text: 'Self-Assessment' },
+        { href: '/backoffice/institution', text: 'Institution' },
+        { href: '/backoffice/create_self_assessment', text: 'Self-Assessment' },
         { href: '/backoffice/users', text: 'Users' }
     ];
 

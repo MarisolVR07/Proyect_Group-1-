@@ -1,11 +1,11 @@
 "use client"
 import React, { useState } from "react";
 import CardsSection from "./CardsSection";
-import DateTimePicker from "./DateTimePicker";
-import SearchBar from "./SearchBar";
+import DateTimePicker from "../general/DateTimePicker";
+import SearchBar from "../maintenance/users/SearchBar";
 import Image from "next/image";
-import InputField from "./InputField";
-import PrimaryButton from "./PrimaryButton";
+import InputField from "../general/InputField";
+import PrimaryButton from "../general/PrimaryButton";
 
 const BackOffice = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,7 +33,7 @@ const BackOffice = () => {
           <h2 className="text-xl text-center text-white mb-3 font-semibold">APP ACTIVATION/DEACTIVATION DATE-TIME</h2>
           <div className="flex space-x-32 items-center justify-center">
             <DateTimePicker text="Select activation date and time" />
-            <DateTimePicker text="Select deactivation date and time"/>
+            <DateTimePicker text="Select deactivation date and time" />
           </div>
           <div className="mt-3">
             <h2 className="text-xl text-center text-white font-semibold">EMAIL</h2>
@@ -50,7 +50,7 @@ const BackOffice = () => {
               </div>
             )}
           </div>
-          <PrimaryButton className="w-44 rounded-md mt-4">
+          <PrimaryButton className="w-44 rounded-md mt-4 mx-auto">
             Save
           </PrimaryButton>
         </div>
