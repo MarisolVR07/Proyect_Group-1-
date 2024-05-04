@@ -107,7 +107,7 @@ export default function Page() {
                   onClick={handleDeleteClick}
                   className="rounded-xl w-20"
                 >
-                  Delete
+                  Clean
                 </SecondaryButtom>
                 <Button onClick={handleSaveClick} className="rounded-xl w-44">
                   Save
