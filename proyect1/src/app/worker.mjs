@@ -14,6 +14,6 @@ function send() {resend.emails.send({
 
 }
 
-cron.schedule('* * * * *', () => {
+cron.schedule('0 0 * * *', () => {
   send();
 });
