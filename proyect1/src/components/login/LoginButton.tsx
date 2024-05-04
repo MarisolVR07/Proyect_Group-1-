@@ -6,12 +6,12 @@ import { User } from '@/app/types/entities';
 import React, { useState, useEffect } from 'react';
 import { AccountInfo } from '@azure/msal-browser';
 import useApi from '@/app/hooks/useApi';
-
+import { useSession } from '@/app/providers/SessionProvider';
 const LoginButton = () => {
   const [user, setUser] = useState<User | null>(null);
   const { instance } = useMsal();
   const { callApi } = useApi<User>(); // Aquí se usa el hook useApi
-
+  const { setUserData } = useSession();
   const handleLogin = async () => {
     try {
       const loginResponse = await instance.loginPopup(loginRequest);
@@ -25,15 +25,14 @@ const LoginButton = () => {
 
   const getUserInfo = async (user: AccountInfo) => {
     try {
-      // Reemplazamos el uso de fetch con callApi
+      
       const data = await callApi('GET', '/api/rc_users/' + user.username);
       if (data) {
         setUser(data);
       } else {
         createUser(user.username, user.name || '');
       }
-     
-
+      
     } catch (error) {
       console.error('Error al obtener información del usuario:', error);
     }
@@ -43,9 +42,7 @@ const LoginButton = () => {
     try {
       const userToCreate: User = {
         USR_Email: username,
-        USR_Name: name,
-        USR_FirstLastName: '.',
-        USR_SecondLastName: '.',
+        USR_FullName: name,
         USR_Role: 'none',
         USR_Department: null,
       };
