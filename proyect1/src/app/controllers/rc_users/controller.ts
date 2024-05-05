@@ -21,7 +21,6 @@ export async function getUsersByName(
     const res: Response = await fetch(`api/rc_users/findname/${name}`);
     //validateResponse(res);
     const user: User | ErrorResponse = await res.json();
-
     return user;
   } catch (error: any) {
     return error;
