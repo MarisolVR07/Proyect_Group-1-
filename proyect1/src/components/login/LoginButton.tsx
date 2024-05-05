@@ -18,6 +18,7 @@ const LoginButton = () => {
       const loginResponse = await instance.loginPopup(loginRequest);
       const userInfo = loginResponse.account;
       await getUserInfo(userInfo);
+      window.location.href="views/dashboard";
     } catch (error) {
       console.error("Error logging in:", error);
     }
