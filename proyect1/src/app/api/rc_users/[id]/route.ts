@@ -46,6 +46,8 @@ export async function PUT(req: NextRequest, { params }: ParameterId) {
   }
 }
 
+
+
 export async function DELETE(_req: NextRequest, { params }: ParameterId) {
   try {
     const fetchedId = params.id;

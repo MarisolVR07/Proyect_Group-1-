@@ -1,9 +1,9 @@
 import { create } from 'zustand';
-import { getUser, deleteUser, saveUser, getUsers, updateUser } from '@/app/controllers/rc_users/controller';
-import { rc_users } from "@prisma/client";
+import { getUser, deleteUser, saveUser, getUsers, updateUser, getUsersByName } from '@/app/controllers/rc_users/controller';
+import { User } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
 
-type User = rc_users
+
 
 interface UserState {
   users: User[];
@@ -12,6 +12,7 @@ interface UserState {
   saveUser: (user: User) => Promise<User | ErrorResponse>;
   getUsers: () => Promise<User[] | ErrorResponse>;
   updateUser: (user: User) => Promise<User | ErrorResponse>;
+  getUsersByName: (name: string) => Promise<User | ErrorResponse>;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -59,4 +60,12 @@ export const useUserStore = create<UserState>((set) => ({
     }));
     return updatedUser;
   },
+  getUsersByName: async (name: string) => {
+    const user = await getUsersByName(name);
+    if ('error' in user) {
+      return user;
+    }
+    set((state) => ({...state, users: [user] }));
+    return user;
+  }
 }));

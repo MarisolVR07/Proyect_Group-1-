@@ -1,8 +1,8 @@
-import { rc_users } from "@prisma/client";
+import { User } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
 //import { getError, validateObject, validateResponse } from "@/utils/utils";*/
 
-type User = rc_users;
+
 export async function getUser(id: string): Promise<User | ErrorResponse> {
   try {
     const res: Response = await fetch(`api/rc_users/${id}`);
@@ -15,7 +15,17 @@ export async function getUser(id: string): Promise<User | ErrorResponse> {
   }
 }
 
+export async function getUsersByName(name: string): Promise<User | ErrorResponse> {
+  try {
+    const res: Response = await fetch(`api/rc_users/findname/${name}`);
+    //validateResponse(res);
+    const user: User | ErrorResponse = await res.json();
 
+    return user;
+  } catch (error: any) {
+    return error;
+  }
+}
 
 export async function deleteUser(id: string): Promise<User | ErrorResponse> {
   try {

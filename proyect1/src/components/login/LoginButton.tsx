@@ -2,22 +2,26 @@ import { useMsal } from '@azure/msal-react';
 import { loginRequest } from '../../app/msalConfig';
 import Button from '../general/PrimaryButton';
 import { WindowsOutlined } from '@ant-design/icons';
-import { User } from '@/app/types/entities';
+import { User } from "@/app/types/entities";
 import React, { useState, useEffect } from 'react';
 import { AccountInfo } from '@azure/msal-browser';
-import useApi from '@/app/hooks/useApi';
-import { useSession } from '@/app/providers/SessionProvider';
+import { useUserStore } from '@/store/userStore';
+import { ErrorResponse } from '@/app/types/api';
+
+
+
+
 const LoginButton = () => {
-  const [user, setUser] = useState<User | null>(null);
+
+  const [error, setError] =  useState<ErrorResponse>();
+  const { getUser, saveUser } = useUserStore();
+  const [user, setUser] = useState<User | ErrorResponse>();
   const { instance } = useMsal();
-  const { callApi } = useApi<User>(); // Aquí se usa el hook useApi
-  const { setUserData } = useSession();
   const handleLogin = async () => {
     try {
       const loginResponse = await instance.loginPopup(loginRequest);
       const userInfo = loginResponse.account;
       await getUserInfo(userInfo); 
-      window.location.href = '/dashboard';
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
     }
@@ -25,16 +29,11 @@ const LoginButton = () => {
 
   const getUserInfo = async (user: AccountInfo) => {
     try {
-      
-      const data = await callApi('GET', '/api/rc_users/' + user.username);
-      if (data) {
-        setUser(data);
-      } else {
-        createUser(user.username, user.name || '');
-      }
-      
+    const userData = await getUser(user.username);
+    if('error' in userData)
+    createUser(user.username, user.name || '');
     } catch (error) {
-      console.error('Error al obtener información del usuario:', error);
+      console.error(error);
     }
   };
 
@@ -46,21 +45,20 @@ const LoginButton = () => {
         USR_Role: 'none',
         USR_Department: null,
       };
-      // Reemplazamos el uso de fetch con callApi
-      const response = await callApi('POST', '/api/rc_users', userToCreate);
+      const response = await saveUser(userToCreate);
       if (response) {
-        console.log('Usuario guardado exitosamente');
+        console.log('User saved successfully');
       } else {
-        console.error('Error al guardar el usuario');
+        console.error('Error saving the user');
       }
     } catch (error) {
-      console.error('Error al crear usuario:', error);
+      console.error('Error saving the user:', error);
     }
   };
 
   useEffect(() => {
     if (user) {
-  
+      // Aquí puedes utilizar la información del usuario para algo más
     }
   }, [user]);
 
