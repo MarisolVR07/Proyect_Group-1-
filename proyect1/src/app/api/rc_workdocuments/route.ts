@@ -26,7 +26,7 @@ export async function POST(
       data: {
         ...workdocument,
       },
-     // include: {rc_departments: true}, Para guardar departamento junto al usuario
+     // include: {rc_departments: true}
     });
     return NextResponse.json(workdocuments, { status: 201 });
   } catch (error) {

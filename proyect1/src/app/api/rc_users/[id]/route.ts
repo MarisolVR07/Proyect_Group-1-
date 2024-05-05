@@ -7,7 +7,7 @@ export async function GET(req: NextRequest, { params }: ParameterId) {
     const fetchedId = params.id;
     const response = await prisma.rc_users.findUnique({
       where: {
-        USR_Email : fetchedId,
+        USR_Email: fetchedId,
       },
     });
 
@@ -23,7 +23,6 @@ export async function GET(req: NextRequest, { params }: ParameterId) {
 
 export async function PUT(req: NextRequest, { params }: ParameterId) {
   try {
-    
     const fetchedId = params.id;
     const user = await req.json();
     console.log(user);
@@ -34,7 +33,6 @@ export async function PUT(req: NextRequest, { params }: ParameterId) {
       data: {
         ...user,
       },
-      
     });
 
     return NextResponse.json(response, { status: 200 });
@@ -46,14 +44,12 @@ export async function PUT(req: NextRequest, { params }: ParameterId) {
   }
 }
 
-
-
 export async function DELETE(_req: NextRequest, { params }: ParameterId) {
   try {
     const fetchedId = params.id;
     const response = await prisma.rc_users.delete({
       where: {
-        USR_Email : fetchedId,
+        USR_Email: fetchedId,
       },
     });
 

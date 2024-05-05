@@ -1,8 +1,8 @@
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { MsalProvider } from "@azure/msal-react"; // Importa MsalProvider
-import { msalInstance } from "./msalConfig"; // Importa tu configuración de MSAL
+import { MsalProvider } from "@azure/msal-react";
+import { msalInstance } from "./msalConfig";
 import { SessionProvider } from "./providers/SessionProvider";
 import "./globals.css";
 

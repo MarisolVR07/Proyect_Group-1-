@@ -4,7 +4,7 @@ interface PrimaryButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   className?: string;
-  icon?: React.ReactNode; // Icono opcional
+  icon?: React.ReactNode;
 }
 
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({ children, onClick, className, icon }) => {

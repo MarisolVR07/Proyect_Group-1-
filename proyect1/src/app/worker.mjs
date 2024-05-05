@@ -11,7 +11,6 @@ function send() {resend.emails.send({
   subject: 'Hello World',
   html: '<p>Congrats on sending your <strong>first email</strong>!</p>'
 });
-
 }
 
 cron.schedule('0 0 * * *', () => {

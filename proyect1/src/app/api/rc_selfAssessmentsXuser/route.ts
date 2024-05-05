@@ -26,7 +26,7 @@ export async function POST(
       data: {
         ...selfassessmentxuser,
       },
-     // include: {rc_departments: true}, Para guardar departamento junto al usuario
+     // include: {rc_departments: true}
     });
     return NextResponse.json(selfassessmentxusers, { status: 201 });
   } catch (error) {

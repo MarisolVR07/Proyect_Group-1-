@@ -4,8 +4,6 @@ export type Department = {
   DPT_Status: string,
   DPT_Institution?: number | null | Institution,
   rc_users?: User[] | null;
-
-
 }
 
 export type User = {
@@ -15,7 +13,6 @@ export type User = {
     USR_FullName: string;
     USR_Role: string;
     USR_Department?: number | null | Department;
-
 };
 
 export type Institution = {
@@ -25,6 +22,4 @@ export type Institution = {
     INS_Telephone: number,
     INS_PhysicalAddress: string,
     rc_departments?: Department[] | null
-
 }
-

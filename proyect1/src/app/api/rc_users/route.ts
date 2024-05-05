@@ -6,9 +6,9 @@ export async function GET(
   req: NextRequest,
   res: NextResponse<String | ErrorResponse | null>
 ) {
-  try { 
+  try {
     const users = await prisma.rc_users.findMany({
-    //  include: {rc_departments: true}
+      //  include: {rc_departments: true}
     });
     return NextResponse.json(users, { status: 200 });
   } catch (error) {
@@ -20,13 +20,13 @@ export async function POST(
   req: NextRequest,
   res: NextResponse<String | ErrorResponse | null>
 ) {
-  try { 
+  try {
     const user = await req.json();
     const users = await prisma.rc_users.create({
       data: {
         ...user,
       },
-     // include: {rc_departments: true}, Para guardar departamento junto al usuario
+      // include: {rc_departments: true}
     });
     return NextResponse.json(users, { status: 201 });
   } catch (error) {

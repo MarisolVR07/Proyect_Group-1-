@@ -26,7 +26,7 @@ export async function POST(
       data: {
         ...institution,
       },
-     // include: {rc_departments: true}, Para guardar departamento junto al usuario
+     // include: {rc_departments: true}, To save department next to user
     });
     return NextResponse.json(institutions, { status: 201 });
   } catch (error) {
