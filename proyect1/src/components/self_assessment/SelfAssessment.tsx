@@ -10,6 +10,7 @@ import PrimaryButton from "../general/PrimaryButton";
 import DownArrowIcon from "../svg/DownArrowIcon";
 import DropdownMenu from "../general/DropdownMenu";
 import DateTimePicker from "../general/DateTimePicker";
+import Table from "./Table";
 
 const SelfAssessment: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -56,13 +57,7 @@ const SelfAssessment: React.FC = () => {
             />
           ))}
         </div>
-        <MantSection
-          number={`1.${currentPage}`}
-          sectionData={sectionData[currentPage.toString()]}
-          setSectionData={(data) =>
-            setSectionData({ ...sectionData, [currentPage.toString()]: data })
-          }
-        />
+        <Table number={`1.${currentPage}`} />
         <div className="flex mx-16 sm:flex-row flex-col items-center sm:justify-between">
           <div className="text-base my-4">
             <p>Carried out by:</p>
