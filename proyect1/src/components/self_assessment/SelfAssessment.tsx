@@ -46,16 +46,24 @@ const SelfAssessment: React.FC = () => {
         <h1 className="text-2xl text-white my-3">Institution</h1>
         <h2 className="text-white text-xl mb-1">Audit</h2>
         <h2 className="text-white text-base ">Description</h2>
-        <div className="space-x-3 rounded-xl w-96 mx-auto my-4 bg-gray-800 p-1">
-          {[1, 2, 3, 4, 5].map((pageNumber) => (
-            <PageButton
-              key={pageNumber}
-              pageNumber={pageNumber}
-              currentPage={currentPage}
-              handlePageChange={handlePageChange}
-              className=""
-            />
-          ))}
+        <div className="flex w-full space-x-3 rounded-xl bg-gray-700 py-1 px-3 my-4 items-center justify-center">
+          <SecondaryButtom onClick={handlePrevPage} className="rounded-xl w-20">
+            Previous
+          </SecondaryButtom>
+          <div className="space-x-3 rounded-xl bg-gray-800 p-1">
+            {[1, 2, 3, 4, 5].map((pageNumber) => (
+              <PageButton
+                key={pageNumber}
+                pageNumber={pageNumber}
+                currentPage={currentPage}
+                handlePageChange={handlePageChange}
+                className=""
+              />
+            ))}
+          </div>
+          <SecondaryButtom onClick={handleNextPage} className="rounded-xl w-20">
+            Next
+          </SecondaryButtom>
         </div>
         <Table number={`1.${currentPage}`} />
         <div className="flex mx-16 sm:flex-row flex-col items-center sm:justify-between">
