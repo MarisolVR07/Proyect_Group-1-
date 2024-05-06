@@ -1,21 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import TableHeader from "./TableHeader";
 import TableSection from "./TableSection";
 import TableRow from "./TableRow";
 
-interface TableProps {
-  number: string;
+interface TableRowData {
+  question: string;
+  checkedIndex: number | null;
+  textArea1: string;
+  textArea2: string;
 }
 
-const Table: React.FC<TableProps> = ({ number }) => {
+interface TableProps {
+  number: string;
+  onDataChange: (data: TableRowData[]) => void;
+}
+
+const Table: React.FC<TableProps> = ({ number, onDataChange }) => {
+  const [rowData, setRowData] = useState<TableRowData[]>([
+    {
+      question: "",
+      checkedIndex: null,
+      textArea1: "",
+      textArea2: "",
+    },
+    {
+      question: "",
+      checkedIndex: null,
+      textArea1: "",
+      textArea2: "",
+    },
+    {
+      question: "",
+      checkedIndex: null,
+      textArea1: "",
+      textArea2: "",
+    },
+    {
+      question: "",
+      checkedIndex: null,
+      textArea1: "",
+      textArea2: "",
+    },
+  ]);
+
+  const handleRowDataChange = (index: number, newData: TableRowData) => {
+    const updatedRowData = [...rowData];
+    updatedRowData[index] = newData;
+    setRowData(updatedRowData);
+    onDataChange(updatedRowData);
+  };
+
   const renderTableRows = () => {
-    const tableRows = [];
-    for (let i = 1; i <= 4; i++) {
-      tableRows.push(
-        <TableRow key={`${number}.${i}`} number={`${number}.${i}`} />
-      );
-    }
-    return tableRows;
+    return rowData.map((data, index) => (
+      <TableRow
+        key={`${number}.${index + 1}`}
+        number={`${number}.${index + 1}`}
+        initialData={data}
+        onDataChange={(newData) => handleRowDataChange(index, newData)}
+      />
+    ));
   };
 
   return (

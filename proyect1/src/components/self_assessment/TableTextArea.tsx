@@ -22,14 +22,14 @@ const TableTextArea: React.FC<TableTextAreaProps> = ({
   };
 
   return (
-      <textarea
-        id={id}
-        name={id}
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-        className={`px-1 bg-transparent text-sm ${className}`}
-      ></textarea>
+    <textarea
+      id={id}
+      name={id}
+      placeholder={placeholder}
+      value={value}
+      onChange={handleChange}
+      className={`px-1 bg-transparent text-sm ${className}`}
+    ></textarea>
   );
 };
 
