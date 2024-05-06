@@ -1,18 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import MantSection from "./Section";
-import InputForms from "../forms/InputForms";
-import TextArea from "../forms/TextAreaForms";
 import Button from "../general/PrimaryButton";
 import PageButton from "../general/PageButton";
 import SecondaryButtom from "../general/SecondaryButton";
-import PrimaryButton from "../general/PrimaryButton";
-import DownArrowIcon from "../svg/DownArrowIcon";
-import DropdownMenu from "../general/DropdownMenu";
-import DateTimePicker from "../general/DateTimePicker";
 import Table from "./Table";
 
 const SelfAssessment: React.FC = () => {
+  const currentDate = new Date();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [sectionData, setSectionData] = useState<{
     [key: string]: { sectionName: string; questions: string[] };
@@ -70,7 +64,7 @@ const SelfAssessment: React.FC = () => {
           <div className="text-base my-4">
             <p>Carried out by:</p>
             <p>Reviewed by:</p>
-            <p>Date:</p>
+            <p>Date: {currentDate.toLocaleDateString()}</p>
           </div>
 
           <Button className="rounded-xl w-44 ">Send</Button>
