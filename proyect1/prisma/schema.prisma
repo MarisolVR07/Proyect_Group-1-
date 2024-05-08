@@ -16,6 +16,7 @@ model rc_answers {
   ANS_SelfAssessment      Int
   rc_questions            rc_questions            @relation(fields: [ANS_Question], references: [QES_Id], onUpdate: Restrict, map: "Question answer")
   rc_selfassessmentsxuser rc_selfassessmentsxuser @relation(fields: [ANS_SelfAssessment], references: [SXU_Id], onUpdate: Restrict, map: "SelfAssesment Answers")
+  rc_proposedaction       rc_proposedaction[]
   rc_workdocuments        rc_workdocuments[]
 
   @@index([ANS_SelfAssessment], map: "IX_Relationship1")
@@ -49,7 +50,6 @@ model rc_parameters {
   PRM_ActivationDate   DateTime @db.Timestamp(0)
   PRM_DeactivationDate DateTime @db.Timestamp(0)
   PRM_Logo             Bytes?   @db.Blob
-  PRM_Key              String   @db.VarChar(255)
   PRM_Email            String   @db.VarChar(100)
 }
 
@@ -81,7 +81,6 @@ model rc_selfassessments {
   SAT_Status              String                    @db.VarChar(1)
   SAT_Audit               String                    @db.VarChar(255)
   SAT_Description         String                    @db.VarChar(255)
-  SAT_Expiration          DateTime                  @db.Timestamp(0)
   SAT_Department          Int
   rc_sections             rc_sections[]
   rc_departments          rc_departments            @relation(fields: [SAT_Department], references: [DPT_Id], onUpdate: Restrict, map: "SelfAssessment Department")
@@ -121,4 +120,18 @@ model rc_workdocuments {
   rc_answers rc_answers? @relation(fields: [WDC_Answer], references: [ANS_Id], onDelete: Restrict, onUpdate: Restrict, map: "Answer references")
 
   @@index([WDC_Answer], map: "IX_Relationship15")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model rc_proposedaction {
+  PAC_Id            Int         @id @unique(map: "PAC_Id") @default(autoincrement())
+  PAC_Date          DateTime    @db.Timestamp(0)
+  PAC_Status        String      @db.VarChar(1)
+  PAC_Responsible   String?     @db.VarChar(100)
+  PAC_Justification String      @db.VarChar(255)
+  PAC_Preview       String      @db.VarChar(255)
+  PAC_Answer        Int?
+  rc_answers        rc_answers? @relation(fields: [PAC_Answer], references: [ANS_Id], onDelete: Restrict, onUpdate: Restrict, map: "Action proposed by answer")
+
+  @@index([PAC_Answer], map: "IX_Relationship1")
 }
