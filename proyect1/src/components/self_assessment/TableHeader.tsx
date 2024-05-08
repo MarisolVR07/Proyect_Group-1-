@@ -27,8 +27,12 @@ const TableHeader: React.FC = () => {
         <h3 className="w-28">References Work Papers</h3>
       </div>
 
+      <div className="w-80 border-e-2 border-gray-600">
+        <h3 className="w-80">Observations</h3>
+      </div>
+
       <div className="w-full">
-        <h3 className="">Observations</h3>
+        <h3 className="w-full">Proposed Action</h3>
       </div>
     </div>
   );

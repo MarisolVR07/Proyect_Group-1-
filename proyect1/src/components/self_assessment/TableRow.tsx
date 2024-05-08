@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import RespCheckBox from "./RespCheckBox";
 import TableTextArea from "./TableTextArea";
+import BoxButton from "./BoxButton";
 
 interface TableRowProps {
   number: string;
@@ -45,11 +46,9 @@ const TableRow: React.FC<TableRowProps> = ({
       <div className="border-e-2 border-gray-600">
         <h3 className="w-14">{number}</h3>
       </div>
-
       <div className="border-e-2 border-gray-600 text-left text-sm px-1 w-96">
         <h3 className="w-96">Question</h3>
       </div>
-
       <div className="flex border-e-2 border-gray-600">
         <div className="w-12">
           <RespCheckBox
@@ -64,7 +63,6 @@ const TableRow: React.FC<TableRowProps> = ({
           />
         </div>
       </div>
-
       <div className="border-e-2 border-gray-600">
         <TableTextArea
           id=""
@@ -73,15 +71,21 @@ const TableRow: React.FC<TableRowProps> = ({
           onChange={(value) => handleTextAreaChange(value, 0)}
         />
       </div>
-
-      <div className="w-full">
+      <div className="w-80 border-e-2 border-gray-600">
         <TableTextArea
           id=""
-          className="w-full h-full"
+          className="w-80 h-full"
           value={rowData.textArea2}
           onChange={(value) => handleTextAreaChange(value, 1)}
         />
       </div>
+      {rowData.checkedIndex === 1 && (
+        <div className="w-full">
+          <BoxButton className="h-full w-full">
+            <h1>Add</h1>
+          </BoxButton>
+        </div>
+      )}
     </div>
   );
 };
