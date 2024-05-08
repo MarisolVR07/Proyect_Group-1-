@@ -11,10 +11,10 @@ export default function Header() {
     const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
     const dropdownLinks = [
-        { href: '/backoffice', text: 'Main' },
-        { href: '/backoffice/Institution', text: 'Institution' },
-        { href: '/backoffice/create_self_assessment', text: 'Self-Assessment' },
-        { href: '/backoffice/users', text: 'Users' }
+        { href: '/views/backoffice', text: 'Main' },
+        { href: '/views/backoffice/Institution', text: 'Institution' },
+        { href: '/views/backoffice/create_self_assessment', text: 'Self-Assessment' },
+        { href: '/views/backoffice/users', text: 'Users' }
     ];
 
     return (
@@ -26,14 +26,14 @@ export default function Header() {
                 </div>
                 <nav>
                     <ul className="flex space-x-4">
-                    <Link href="/dashboard" passHref>
+                    <Link href="/views/dashboard" passHref>
                             <PrimaryButton className="rounded-md w-36">DashBoard</PrimaryButton>
                         </Link>
                         <li className="px-3 rounded-md">
                             <PrimaryButton icon={<DownArrowIcon />} className='rounded-md w-40' onClick={toggleDropdown}>BackOffice</PrimaryButton>
                             <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />
                         </li>
-                        <Link href="/reports" passHref>
+                        <Link href="/views/reports" passHref>
                             <PrimaryButton className="rounded-md w-36">Reports</PrimaryButton>
                         </Link>
                     </ul>

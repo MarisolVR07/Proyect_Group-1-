@@ -13,21 +13,21 @@ const CardsSection = () => (
             </div>
             <div className="flex flex-wrap justify-between items-center text-center w-full px-20">
                 <CardButton
-                    href="/backoffice"
+                    href="/views/backoffice"
                     icon={<Icon><GearIcon/></Icon>}
                     title="Backoffice"
                     description=""
                     className='flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2'
                 />
                 <CardButton
-                    href="/dashboard/self_assessment"
+                    href="/views/dashboard/self_assessment"
                     icon={<Icon><ListIcon/></Icon>}
                     title="Self-Assessment"
                     description=""
                     className='flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2'
                 />
                 <CardButton
-                    href="/reports"
+                    href="/views/reports"
                     icon={<Icon><DocExelIcon/></Icon>}
                     title="Reports"
                     description=""

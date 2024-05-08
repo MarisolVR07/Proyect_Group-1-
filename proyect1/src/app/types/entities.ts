@@ -22,4 +22,4 @@ export type Institution = {
     INS_Telephone: number,
     INS_PhysicalAddress: string,
     rc_departments?: Department[] | null
-}
+}////////////////////////////////

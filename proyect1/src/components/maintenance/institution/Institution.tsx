@@ -70,8 +70,9 @@ export default function Page() {
   };
 
   return (
-    <main className="relative w-full flex flex-col items-center justify-center min-h-screen">
-      <div className="container mx-auto flex justify-between my-4 p-4 max-w-7xl">
+<main className="relative w-full flex flex-col items-center justify-center min-h-screen  text-white font-poppins font-semibold drop-shadow-xl">
+      <div className="container mx-auto flex flex-col md:flex-row justify-between my-4 p-4 max-w-7xl space-y-4 md:space-y-0">
+        
        <div className="form-control flex-1 max-w-lg p-8 rounded-md items-center justify-center bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl">
           <h1 className="text-2xl mb-5">INSTITUTION</h1>
 

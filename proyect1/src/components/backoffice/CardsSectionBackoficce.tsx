@@ -13,7 +13,7 @@ const CardsSection = () => (
                 <h1 className='text-3xl text-white font-semibold'>BACKOFFICE</h1>
             </div>
             <CardButton
-                href="/backoffice/Institution"
+                href="/views/backoffice/Institution"
                 icon={<Icon><InstitutionIcon/></Icon>}
                 title="Institution"
                 description=""
@@ -21,21 +21,21 @@ const CardsSection = () => (
             />
             <div className="flex flex-wrap w-full m-4 space-x-4 items-center justify-center text-center">
                 <CardButton
-                    href="/backoffice/users"
+                    href="/views/backoffice/users"
                     icon={<Icon><MantUsersIcon/></Icon>}
                     title="Users"
                     description=""
                     className='w-60 bg-gray-700  text-center'
                 />
                 <CardButton
-                    href="/backoffice/create_self_assessment"
+                    href="/views/backoffice/create_self_assessment"
                     icon={<Icon><ListIcon/></Icon>}
                     title="Self-Assessment"
                     description=""
                     className='w-full bg-gray-700 text-center'
                 />
                 <CardButton
-                    href="/backoffice/users"
+                    href="/views/backoffice/users"
                     icon={<Icon><DocExelIcon/></Icon>}
                     title="Reports"
                     description=""

@@ -49,8 +49,8 @@ const MantSelfAssessment: React.FC = () => {
     };
 
     return (
-        <div className="form-control my-3 py-8 px-16 w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
-            <h1 className="text-2xl text-white mb-5">MAINTENANCE OF SELF-ASSESSMENTS</h1>
+        <div className="form-control my-3 py-8 px-4 md:px-16 w-full md:w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
+             <h1 className="text-2xl text-white mb-5">MAINTENANCE OF SELF-ASSESSMENTS</h1>
             <div className="mb-5 px-3 rounded-md">
                 <PrimaryButton icon={<DownArrowIcon />} className='rounded-md w-40' onClick={toggleDropdown}>Department</PrimaryButton>
                 <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />
@@ -74,7 +74,7 @@ const MantSelfAssessment: React.FC = () => {
                 sectionData={sectionData[currentPage.toString()]}
                 setSectionData={(data) => setSectionData({ ...sectionData, [currentPage.toString()]: data })}
             />
-            <div className="flex w-full space-x-3 rounded-xl bg-gray-700 py-1 px-3 my-4 items-center justify-center">
+            <div className="flex flex-wrap justify-between space-x-0 md:space-x-3 rounded-xl bg-gray-700 py-1 px-3 my-4 items-center">
                 <SecondaryButtom onClick={handlePrevPage} className="rounded-xl w-20">Previous</SecondaryButtom>
                 <div className="space-x-3 rounded-xl bg-gray-800 p-1">
                     {[1, 2, 3, 4, 5].map((pageNumber) => (
@@ -90,7 +90,6 @@ const MantSelfAssessment: React.FC = () => {
                 <SecondaryButtom onClick={handleNextPage} className="rounded-xl w-20">Next</SecondaryButtom>
             </div>
             <div className="flex space-x-40">
-                <DateTimePicker text="Select expiration date and time" />
                 <Button className="rounded-xl w-44 mt-4">Save</Button>
             </div>
 

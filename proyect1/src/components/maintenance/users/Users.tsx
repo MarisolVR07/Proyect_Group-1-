@@ -6,110 +6,48 @@ import TextArea from "../../forms/TextAreaForms";
 import React, { useState } from "react";
 import InputForms from "../../forms/InputForms";
 
-import SecondaryButtom from "../../general/SecondaryButton";
+import SecondaryButton from "../../general/SecondaryButton";
 import SearchBar from "./SearchBar";
-interface FormRowProps {
-  label: string;
-  id: string;
-  type?: "text" | "checkbox" | "textarea";
-}
 
-const FormRow: React.FC<FormRowProps> = ({ label, id, type = "text" }) => {
-  return (
-    <div
-      className={`flex w-full mb-4 items-center ${
-        type === "checkbox" ? "justify-start" : "justify-between"
-      }`}
-    >
-      <Label htmlFor={id} className="w-1/3">
-        {label}
-      </Label>
-      {type === "textarea" ? (
-        <TextArea id={id} className="w-2/3" />
-      ) : type === "checkbox" ? (
-        <input type="checkbox" id={id} name={id} className="ml-4" />
-      ) : (
-        <input
-          type="text"
-          id={id}
-          name={id}
-          className="w-2/3 h-10 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-      )}
-    </div>
-  );
-};
+const handleSaveClick = () => console.log("Save");
+const handleDeleteClick = () => console.log("Delete");
 
-const handleSaveClick = () => {
-  console.log("Save");
-};
-const handleDeleteClick = () => {
-  console.log("Delete");
-};
-
-export default function Page() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
   };
 
   return (
-    <div className="form-control my-3 py-8 px-16 w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
-      <div className=" w-full h-10 py-1 items-center justify-center text-center">
-        <h4 className="text-2xl text-white"> SEARCH USERS</h4>
-      </div>
-
-      <div className=" w-full px-3 pb-3 pt-4 mb-1 bg-gray-700 rounded-md items-center justify-center">
-        <SearchBar onSearch={handleSearchChange} />
-      </div>
+    <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
+      <h4 className="text-2xl text-white text-center mb-4">SEARCH USERS</h4>
+      <SearchBar onSearch={handleSearchChange} />
       <div className="overflow-x-auto mt-4 rounded-md">
         <table className="table-auto w-full">
-          <thead>
-            <tr className="bg-violet-800 text-white">
+          <thead className="bg-violet-800 text-white">
+            <tr>
               <th className="px-4 py-2">ID</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">First Last Name</th>
               <th className="px-4 py-2">Second Last Name</th>
               <th className="px-4 py-2">State</th>
               <th className="px-4 py-2">Department</th>
-              <th className="px-4 py-2">Delete</th>
+              <th className="px-4 py-2">Action </th>
             </tr>
           </thead>
-          <tbody>
-            {/*    <div className="relative  w-full h-10 flex flex-col space-y-4 rounded-xl bg-gray-700 py-1 px-3 my-4 items-center justify-center">
-            <SecondaryButtom
-              onClick={toggleDropdown}
-              className="rounded-xl w-40"
-            >
-              Roles
-            </SecondaryButtom>
-            {isDropdownOpen && (
-              <div className="absolute z-10 w-48 bg-white rounded-md shadow-lg mt-2">
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  Administrator
-                </a>
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  User
-                </a>
-              </div>
-            )}
-          </div>
-           */}
-          </tbody>
+          <tbody>{/* Dynamic content will be loaded here */}</tbody>
         </table>
+      </div>
+      <div className="flex flex-col md:flex-row justify-between mt-4 items-center">
+        <div>
+          <p>Carried out by:</p>
+          <p>Reviewed by:</p>
+          <p>Date: {new Date().toLocaleDateString()}</p>
+        </div>
+        <Button onClick={handleSaveClick} className="md:w-auto md:px-10 mt-4 md:mt-0 rounded-xl">Send</Button>
       </div>
     </div>
   );
-}
+};
+
+export default Users;
