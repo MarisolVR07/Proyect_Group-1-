@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import TableHeader from "./TableHeader";
 import TableSection from "./TableSection";
 import TableRow from "./TableRow";
+import TableTextArea from "./TableTextArea";
+import DateTimePicker from "../general/DateTimePicker";
+import InputField from "../general/InputField";
+import Select from "../general/Select";
+import SecondaryButton from "../general/SecondaryButton";
+import ProposedAction from "./ProposedAction";
 
 interface TableRowData {
   question: string;
@@ -43,6 +49,16 @@ const Table: React.FC<TableProps> = ({ number, onDataChange }) => {
     },
   ]);
 
+  const [showForm, setShowForm] = useState(false);
+
+  const handleFormVisibility = (visible: boolean) => {
+    setShowForm(visible);
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+  };
+
   const handleRowDataChange = (index: number, newData: TableRowData) => {
     const updatedRowData = [...rowData];
     updatedRowData[index] = newData;
@@ -53,6 +69,7 @@ const Table: React.FC<TableProps> = ({ number, onDataChange }) => {
   const renderTableRows = () => {
     return rowData.map((data, index) => (
       <TableRow
+        onFormVisibilityChange={handleFormVisibility}
         key={`${number}.${index + 1}`}
         number={`${number}.${index + 1}`}
         initialData={data}
@@ -68,6 +85,7 @@ const Table: React.FC<TableProps> = ({ number, onDataChange }) => {
         <TableSection number={number} />
         {renderTableRows()}
       </div>
+      {showForm && <ProposedAction onAccept={handleCloseForm} />}
     </div>
   );
 };

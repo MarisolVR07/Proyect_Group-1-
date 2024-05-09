@@ -32,8 +32,8 @@ const BackOffice = () => {
         <div className="bg-gray-700 p-3 text-center items-center justify-center border-2 border-white rounded-xl">
           <h2 className="text-xl text-center text-white mb-3 font-semibold">APP ACTIVATION/DEACTIVATION DATE-TIME</h2>
           <div className="flex flex-col md:flex-row space-x-0 md:space-x-32 items-center justify-center">
-            <DateTimePicker text="Select activation date and time" />
-            <DateTimePicker text="Select deactivation date and time" />
+            <DateTimePicker text="Select activation date and time:" />
+            <DateTimePicker text="Select deactivation date and time:" />
           </div>
           <div className="mt-3">
             <h2 className="text-xl text-center text-white font-semibold">EMAIL</h2>

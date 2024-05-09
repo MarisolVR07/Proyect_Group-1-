@@ -7,6 +7,7 @@ interface TableRowProps {
   number: string;
   onDataChange: (data: TableRowData) => void;
   initialData: TableRowData;
+  onFormVisibilityChange: (visible: boolean) => void;
 }
 
 interface TableRowData {
@@ -20,6 +21,7 @@ const TableRow: React.FC<TableRowProps> = ({
   number,
   initialData,
   onDataChange,
+  onFormVisibilityChange,
 }) => {
   const [rowData, setRowData] = useState<TableRowData>(initialData);
 
@@ -35,6 +37,10 @@ const TableRow: React.FC<TableRowProps> = ({
       ...prevData,
       [`textArea${textareaIndex + 1}`]: value,
     }));
+  };
+
+  const handleBoxButtonClick = () => {
+    onFormVisibilityChange(true);
   };
 
   useEffect(() => {
@@ -65,7 +71,7 @@ const TableRow: React.FC<TableRowProps> = ({
       </div>
       <div className="border-e-2 border-gray-600">
         <TableTextArea
-          id=""
+          id={`Ref.${number}`}
           className="w-28 h-full"
           value={rowData.textArea1}
           onChange={(value) => handleTextAreaChange(value, 0)}
@@ -73,7 +79,7 @@ const TableRow: React.FC<TableRowProps> = ({
       </div>
       <div className="w-80 border-e-2 border-gray-600">
         <TableTextArea
-          id=""
+          id={`Obs.${number}`}
           className="w-80 h-full"
           value={rowData.textArea2}
           onChange={(value) => handleTextAreaChange(value, 1)}
@@ -81,7 +87,7 @@ const TableRow: React.FC<TableRowProps> = ({
       </div>
       {rowData.checkedIndex === 1 && (
         <div className="w-full">
-          <BoxButton className="h-full w-full">
+          <BoxButton className="h-full w-full" onClick={handleBoxButtonClick}>
             <h1>Add</h1>
           </BoxButton>
         </div>
