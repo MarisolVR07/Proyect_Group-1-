@@ -5,12 +5,20 @@ import PageButton from "../general/PageButton";
 import SecondaryButton from "../general/SecondaryButton";
 import Table from "./Table";
 
+interface ProposedActionData {
+  responsible: string;
+  justification: string;
+  preview: string;
+}
+
 interface TableRowData {
   question: string;
   checkedIndex: number | null;
   textArea1: string;
   textArea2: string;
+  proposedActionData?: ProposedActionData;
 }
+
 
 const SelfAssessment: React.FC = () => {
   const currentDate = new Date();
@@ -82,7 +90,7 @@ const SelfAssessment: React.FC = () => {
         style={{ display: index === currentPage - 1 ? "block" : "none" }}
       >
         <Table
-          number={`1.${index + 1}`}
+          id={`1.${index + 1}`}
           onDataChange={(data: TableRowData[]) =>
             handleTableDataChange(currentPage, data)
           }

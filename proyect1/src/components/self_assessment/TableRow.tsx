@@ -4,7 +4,7 @@ import TableTextArea from "./TableTextArea";
 import BoxButton from "./BoxButton";
 
 interface TableRowProps {
-  number: string;
+  id: string;
   onDataChange: (data: TableRowData) => void;
   initialData: TableRowData;
   onFormVisibilityChange: (visible: boolean) => void;
@@ -18,7 +18,7 @@ interface TableRowData {
 }
 
 const TableRow: React.FC<TableRowProps> = ({
-  number,
+  id,
   initialData,
   onDataChange,
   onFormVisibilityChange,
@@ -50,7 +50,7 @@ const TableRow: React.FC<TableRowProps> = ({
   return (
     <div className="flex w-full border-t-2 border-gray-600">
       <div className="border-e-2 border-gray-600">
-        <h3 className="w-14">{number}</h3>
+        <h3 className="w-14">{id}</h3>
       </div>
       <div className="border-e-2 border-gray-600 text-left text-sm px-1 w-96">
         <h3 className="w-96">Question</h3>
@@ -71,7 +71,7 @@ const TableRow: React.FC<TableRowProps> = ({
       </div>
       <div className="border-e-2 border-gray-600">
         <TableTextArea
-          id={`Ref.${number}`}
+          id={`Ref.${id}`}
           className="w-28 h-full"
           value={rowData.textArea1}
           onChange={(value) => handleTextAreaChange(value, 0)}
@@ -79,7 +79,7 @@ const TableRow: React.FC<TableRowProps> = ({
       </div>
       <div className="w-80 border-e-2 border-gray-600">
         <TableTextArea
-          id={`Obs.${number}`}
+          id={`Obs.${id}`}
           className="w-80 h-full"
           value={rowData.textArea2}
           onChange={(value) => handleTextAreaChange(value, 1)}
