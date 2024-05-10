@@ -2,11 +2,6 @@ import React, { useState } from "react";
 import TableHeader from "./TableHeader";
 import TableSection from "./TableSection";
 import TableRow from "./TableRow";
-import TableTextArea from "./TableTextArea";
-import DateTimePicker from "../general/DateTimePicker";
-import InputField from "../general/InputField";
-import Select from "../general/Select";
-import SecondaryButton from "../general/SecondaryButton";
 import ProposedAction from "./ProposedAction";
 
 interface ProposedActionData {

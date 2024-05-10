@@ -20,7 +20,6 @@ interface TableRowData {
   proposedActionData?: ProposedActionData;
 }
 
-
 const SelfAssessment: React.FC = () => {
   const currentDate = new Date();
   const [currentPage, setCurrentPage] = useState<number>(1);
