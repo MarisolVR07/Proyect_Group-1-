@@ -8,6 +8,7 @@ interface ProposedActionData {
   responsible: string;
   justification: string;
   preview: string;
+  date: Date | null;
 }
 
 interface ProposedActionProps {
@@ -31,6 +32,7 @@ const ProposedAction: React.FC<ProposedActionProps> = ({
       setResponsible(initialData.responsible);
       setJustification(initialData.justification);
       setPreview(initialData.preview);
+      setDate(initialData.date);
     }
   }, [initialData]);
 
@@ -39,6 +41,7 @@ const ProposedAction: React.FC<ProposedActionProps> = ({
       responsible,
       justification,
       preview,
+      date,
     };
     onAccept(proposedActionData);
   };

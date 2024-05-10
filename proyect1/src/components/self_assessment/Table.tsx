@@ -13,6 +13,7 @@ interface ProposedActionData {
   responsible: string;
   justification: string;
   preview: string;
+  date: Date | null;
 }
 
 interface TableRowData {
@@ -29,33 +30,58 @@ interface TableProps {
 }
 
 const Table: React.FC<TableProps> = ({ id, onDataChange }) => {
-  const [rowData, setRowData] = useState<TableRowData[]>([
+  const initialRowData: TableRowData[] = [
     {
       question: "",
       checkedIndex: null,
       textArea1: "",
       textArea2: "",
+      proposedActionData: {
+        responsible: "",
+        justification: "",
+        preview: "",
+        date: null,
+      },
     },
     {
       question: "",
       checkedIndex: null,
       textArea1: "",
       textArea2: "",
+      proposedActionData: {
+        responsible: "",
+        justification: "",
+        preview: "",
+        date: null,
+      },
     },
     {
       question: "",
       checkedIndex: null,
       textArea1: "",
       textArea2: "",
+      proposedActionData: {
+        responsible: "",
+        justification: "",
+        preview: "",
+        date: null,
+      },
     },
     {
       question: "",
       checkedIndex: null,
       textArea1: "",
       textArea2: "",
+      proposedActionData: {
+        responsible: "",
+        justification: "",
+        preview: "",
+        date: null,
+      },
     },
-  ]);
+  ];
 
+  const [rowData, setRowData] = useState<TableRowData[]>(initialRowData);
   const [showForm, setShowForm] = useState(false);
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
 
@@ -64,13 +90,31 @@ const Table: React.FC<TableProps> = ({ id, onDataChange }) => {
     setSelectedRowIndex(index);
   };
 
-  const handleCloseForm = () => {
+  const handleCloseForm = (proposedActionData: ProposedActionData) => {
     setShowForm(false);
+    if (selectedRowIndex !== null) {
+      const updatedRowData = [...rowData];
+      updatedRowData[selectedRowIndex].proposedActionData = proposedActionData;
+      setRowData(updatedRowData);
+      onDataChange(updatedRowData);
+    }
   };
 
-  const handleRowDataChange = (index: number, newData: TableRowData) => {
+  const handleRowDataChange = (
+    index: number,
+    newData: TableRowData,
+    proposedActionData: ProposedActionData | undefined
+  ) => {
     const updatedRowData = [...rowData];
-    updatedRowData[index] = newData;
+    updatedRowData[index] = {
+      ...newData,
+      proposedActionData: proposedActionData || {
+        responsible: "",
+        justification: "",
+        preview: "",
+        date: null,
+      },
+    };
     setRowData(updatedRowData);
     onDataChange(updatedRowData);
   };
@@ -78,11 +122,15 @@ const Table: React.FC<TableProps> = ({ id, onDataChange }) => {
   const renderTableRows = () => {
     return rowData.map((data, index) => (
       <TableRow
-        onFormVisibilityChange={(visible) => handleFormVisibility(visible, index)}
+        onFormVisibilityChange={(visible) =>
+          handleFormVisibility(visible, index)
+        }
         key={`${id}.${index + 1}`}
         id={`${id}.${index + 1}`}
         initialData={data}
-        onDataChange={(newData) => handleRowDataChange(index, newData)}
+        onDataChange={(newData) =>
+          handleRowDataChange(index, newData, data.proposedActionData)
+        }
       />
     ));
   };
@@ -95,7 +143,11 @@ const Table: React.FC<TableProps> = ({ id, onDataChange }) => {
         {renderTableRows()}
       </div>
       {showForm && selectedRowIndex !== null && (
-        <ProposedAction onAccept={handleCloseForm} id={`${id}.${selectedRowIndex + 1}`} />
+        <ProposedAction
+          initialData={rowData[selectedRowIndex].proposedActionData}
+          onAccept={handleCloseForm}
+          id={`${id}.${selectedRowIndex + 1}`}
+        />
       )}
     </div>
   );

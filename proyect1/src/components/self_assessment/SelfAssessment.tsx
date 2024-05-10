@@ -9,6 +9,7 @@ interface ProposedActionData {
   responsible: string;
   justification: string;
   preview: string;
+  date: Date | null;
 }
 
 interface TableRowData {
