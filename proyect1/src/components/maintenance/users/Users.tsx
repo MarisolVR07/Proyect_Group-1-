@@ -1,19 +1,19 @@
 "use client";
-
 import Button from "@/components/general/PrimaryButton";
-import Label from "../../general/Label";
-import TextArea from "../../forms/TextAreaForms";
-import React, { useState } from "react";
-import InputForms from "../../forms/InputForms";
-
-import SecondaryButton from "../../general/SecondaryButton";
+import React, { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
-
-const handleSaveClick = () => console.log("Save");
-const handleDeleteClick = () => console.log("Delete");
+import { useUserStore } from "@/store/userStore";
 
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { users, getUsers } = useUserStore();
+
+  const handleSaveClick = () => console.log("Save");
+
+  useEffect(() => {
+    getUsers();
+  }, [searchQuery, getUsers]);
+
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
   };
@@ -27,24 +27,26 @@ const Users = () => {
           <thead className="bg-violet-800 text-white">
             <tr>
               <th className="px-4 py-2">ID</th>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">First Last Name</th>
-              <th className="px-4 py-2">Second Last Name</th>
-              <th className="px-4 py-2">State</th>
-              <th className="px-4 py-2">Department</th>
-              <th className="px-4 py-2">Action </th>
+              <th className="px-4 py-2">FullName</th>
             </tr>
           </thead>
-          <tbody>{/* Dynamic content will be loaded here */}</tbody>
+          <tbody>
+            {users.map((user, index) => (
+              <tr key={index}>
+                <td className="px-4 py-2">{user.USR_Email}</td>
+                <td className="px-4 py-2">{user.USR_FullName}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
       <div className="flex flex-col md:flex-row justify-between mt-4 items-center">
-        <div>
-          <p>Carried out by:</p>
-          <p>Reviewed by:</p>
-          <p>Date: {new Date().toLocaleDateString()}</p>
-        </div>
-        <Button onClick={handleSaveClick} className="md:w-auto md:px-10 mt-4 md:mt-0 rounded-xl">Send</Button>
+        <Button
+          onClick={handleSaveClick}
+          className="md:w-auto md:px-10 mt-4 md:mt-0 rounded-xl"
+        >
+          Send
+        </Button>
       </div>
     </div>
   );
