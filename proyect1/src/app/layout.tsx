@@ -1,10 +1,8 @@
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { MsalProvider } from "@azure/msal-react";
-import { msalInstance } from "./msalConfig";
 import { SessionProvider } from "./providers/SessionProvider";
 import "./globals.css";
+import DebugModeToggle from "@/components/debug_mode/DebugModeToggle";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,12 +16,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
-    <body className={inter.className}>
-      <SessionProvider
-    >{children}
-    </SessionProvider></body>
-  </html>
+      <body className={inter.className}>
+        <DebugModeToggle>
+          <SessionProvider>{children}</SessionProvider>
+        </DebugModeToggle>
+      </body>
+    </html>
   );
 }
