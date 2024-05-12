@@ -29,7 +29,7 @@ export const useUserStore = create<UserState>((set) => ({
     if ("error" in user) {
       return user;
     }
-    set((state) => ({ ...state, users: [user] }));
+    set((state) => ({ ...state, users: [...state.users, user], currentUser: user }));
     return user;
   },
   deleteUser: async (id: string) => {
@@ -48,11 +48,7 @@ export const useUserStore = create<UserState>((set) => ({
     if ("error" in newUser) {
       return newUser;
     }
-    set((state) => ({
-      ...state,
-      users: [...state.users, newUser],
-      currentUser: newUser,
-    }));
+    set((state) => ({ ...state, users: [...state.users, newUser], currentUser: newUser }));
     return newUser;
   },
   getUsers: async () => {
