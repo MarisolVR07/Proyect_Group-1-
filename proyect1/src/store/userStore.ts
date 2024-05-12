@@ -19,7 +19,6 @@ interface UserState {
   getUsers: () => Promise<User[] | ErrorResponse>;
   updateUser: (user: User) => Promise<User | ErrorResponse>;
   getUsersByName: (name: string) => Promise<User | ErrorResponse>;
-  setCurrentUser: (user: User | null) => void; // FunciÃ³n para establecer el usuario actual
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -81,5 +80,4 @@ export const useUserStore = create<UserState>((set) => ({
     set((state) => ({ ...state, users: [user] }));
     return user;
   },
-  setCurrentUser: (user: User | null) => set((state) => ({ ...state, currentUser: user })),
 }));

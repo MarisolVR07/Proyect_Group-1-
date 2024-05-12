@@ -7,12 +7,14 @@ import React, { useState, useEffect } from "react";
 import { AccountInfo } from "@azure/msal-browser";
 import { useUserStore } from "@/store/userStore";
 import { ErrorResponse } from "@/app/types/api";
-
+import { useAuthStore } from "@/store/authStore";
 
 const LoginButton = () => {
   const [error, setError] = useState<ErrorResponse>();
-  const { getUser, saveUser, setCurrentUser } = useUserStore();
+  const { getUser, saveUser } = useUserStore();
   const [user, setUser] = useState<User | ErrorResponse>();
+  const { setCurrentUser } = useAuthStore();
+
   const { instance } = useMsal();
   const handleLogin = async () => {
     try {
@@ -28,9 +30,9 @@ const LoginButton = () => {
   const getUserInfo = async (user: AccountInfo) => {
     try {
       const userData = await getUser(user.username);
-      if ("error" in userData){
+      if ("error" in userData) {
         createUser(user.username, user.name || "");
-      }else{
+      } else {
         setCurrentUser(userData);
       }
     } catch (error) {
@@ -47,10 +49,10 @@ const LoginButton = () => {
         USR_Department: null,
       };
       const response = await saveUser(userToCreate);
-      if (response) {
-        console.log("User saved successfully");
+      if ("error" in response) {
+        console.error("Error creating user:", response.error);
       } else {
-        console.error("Error saving the user");
+        setCurrentUser(response);
       }
     } catch (error) {
       console.error("Error saving the user:", error);
