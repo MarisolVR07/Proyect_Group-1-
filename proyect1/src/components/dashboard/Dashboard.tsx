@@ -1,11 +1,6 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import CardsSectionDashBoard from "./CardsSectionDashboard";
-import DateTimePicker from "../general/DateTimePicker";
-import SearchBar from "../maintenance/users/SearchBar";
-import Image from "next/image";
-import InputField from "../general/InputField";
-import PrimaryButton from "../general/PrimaryButton";
 
 const BackOffice = () => {
   const [searchQuery, setSearchQuery] = useState("");

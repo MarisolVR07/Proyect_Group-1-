@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface PrimaryButtonProps {
   children: React.ReactNode;
@@ -7,7 +7,12 @@ interface PrimaryButtonProps {
   icon?: React.ReactNode;
 }
 
-const PrimaryButton: React.FC<PrimaryButtonProps> = ({ children, onClick, className, icon }) => {
+const PrimaryButton: React.FC<PrimaryButtonProps> = ({
+  children,
+  onClick,
+  className,
+  icon,
+}) => {
   const buttonClasses = `text-white bg-violet-800 hover:bg-violet-700 h-8 flex items-center justify-center ${className}`;
 
   return (

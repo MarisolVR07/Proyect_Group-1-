@@ -12,7 +12,7 @@ import { ErrorResponse } from "@/app/types/api";
 
 interface UserState {
   users: User[];
-  currentUser: User | null; // Nuevo campo para almacenar el usuario actual
+  currentUser: User | null;
   getUser: (id: string) => Promise<User | ErrorResponse>;
   deleteUser: (id: string) => Promise<User | ErrorResponse>;
   saveUser: (user: User) => Promise<User | ErrorResponse>;
@@ -23,7 +23,7 @@ interface UserState {
 
 export const useUserStore = create<UserState>((set) => ({
   users: [],
-  currentUser: null, // Inicialmente no hay usuario actual
+  currentUser: null,
   getUser: async (id: string) => {
     const user = await getUser(id);
     if ("error" in user) {
@@ -48,7 +48,11 @@ export const useUserStore = create<UserState>((set) => ({
     if ("error" in newUser) {
       return newUser;
     }
-    set((state) => ({ ...state, users: [...state.users, newUser], currentUser: newUser })); // Almacena el nuevo usuario como 'currentUser'
+    set((state) => ({
+      ...state,
+      users: [...state.users, newUser],
+      currentUser: newUser,
+    }));
     return newUser;
   },
   getUsers: async () => {

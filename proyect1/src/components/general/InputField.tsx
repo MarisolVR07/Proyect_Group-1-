@@ -6,7 +6,7 @@ interface InputFieldProps {
   type: InputType;
   placeholder?: string;
   value?: string;
-  onChange?: (value: string) => void; 
+  onChange?: (value: string) => void;
 }
 
 const InputField: React.FC<InputFieldProps> = ({

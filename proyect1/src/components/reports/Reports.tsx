@@ -17,10 +17,10 @@ const Reports: React.FC = () => {
     setSearchQuery(query);
   };
   return (
-      <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
+    <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
       <h4 className="text-2xl text-white text-center mb-4"> REPORTS</h4>
       <SearchBar onSearch={handleSearchChange} />
-       <div className="overflow-x-auto mt-4 rounded-md">
+      <div className="overflow-x-auto mt-4 rounded-md">
         <table className="table-auto w-full">
           <thead className="bg-violet-800 text-white">
             <tr>
@@ -30,11 +30,10 @@ const Reports: React.FC = () => {
           </thead>
 
           <tbody>
-              <tr>
-                <td className="px-4 py-2">{}</td>
-                <td className="px-4 py-2">{}</td>
-              </tr>
-      
+            <tr>
+              <td className="px-4 py-2">{}</td>
+              <td className="px-4 py-2">{}</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -42,7 +41,6 @@ const Reports: React.FC = () => {
         <Button className="rounded-xl w-44 mt-4">Export</Button>
       </div>
     </div>
-    
   );
 };
 

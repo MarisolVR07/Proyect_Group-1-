@@ -1,13 +1,11 @@
 export type ErrorResponse = {
-    error: string;
-  };
-  
-  export type ParameterId = {
-    params: { id: string };
-  };
+  error: string;
+};
 
-  export type ParameterFullName = {
-    params: { fullname: string };
-  };
+export type ParameterId = {
+  params: { id: string };
+};
 
-  
+export type ParameterFullName = {
+  params: { fullname: string };
+};

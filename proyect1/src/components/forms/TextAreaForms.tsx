@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface TextAreaProps {
   id: string;
@@ -9,7 +9,14 @@ interface TextAreaProps {
   onChange?: (value: string) => void;
 }
 
-const TextArea: React.FC<TextAreaProps> = ({ id, className, spam, placeholder, value, onChange }) => {
+const TextArea: React.FC<TextAreaProps> = ({
+  id,
+  className,
+  spam,
+  placeholder,
+  value,
+  onChange,
+}) => {
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (onChange) {
       onChange(event.target.value);

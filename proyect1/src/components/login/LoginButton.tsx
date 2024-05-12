@@ -18,7 +18,7 @@ const LoginButton = () => {
       const loginResponse = await instance.loginPopup(loginRequest);
       const userInfo = loginResponse.account;
       await getUserInfo(userInfo);
-      window.location.href="views/dashboard";
+      window.location.href = "views/dashboard";
     } catch (error) {
       console.error("Error logging in:", error);
     }
@@ -54,7 +54,6 @@ const LoginButton = () => {
 
   useEffect(() => {
     if (user) {
-      //Here you can use the user information for something else 
     }
   }, [user]);
 

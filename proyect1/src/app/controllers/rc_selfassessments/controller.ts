@@ -8,7 +8,9 @@ const API_URL =
   currentUrl.split("//")[1].split("/")[0] +
   "/api/";
 
-export async function getSelfAssessment(id: number): Promise<SelfAssessments | ErrorResponse> {
+export async function getSelfAssessment(
+  id: number
+): Promise<SelfAssessments | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + `rc_selfassessment/${id}`);
     //validateResponse(res);
@@ -20,9 +22,9 @@ export async function getSelfAssessment(id: number): Promise<SelfAssessments | E
   }
 }
 
-
-
-export async function deleteSelfAssessment(id: number): Promise<SelfAssessments | ErrorResponse> {
+export async function deleteSelfAssessment(
+  id: number
+): Promise<SelfAssessments | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + `rc_selfassessment/${id}`, {
       method: "DELETE",
@@ -37,7 +39,9 @@ export async function deleteSelfAssessment(id: number): Promise<SelfAssessments 
   }
 }
 
-export async function saveSelfAssessment(selfAssessment: SelfAssessments): Promise<SelfAssessments | ErrorResponse> {
+export async function saveSelfAssessment(
+  selfAssessment: SelfAssessments
+): Promise<SelfAssessments | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + "rc_selfassessment", {
       method: "POST",
@@ -57,7 +61,9 @@ export async function saveSelfAssessment(selfAssessment: SelfAssessments): Promi
   }
 }
 
-export async function getSelfAssessments(): Promise<SelfAssessments[] | ErrorResponse> {
+export async function getSelfAssessments(): Promise<
+  SelfAssessments[] | ErrorResponse
+> {
   try {
     console.log(process.env.API_DIRECTION);
     const res: Response = await fetch(API_URL + "rc_selfassessment");
@@ -71,15 +77,20 @@ export async function getSelfAssessments(): Promise<SelfAssessments[] | ErrorRes
   }
 }
 
-export async function updateSelfAssessment(selfAssessment : SelfAssessments): Promise<SelfAssessments | ErrorResponse> {
+export async function updateSelfAssessment(
+  selfAssessment: SelfAssessments
+): Promise<SelfAssessments | ErrorResponse> {
   try {
-    const res = await fetch(API_URL + `rc_selfassessment/${selfAssessment.SAT_Id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(selfAssessment),
-    });
+    const res = await fetch(
+      API_URL + `rc_selfassessment/${selfAssessment.SAT_Id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(selfAssessment),
+      }
+    );
 
     const newSelfAssessment: SelfAssessments | ErrorResponse = await res.json();
     return newSelfAssessment;

@@ -1,23 +1,26 @@
+import { useState } from "react";
 
-import { useState } from 'react';
-
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 interface ApiResponse<T> {
   data: T | null;
 }
 
-async function fetchApi<T>(method: HttpMethod, url: string, requestData?: any): Promise<ApiResponse<T>> {
+async function fetchApi<T>(
+  method: HttpMethod,
+  url: string,
+  requestData?: any
+): Promise<ApiResponse<T>> {
   const response = await fetch(url, {
     method,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: requestData ? JSON.stringify(requestData) : undefined,
   });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch data');
+    throw new Error("Failed to fetch data");
   }
 
   const data: T = await response.json();
@@ -27,7 +30,11 @@ async function fetchApi<T>(method: HttpMethod, url: string, requestData?: any): 
 function useApi<T>() {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const callApi = async (method: HttpMethod, url: string, requestData?: any): Promise<T | null> => {
+  const callApi = async (
+    method: HttpMethod,
+    url: string,
+    requestData?: any
+  ): Promise<T | null> => {
     setLoading(true);
 
     try {

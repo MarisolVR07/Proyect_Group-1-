@@ -13,8 +13,6 @@ const BoxButton: React.FC<BoxButtonProps> = ({
   className,
   icon,
 }) => {
-
-
   return (
     <div
       className={`bg-transparent hover:ring-1 ring-white text-center items-center justify-center cursor-pointer ${className}`}

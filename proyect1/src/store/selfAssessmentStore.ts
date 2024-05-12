@@ -4,7 +4,7 @@ import {
   getSelfAssessments,
   getSelfAssessment,
   saveSelfAssessment,
-  updateSelfAssessment
+  updateSelfAssessment,
 } from "@/app/controllers/rc_selfassessments/controller";
 import { SelfAssessments } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
@@ -13,10 +13,16 @@ interface SelfAssessmentState {
   selfAssessments: SelfAssessments[];
   currentSelfAssessment: SelfAssessments | null;
   getSelfAssessment: (id: number) => Promise<SelfAssessments | ErrorResponse>;
-  deleteSelfAssessment: (id: number) => Promise<SelfAssessments | ErrorResponse>;
-  saveSelfAssessment: (selfAssessment: SelfAssessments) => Promise<SelfAssessments | ErrorResponse>;
+  deleteSelfAssessment: (
+    id: number
+  ) => Promise<SelfAssessments | ErrorResponse>;
+  saveSelfAssessment: (
+    selfAssessment: SelfAssessments
+  ) => Promise<SelfAssessments | ErrorResponse>;
   getSelfAssessments: () => Promise<SelfAssessments[] | ErrorResponse>;
-  updateSelfAssessment: (selfAssessment: SelfAssessments) => Promise<SelfAssessments | ErrorResponse>;
+  updateSelfAssessment: (
+    selfAssessment: SelfAssessments
+  ) => Promise<SelfAssessments | ErrorResponse>;
 }
 
 export const useSelfAssessmentsStore = create<SelfAssessmentState>((set) => ({
@@ -46,7 +52,11 @@ export const useSelfAssessmentsStore = create<SelfAssessmentState>((set) => ({
     if ("error" in newSelfAssessment) {
       return newSelfAssessment;
     }
-    set((state) => ({ ...state, selfAssessments: [...state.selfAssessments, newSelfAssessment], currentSelfAssessment: newSelfAssessment }));
+    set((state) => ({
+      ...state,
+      selfAssessments: [...state.selfAssessments, newSelfAssessment],
+      currentSelfAssessment: newSelfAssessment,
+    }));
     return newSelfAssessment;
   },
   getSelfAssessments: async () => {

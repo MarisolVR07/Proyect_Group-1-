@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import CardsSection from "./CardsSectionBackoficce";
 import DateTimePicker from "../general/DateTimePicker";
@@ -27,25 +27,36 @@ const BackOffice = () => {
 
   return (
     <div className="items-center justify-center mb-4 font-poppins drop-shadow-xl">
-    <CardsSection />
-    <div className="flex flex-col md:flex-row space-x-0 md:space-x-3 mx-9 text-center justify-center">
+      <CardsSection />
+      <div className="flex flex-col md:flex-row space-x-0 md:space-x-3 mx-9 text-center justify-center">
         <div className="bg-gray-700 p-3 text-center items-center justify-center border-2 border-white rounded-xl">
-          <h2 className="text-xl text-center text-white mb-3 font-semibold">APP ACTIVATION/DEACTIVATION DATE-TIME</h2>
+          <h2 className="text-xl text-center text-white mb-3 font-semibold">
+            APP ACTIVATION/DEACTIVATION DATE-TIME
+          </h2>
           <div className="flex flex-col md:flex-row space-x-0 md:space-x-32 items-center justify-center">
             <DateTimePicker text="Select activation date and time:" />
             <DateTimePicker text="Select deactivation date and time:" />
           </div>
           <div className="mt-3">
-            <h2 className="text-xl text-center text-white font-semibold">EMAIL</h2>
+            <h2 className="text-xl text-center text-white font-semibold">
+              EMAIL
+            </h2>
             <InputField type="email" label="" placeholder="Email" />
           </div>
           <div className="">
-            <h2 className="text-xl text-center text-white mb-3 font-semibold">LOGO</h2>
+            <h2 className="text-xl text-center text-white mb-3 font-semibold">
+              LOGO
+            </h2>
             <input type="file" onChange={handleLogoChange} />
             {logoFile && (
               <div className="my-4 flex justify-center">
                 <div className="w-48 h-48 flex items-center justify-center">
-                  <Image src={URL.createObjectURL(logoFile)} alt="Logo" width={200} height={200} />
+                  <Image
+                    src={URL.createObjectURL(logoFile)}
+                    alt="Logo"
+                    width={200}
+                    height={200}
+                  />
                 </div>
               </div>
             )}
@@ -73,7 +84,7 @@ const BackOffice = () => {
                   <th className="px-4 py-2">State</th>
                 </tr>
               </thead>
-              <tbody>{/* Aquí se cargarán los datos dinámicamente */}</tbody>
+              <tbody></tbody>
             </table>
           </div>
         </div>

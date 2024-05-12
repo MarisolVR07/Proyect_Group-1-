@@ -1,9 +1,6 @@
 "use client";
 
 import React from "react";
-
-import InputField from "../general/InputField";
-import Button from "../general/PrimaryButton";
 import LoginButton from "./LoginButton";
 
 const LoginForm = () => (

@@ -11,7 +11,7 @@ const Users = () => {
   const handleSaveClick = () => console.log("Save");
   const handlePrintClick = () => {
     window.print();
-  }
+  };
 
   useEffect(() => {
     getUsers();
