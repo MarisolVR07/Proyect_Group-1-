@@ -23,3 +23,14 @@ export type Institution = {
     INS_PhysicalAddress: string,
     rc_departments?: Department[] | null
 }////////////////////////////////
+
+export type SelfAssessments = {
+
+  SAT_Id?: number | null,
+  SAT_Status: string,
+  SAT_Audit: string,
+  SAT_Description: string,
+  SAT_Department?: number | null,
+  rc_departments?:number | null | Department 
+
+}
