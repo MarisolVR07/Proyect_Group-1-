@@ -8,9 +8,10 @@ import { AccountInfo } from "@azure/msal-browser";
 import { useUserStore } from "@/store/userStore";
 import { ErrorResponse } from "@/app/types/api";
 
+
 const LoginButton = () => {
   const [error, setError] = useState<ErrorResponse>();
-  const { getUser, saveUser } = useUserStore();
+  const { getUser, saveUser, setCurrentUser } = useUserStore();
   const [user, setUser] = useState<User | ErrorResponse>();
   const { instance } = useMsal();
   const handleLogin = async () => {
@@ -27,7 +28,11 @@ const LoginButton = () => {
   const getUserInfo = async (user: AccountInfo) => {
     try {
       const userData = await getUser(user.username);
-      if ("error" in userData) createUser(user.username, user.name || "");
+      if ("error" in userData){
+        createUser(user.username, user.name || "");
+      }else{
+        setCurrentUser(userData);
+      }
     } catch (error) {
       console.error(error);
     }

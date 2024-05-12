@@ -19,6 +19,7 @@ interface UserState {
   getUsers: () => Promise<User[] | ErrorResponse>;
   updateUser: (user: User) => Promise<User | ErrorResponse>;
   getUsersByName: (name: string) => Promise<User | ErrorResponse>;
+  setCurrentUser: (user: User | null) => void; // FunciÃ³n para establecer el usuario actual
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -29,7 +30,7 @@ export const useUserStore = create<UserState>((set) => ({
     if ("error" in user) {
       return user;
     }
-    set((state) => ({ ...state, users: [user] }));
+    set((state) => ({ ...state, users: [...state.users, user], currentUser: user }));
     return user;
   },
   deleteUser: async (id: string) => {
@@ -48,11 +49,7 @@ export const useUserStore = create<UserState>((set) => ({
     if ("error" in newUser) {
       return newUser;
     }
-    set((state) => ({
-      ...state,
-      users: [...state.users, newUser],
-      currentUser: newUser,
-    }));
+    set((state) => ({ ...state, users: [...state.users, newUser], currentUser: newUser }));
     return newUser;
   },
   getUsers: async () => {
@@ -84,4 +81,5 @@ export const useUserStore = create<UserState>((set) => ({
     set((state) => ({ ...state, users: [user] }));
     return user;
   },
+  setCurrentUser: (user: User | null) => set((state) => ({ ...state, currentUser: user })),
 }));

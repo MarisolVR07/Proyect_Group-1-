@@ -6,12 +6,16 @@ import { useUserStore } from "@/store/userStore";
 
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { users, getUsers } = useUserStore();
+  const { users, getUsers, currentUser } = useUserStore();
 
   const handleSaveClick = () => console.log("Save");
   const handlePrintClick = () => {
     window.print();
   };
+
+  useEffect(() => {
+    console.log(currentUser?.USR_FullName);
+  }, [currentUser]);
 
   useEffect(() => {
     getUsers();
@@ -45,7 +49,7 @@ const Users = () => {
         </Button>
       </div>
       <h4 className="text-2xl text-white text-center mb-4 print-only text-color">
-        SEARCH USERS
+        USERS
       </h4>
       <SearchBar onSearch={handleSearchChange} />
       <div className="overflow-x-auto mt-4 rounded-md print-only">
@@ -75,6 +79,13 @@ const Users = () => {
           Send
         </Button>
       </div>
+
+      <div className="m-5">
+      <h5 className="text-sm text-white text-center mb-4 print-only text-color">
+        {currentUser?.USR_FullName}
+      </h5>
+      </div>
+
     </div>
   );
 };
