@@ -8,12 +8,11 @@ const API_URL =
   currentUrl.split("//")[1].split("/")[0] +
   "/api/";
 
-
   export async function getInstitution(
     id: number
   ): Promise<Institution | ErrorResponse> {
     try {
-      const res: Response = await fetch(API_URL + `rc_institution/${id}`);
+      const res: Response = await fetch(API_URL + `rc_institutions/${id}`);
       //validateResponse(res);
       const institution: Institution | ErrorResponse = await res.json();
   
@@ -27,7 +26,7 @@ const API_URL =
     id: number
   ): Promise<Institution | ErrorResponse> {
     try {
-      const res: Response = await fetch(API_URL + `rc_institution/${id}`, {
+      const res: Response = await fetch(API_URL + `rc_institutions/${id}`, {
         method: "DELETE",
       });
       //validateResponse(res);
@@ -43,7 +42,7 @@ const API_URL =
     institution: Institution
 ): Promise<Institution | ErrorResponse> {
   try {
-    const res: Response = await fetch(API_URL + "rc_institution", {
+    const res: Response = await fetch(API_URL + "rc_institutions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,7 +65,7 @@ const API_URL =
       ): Promise<Institution | ErrorResponse> {
         try {
           const res = await fetch(
-            API_URL + `rc_institution/${institution.INS_Id}`,
+            API_URL + `rc_institutions/${institution.INS_Id}`,
             {
               method: "PUT",
               headers: {
