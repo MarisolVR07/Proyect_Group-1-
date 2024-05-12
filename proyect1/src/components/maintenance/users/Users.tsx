@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
 import { useUserStore } from "@/store/userStore";
 
+
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { users, getUsers } = useUserStore();
@@ -23,10 +24,11 @@ const Users = () => {
 
   return (
     <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
+      
       <div className="flex flex-col md:flex-row justify-between items-center">
         <Button
           onClick={handlePrintClick}
-          className="md:w-auto md:px-10 md:mt-0 rounded-xl ml-auto"
+          className="md:w-auto md:px-10 md:mt-0 rounded-xl ml-auto no-print"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -44,14 +46,16 @@ const Users = () => {
           </svg>
         </Button>
       </div>
-      <h4 className="text-2xl text-white text-center mb-4">SEARCH USERS</h4>
-      <SearchBar onSearch={handleSearchChange} />
-      <div className="overflow-x-auto mt-4 rounded-md">
-        <table className="table-auto w-full">
+
+      <h4 className="text-2xl text-white text-center mb-4 print-only text-color">SEARCH USERS</h4>
+      <SearchBar onSearch={handleSearchChange}/>
+      
+      <div className="overflow-x-auto mt-4 rounded-md print-only">
+        <table className="table-auto w-full text-color">
           <thead className="bg-violet-800 text-white">
             <tr>
-              <th className="px-4 py-2">ID</th>
-              <th className="px-4 py-2">FullName</th>
+              <th className="px-4 py-2 text-color">ID</th>
+              <th className="px-4 py-2 text-color">FullName</th>
             </tr>
           </thead>
           <tbody>
@@ -64,14 +68,16 @@ const Users = () => {
           </tbody>
         </table>
       </div>
+
       <div className="flex flex-col md:flex-row justify-between mt-4 items-center">
         <Button
           onClick={handleSaveClick}
-          className="md:w-auto md:px-10 mt-4 md:mt-0 rounded-xl"
+          className="md:w-auto md:px-10 mt-4 md:mt-0 rounded-xl no-print"
         >
           Send
         </Button>
       </div>
+
     </div>
   );
 };

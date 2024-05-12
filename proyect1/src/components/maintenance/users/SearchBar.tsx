@@ -10,7 +10,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       type="text"
       placeholder="Search users..."
       onChange={(e) => onSearch(e.target.value)}
-      className="w-full p-2 rounded-md"
+      className="w-full p-2 rounded-md no-print"
     />
   );
 };

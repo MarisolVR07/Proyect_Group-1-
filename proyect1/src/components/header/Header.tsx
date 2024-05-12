@@ -24,20 +24,22 @@ export default function Header() {
     <header className="w-full bg-transparent text-white py-3 top-0 z-10">
       <div className="container mx-auto flex justify-between items-center">
         <div className="items-center">
-          <div className="text-4xl font-bold">ISC</div>
-          <div className="text-xs">Internal System Control</div>
+          <div className="text-4xl font-bold text-color print-only">ISC</div>
+          <div className="text-xs text-color print-only ">
+            Internal System Control
+          </div>
         </div>
         <nav>
           <ul className="flex space-x-4">
             <Link href="/views/dashboard" passHref>
-              <PrimaryButton className="rounded-md w-36">
+              <PrimaryButton className="rounded-md w-36 no-print">
                 DashBoard
               </PrimaryButton>
             </Link>
             <li className="px-3 rounded-md">
               <PrimaryButton
                 icon={<DownArrowIcon />}
-                className="rounded-md w-40"
+                className="rounded-md w-40 no-print"
                 onClick={toggleDropdown}
               >
                 BackOffice
@@ -45,7 +47,7 @@ export default function Header() {
               <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />
             </li>
             <Link href="/views/reports" passHref>
-              <PrimaryButton className="rounded-md w-36">Reports</PrimaryButton>
+              <PrimaryButton className="rounded-md w-36 no-print">Reports</PrimaryButton>
             </Link>
           </ul>
         </nav>

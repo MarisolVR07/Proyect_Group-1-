@@ -30,3 +30,15 @@ body {
     text-wrap: balance;
   }
 }
+
+@media print {
+  .no-print {
+    display: none;
+  }
+  .print-only {
+    display: block;
+  }
+  .text-color {
+    color: black !important;
+  }
+}
