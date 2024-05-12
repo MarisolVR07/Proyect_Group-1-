@@ -3,11 +3,12 @@ import Button from "@/components/general/PrimaryButton";
 import React, { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
 import { useUserStore } from "@/store/userStore";
+import { useAuthStore } from "@/store/authStore";
 
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { users, getUsers, currentUser } = useUserStore();
-
+  const { users, getUsers } = useUserStore();
+  const { currentUser } = useAuthStore();
   const handleSaveClick = () => console.log("Save");
   const handlePrintClick = () => {
     window.print();
@@ -28,6 +29,11 @@ const Users = () => {
   return (
     <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
       <div className="flex flex-col md:flex-row justify-between items-center">
+        <div className="m-5 print-only">
+          <h5 className="text-sm text-white text-center mb-4  text-color">
+            Current user: {currentUser?.USR_FullName}
+          </h5>
+        </div>
         <Button
           onClick={handlePrintClick}
           className="md:w-auto md:px-10 md:mt-0 rounded-xl ml-auto no-print"
@@ -79,13 +85,6 @@ const Users = () => {
           Send
         </Button>
       </div>
-
-      <div className="m-5">
-      <h5 className="text-sm text-white text-center mb-4 print-only text-color">
-        {currentUser?.USR_FullName}
-      </h5>
-      </div>
-
     </div>
   );
 };
