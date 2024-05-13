@@ -5,6 +5,7 @@ import SearchBar from "./SearchBar";
 import { useUserStore } from "@/store/userStore";
 import { useAuthStore } from "@/store/authStore";
 import Spinner from "@/components/skeletons/Spinner";
+
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { users, getUsers, getUsersByName  } = useUserStore();
@@ -48,7 +49,7 @@ const Users = () => {
     <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <div className="m-5 print-only">
-          <h5 className="text-sm text-white text-center mb-4  text-color">
+          <h5 className="text-sm text-white text-center mb-4 text-color">
             Current user: {currentUser?.USR_FullName}
           </h5>
         </div>
@@ -83,8 +84,8 @@ const Users = () => {
           <table className="table-auto w-full text-color">
             <thead className="bg-violet-800 text-white">
               <tr>
-                <th className="px-4 py-2">ID</th>
-                <th className="px-4 py-2">FullName</th>
+                <th className="px-4 py-2 text-color">ID</th>
+                <th className="px-4 py-2 text-color">FullName</th>
               </tr>
             </thead>
             <tbody>
@@ -98,7 +99,6 @@ const Users = () => {
           </table>
         </div>
       )}
-
       <div className="flex flex-col md:flex-row justify-between mt-4 items-center">
         <Button
           onClick={handleSaveClick}
