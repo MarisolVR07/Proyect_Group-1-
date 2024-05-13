@@ -4,31 +4,44 @@ import React, { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
 import { useUserStore } from "@/store/userStore";
 import { useAuthStore } from "@/store/authStore";
-
+import Spinner from "@/components/skeletons/Spinner";
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { users, getUsers, getUsersByName  } = useUserStore();
   const { currentUser } = useAuthStore();
   const handleSaveClick = () => console.log("Save");
+  const [isLoading, setIsLoading] = useState(false); 
   const handlePrintClick = () => {
     window.print();
   };
 
   useEffect(() => {
-    console.log(currentUser?.USR_FullName);
-  }, [currentUser]);
-
-  useEffect(() => {
-    getUsers();
+    const fetchData = async () => {
+      setIsLoading(true);  
+      try {
+        await getUsers();
+      } catch (error) {
+        console.error("Failed to fetch users", error);
+      }
+      setIsLoading(false); 
+    };
+    fetchData();
   }, []);
 
-  const handleSearchChange = (query: string) => {
+
+  const handleSearchChange = async (query: string) => {
     setSearchQuery(query);
-    if (query.length > 0) {
-      getUsersByName(query); 
-    } else {
-      getUsers(); 
+    setIsLoading(true);
+    try {
+      if (query.length > 0) {
+        await getUsersByName(query);
+      } else {
+        await getUsers();
+      }
+    } catch (error) {
+      console.error("Error searching users", error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -63,24 +76,28 @@ const Users = () => {
         USERS
       </h4>
       <SearchBar onSearch={handleSearchChange} />
-      <div className="overflow-x-auto mt-4 rounded-md print-only">
-        <table className="table-auto w-full text-color">
-          <thead className="bg-violet-800 text-white">
-            <tr>
-              <th className="px-4 py-2 text-color">ID</th>
-              <th className="px-4 py-2 text-color">FullName</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, index) => (
-              <tr key={index}>
-                <td className="px-4 py-2">{user.USR_Email}</td>
-                <td className="px-4 py-2">{user.USR_FullName}</td>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className="overflow-x-auto mt-4 rounded-md print-only">
+          <table className="table-auto w-full text-color">
+            <thead className="bg-violet-800 text-white">
+              <tr>
+                <th className="px-4 py-2">ID</th>
+                <th className="px-4 py-2">FullName</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {users.map((user, index) => (
+                <tr key={index}>
+                  <td className="px-4 py-2">{user.USR_Email}</td>
+                  <td className="px-4 py-2">{user.USR_FullName}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <div className="flex flex-col md:flex-row justify-between mt-4 items-center">
         <Button
