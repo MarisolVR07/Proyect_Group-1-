@@ -22,16 +22,16 @@ export async function getUser(id: string): Promise<User | ErrorResponse> {
 
 export async function getUsersByName(
   name: string
-): Promise<User | ErrorResponse> {
+): Promise<User[] | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + `rc_users/findname/${name}`);
-    //validateResponse(res);
-    const user: User | ErrorResponse = await res.json();
-    return user;
+    const users: User[] | ErrorResponse = await res.json();
+    return users;
   } catch (error: any) {
     return error;
   }
 }
+
 
 export async function deleteUser(id: string): Promise<User | ErrorResponse> {
   try {

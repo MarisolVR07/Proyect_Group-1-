@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/authStore";
 
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { users, getUsers } = useUserStore();
+  const { users, getUsers, getUsersByName  } = useUserStore();
   const { currentUser } = useAuthStore();
   const handleSaveClick = () => console.log("Save");
   const handlePrintClick = () => {
@@ -20,10 +20,15 @@ const Users = () => {
 
   useEffect(() => {
     getUsers();
-  }, [searchQuery, getUsers]);
+  }, []);
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
+    if (query.length > 0) {
+      getUsersByName(query); 
+    } else {
+      getUsers(); 
+    }
   };
 
   return (

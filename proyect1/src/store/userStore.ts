@@ -18,7 +18,7 @@ interface UserState {
   saveUser: (user: User) => Promise<User | ErrorResponse>;
   getUsers: () => Promise<User[] | ErrorResponse>;
   updateUser: (user: User) => Promise<User | ErrorResponse>;
-  getUsersByName: (name: string) => Promise<User | ErrorResponse>;
+  getUsersByName: (name: string) => Promise<User[]  | ErrorResponse>;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -73,11 +73,11 @@ export const useUserStore = create<UserState>((set) => ({
     return updatedUser;
   },
   getUsersByName: async (name: string) => {
-    const user = await getUsersByName(name);
-    if ("error" in user) {
-      return user;
+    const users = await getUsersByName(name);
+    if ("error" in users) {
+      return users;
     }
-    set((state) => ({ ...state, users: [user] }));
-    return user;
+    set((state) => ({ ...state, users }));
+    return users;
   },
 }));
