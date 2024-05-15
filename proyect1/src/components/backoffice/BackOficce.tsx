@@ -29,7 +29,7 @@ const BackOffice = () => {
   };
 
   return (
-    <div className="items-center justify-center mb-4 font-poppins drop-shadow-xl">
+    <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
       <CardsSection />
       <div className="flex flex-col md:flex-row space-x-0 md:space-x-3 mx-9 text-center justify-center">
         <div className="bg-gray-700 p-3 text-center items-center justify-center border-2 border-white rounded-xl">
