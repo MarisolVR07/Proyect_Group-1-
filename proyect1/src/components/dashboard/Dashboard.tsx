@@ -16,7 +16,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
+    <div className="items-center justify-center font-poppins drop-shadow-xl">
       <CardsSectionDashBoard />
     </div>
   );

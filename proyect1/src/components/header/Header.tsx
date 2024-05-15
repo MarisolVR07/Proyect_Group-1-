@@ -12,7 +12,7 @@ export default function Header() {
 
   const dropdownLinks = [
     { href: "/views/backoffice", text: "Main" },
-    { href: "/views/backoffice/Institution", text: "Institution" },
+    { href: "/views/backoffice/unit", text: "Departments Unit" },
     {
       href: "/views/backoffice/create_self_assessment",
       text: "Self-Assessment",

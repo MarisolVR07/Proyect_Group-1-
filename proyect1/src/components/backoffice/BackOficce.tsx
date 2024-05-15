@@ -42,6 +42,12 @@ const BackOffice = () => {
           </div>
           <div className="mt-3">
             <h2 className="text-xl text-center text-white font-semibold">
+              INSTITUTION
+            </h2>
+            <InputField type="text" label="" placeholder="Institution" />
+          </div>
+          <div className="mt-3">
+            <h2 className="text-xl text-center text-white font-semibold">
               EMAIL
             </h2>
             <InputField type="email" label="" placeholder="Email" />

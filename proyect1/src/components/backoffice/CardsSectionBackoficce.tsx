@@ -13,13 +13,13 @@ const CardsSection = () => (
         <h1 className="text-3xl text-white font-semibold">BACKOFFICE</h1>
       </div>
       <CardButton
-        href="/views/backoffice/Institution"
+        href="/views/backoffice/unit"
         icon={
           <Icon>
             <InstitutionIcon />
           </Icon>
         }
-        title="Institution"
+        title="Departments Unit"
         description=""
         className="w-full text-center bg-gray-700 text-2xl"
       />
