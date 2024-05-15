@@ -2,7 +2,7 @@ import React from "react";
 import CardButton from "../general/CardButton";
 import Icon from "../general/CardIcon";
 import ListIcon from "../svg/ListIcon";
-import DocExelIcon from "../svg/DocExelIcon";
+import FileExportIcon from "../svg/FileExportIcon";
 import GearIcon from "../svg/GearIcon";
 
 const CardsSection = () => (
@@ -40,7 +40,7 @@ const CardsSection = () => (
           href="/views/reports"
           icon={
             <Icon>
-              <DocExelIcon />
+              <FileExportIcon />
             </Icon>
           }
           title="Reports"
