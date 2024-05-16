@@ -9,15 +9,15 @@ datasource db {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model rc_answers {
-  ANS_Id                  Int                     @id @unique(map: "ANS_Id") @default(autoincrement())
-  ANS_Selection           String                  @db.VarChar(1)
-  ANS_Observations        String                  @db.VarChar(255)
+  ANS_Id                  Int                      @id @unique(map: "ANS_Id") @default(autoincrement())
+  ANS_Selection           String                   @db.VarChar(1)
+  ANS_Observations        String?                  @db.VarChar(255)
+  ANS_WorkDocument        String?                  @db.VarChar(1000)
   ANS_Question            Int
   ANS_SelfAssessment      Int
-  rc_questions            rc_questions            @relation(fields: [ANS_Question], references: [QES_Id], onUpdate: Restrict, map: "Question answer")
-  rc_selfassessmentsxuser rc_selfassessmentsxuser @relation(fields: [ANS_SelfAssessment], references: [SXU_Id], onUpdate: Restrict, map: "SelfAssesment Answers")
+  rc_questions            rc_questions             @relation(fields: [ANS_Question], references: [QES_Id], onUpdate: Restrict, map: "Question answer")
+  rc_selfassessmentsxuser rc_appliedselfassessment @relation(fields: [ANS_SelfAssessment], references: [ASA_Id], onUpdate: Restrict, map: "SelfAssesment Answers")
   rc_proposedaction       rc_proposedaction[]
-  rc_workdocuments        rc_workdocuments[]
 
   @@index([ANS_SelfAssessment], map: "IX_Relationship1")
   @@index([ANS_Question], map: "IX_Relationship7")
@@ -27,22 +27,13 @@ model rc_answers {
 model rc_departments {
   DPT_Id             Int                  @id @unique(map: "DPT_Id") @default(autoincrement())
   DPT_Name           String               @db.VarChar(100)
-  DPT_Status         String               @db.VarChar(1)
+  DPT_Status         String?              @db.VarChar(1)
   DPT_Institution    Int
-  rc_institution     rc_institution       @relation(fields: [DPT_Institution], references: [INS_Id], onUpdate: Restrict, map: "Institution departments")
+  rc_institution     rc_unit              @relation(fields: [DPT_Institution], references: [UND_Id], onUpdate: Restrict, map: "Institution departments")
   rc_selfassessments rc_selfassessments[]
   rc_users           rc_users[]
 
   @@index([DPT_Institution], map: "IX_Relationship14")
-}
-
-model rc_institution {
-  INS_Id              Int              @id @unique(map: "INS_Id") @default(autoincrement())
-  INS_Name            String           @db.VarChar(30)
-  INS_Email           String           @db.VarChar(100)
-  INS_Telephone       Int
-  INS_PhysicalAddress String?          @db.VarChar(250)
-  rc_departments      rc_departments[]
 }
 
 model rc_parameters {
@@ -51,6 +42,7 @@ model rc_parameters {
   PRM_DeactivationDate DateTime @db.Timestamp(0)
   PRM_Logo             Bytes?   @db.Blob
   PRM_Email            String   @db.VarChar(100)
+  PRM_Institution      String   @db.VarChar(100)
 }
 
 model rc_questions {
@@ -77,28 +69,16 @@ model rc_sections {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model rc_selfassessments {
-  SAT_Id                  Int                       @id @unique(map: "SAT_Id") @default(autoincrement())
-  SAT_Status              String                    @db.VarChar(1)
-  SAT_Audit               String                    @db.VarChar(255)
-  SAT_Description         String                    @db.VarChar(255)
-  SAT_Department          Int
-  rc_sections             rc_sections[]
-  rc_departments          rc_departments            @relation(fields: [SAT_Department], references: [DPT_Id], onUpdate: Restrict, map: "SelfAssessment Department")
-  rc_selfassessmentsxuser rc_selfassessmentsxuser[]
+  SAT_Id                   Int                        @id @unique(map: "SAT_Id") @default(autoincrement())
+  SAT_Status               String?                    @db.VarChar(1)
+  SAT_Audit                String                     @db.VarChar(255)
+  SAT_Description          String                     @db.VarChar(255)
+  SAT_Department           Int
+  rc_appliedselfassessment rc_appliedselfassessment[]
+  rc_sections              rc_sections[]
+  rc_departments           rc_departments             @relation(fields: [SAT_Department], references: [DPT_Id], onUpdate: Restrict, map: "SelfAssessment Department")
 
   @@index([SAT_Department], map: "IX_Relationship12")
-}
-
-model rc_selfassessmentsxuser {
-  SXU_Id             Int                @id @unique(map: "SXD_Id") @default(autoincrement())
-  SXU_Date           DateTime           @db.Timestamp(0)
-  SXU_ReviewedBy     String             @db.VarChar(30)
-  SXU_MadeBy         String             @db.VarChar(30)
-  SXU_Assessment     Int
-  rc_answers         rc_answers[]
-  rc_selfassessments rc_selfassessments @relation(fields: [SXU_Assessment], references: [SAT_Id], onUpdate: Restrict, map: "SelfAssessment")
-
-  @@index([SXU_Assessment], map: "IX_Relationship9")
 }
 
 model rc_users {
@@ -106,32 +86,44 @@ model rc_users {
   USR_Email      String          @unique(map: "USR_Email") @db.VarChar(100)
   USR_FullName   String          @db.VarChar(100)
   USR_Role       String          @db.VarChar(30)
+  USR_Status     String?         @db.VarChar(1)
   USR_Department Int?
   rc_departments rc_departments? @relation(fields: [USR_Department], references: [DPT_Id], onDelete: Restrict, onUpdate: Restrict, map: "Departament users")
 
   @@index([USR_Department], map: "IX_Relationship2")
 }
 
-model rc_workdocuments {
-  WDC_Id     Int         @id @unique(map: "WDC_Id") @default(autoincrement())
-  WDC_Name   String      @db.VarChar(30)
-  WDC_URL    String      @db.VarChar(2000)
-  WDC_Answer Int?
-  rc_answers rc_answers? @relation(fields: [WDC_Answer], references: [ANS_Id], onDelete: Restrict, onUpdate: Restrict, map: "Answer references")
-
-  @@index([WDC_Answer], map: "IX_Relationship15")
-}
-
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model rc_proposedaction {
   PAC_Id            Int         @id @unique(map: "PAC_Id") @default(autoincrement())
   PAC_Date          DateTime    @db.Timestamp(0)
-  PAC_Status        String      @db.VarChar(1)
-  PAC_Responsible   String?     @db.VarChar(100)
+  PAC_Status        String?     @db.VarChar(1)
+  PAC_Responsible   String      @db.VarChar(100)
   PAC_Justification String      @db.VarChar(255)
   PAC_Preview       String      @db.VarChar(255)
   PAC_Answer        Int?
   rc_answers        rc_answers? @relation(fields: [PAC_Answer], references: [ANS_Id], onDelete: Restrict, onUpdate: Restrict, map: "Action proposed by answer")
 
   @@index([PAC_Answer], map: "IX_Relationship1")
+}
+
+model rc_appliedselfassessment {
+  ASA_Id             Int                @id @unique(map: "SXD_Id") @default(autoincrement())
+  ASA_Date           DateTime           @db.Timestamp(0)
+  ASA_ReviewedBy     String             @db.VarChar(30)
+  ASA_MadeBy         String             @db.VarChar(30)
+  ASA_Assessment     Int
+  rc_answers         rc_answers[]
+  rc_selfassessments rc_selfassessments @relation(fields: [ASA_Assessment], references: [SAT_Id], onUpdate: Restrict, map: "SelfAssessment")
+
+  @@index([ASA_Assessment], map: "IX_Relationship9")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model rc_unit {
+  UND_Id         Int              @id @unique(map: "INS_Id") @default(autoincrement())
+  UND_Name       String           @db.VarChar(30)
+  UND_Email      String           @db.VarChar(100)
+  UND_Status     String?          @db.VarChar(1)
+  rc_departments rc_departments[]
 }
