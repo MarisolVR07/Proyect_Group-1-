@@ -160,7 +160,7 @@ export default function Page() {
               </label>
             </div>
             <Button onClick={handleSaveClick} className="rounded-xl w-44">
-              Save
+              Add
             </Button>
           </div>
           <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center">
