@@ -31,19 +31,20 @@ const Users = () => {
 
 
   const handleSearchChange = async (query: string) => {
+    if (searchQuery === query) return; 
     setSearchQuery(query);
+    if (!query.trim()) return; 
     setIsLoading(true);
     try {
-      if (query.length > 0) {
-        await getUsersByName(query);
-      } else {
-        await getUsers();
-      }
+      const results = query.length > 0 ? await getUsersByName(query) : await getUsers();
+      // Posible actualización de estado con los resultados aquí, si fuera necesario
     } catch (error) {
       console.error("Error searching users", error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
-  };
+};
+
 
   return (
     <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
