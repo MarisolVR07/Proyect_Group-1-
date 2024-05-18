@@ -1,11 +1,21 @@
 "use client";
 import { ReactNode, useEffect, useState } from "react";
+import Alert from "@/components/alerts/Alert";
+
+interface DebugMessage {
+  content: string;
+  type: "Error" | "Info" | "Warning" | "Success";
+}
 
 interface DebugModeToggleProps {
   children: ReactNode;
+  debugMessages?: DebugMessage[];
 }
 
-const DebugModeToggle = ({ children }: DebugModeToggleProps) => {
+const DebugModeToggle = ({
+  children,
+  debugMessages = [],
+}: DebugModeToggleProps) => {
   const [debugMode, setDebugMode] = useState(false);
 
   useEffect(() => {
@@ -19,12 +29,10 @@ const DebugModeToggle = ({ children }: DebugModeToggleProps) => {
 
   return (
     <div className="w-full h-full flex flex-col min-h-screen bg-gradient-to-br from-black via-100% via-violet-900 to-violet-800">
-      {debugMode && (
-        <div className="bg-red-500 text-white p-4">
-          <h2>Debug Mode Activated</h2>
-          <p>Some debug information goes here.</p>
-        </div>
-      )}
+      {debugMode &&
+        debugMessages.map((message, index) => (
+          <Alert key={index} type={message.type} message={message.content} />
+        ))}
       {children}
     </div>
   );
