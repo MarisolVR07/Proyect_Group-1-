@@ -31,3 +31,12 @@ export type SelfAssessments = {
   SAT_Department?: number | null;
   rc_departments?: number | null | Department;
 };
+
+export type Unit = {
+  UND_Id?: number | null;               
+  UND_Name:       string           
+  UND_Email:      String          
+  UND_Status:     String          
+  rc_departments?: Department[] | null;
+
+};
