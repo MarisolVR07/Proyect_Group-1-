@@ -4,6 +4,9 @@ import SearchBar from "./SearchBar";
 import { useUserStore } from "@/store/userStore";
 import { useAuthStore } from "@/store/authStore";
 import Spinner from "@/components/skeletons/Spinner";
+import DepartmentDropdown from "./DepartmentDropdown";
+import StateCheckbox from "./StateCheckbox";
+import { User } from "@/app/types/entities";
 
 interface DebugMessage {
   content: string;
@@ -16,9 +19,9 @@ interface UsersProps {
 
 const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { users, getUsers, getUsersByName } = useUserStore();
+  const [editUserId, setEditUserId] = useState<number | null>(null);
+  const { users, getUsers, getUsersByName, updateUser } = useUserStore();
   const { currentUser } = useAuthStore();
-  const handleSaveClick = () => console.log("Save");
   const [isLoading, setIsLoading] = useState(false);
   const handlePrintClick = () => {
     window.print();
@@ -42,6 +45,21 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     fetchData();
   }, []);
 
+  const handleStatusChange = (user: User, event: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked;
+    const updatedUser = {
+      ...user,
+      USR_Status: isChecked ? "Active" : "Inactive",
+    };
+    updateUser(updatedUser);
+  };
+
+  const handleDepartmentChange = (user: User, newDeptId: Number) => {
+    // Update user's department locally and prepare to save
+    const updatedUser = { ...user, USR_Department: { DPT_Id: newDeptId } };
+    //updateUser(updatedUser);
+  };
+
   const handleSearchChange = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
@@ -53,6 +71,22 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     } catch (error) {
       console.error("Error searching users", error);
       onDebugMessage({ content: "Error searching users", type: "Error" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRowDoubleClick = (userId: number) => {
+    setEditUserId(userId);
+  };
+
+  const handleSaveClick = async (user: User) => {
+    setIsLoading(true);
+    try {
+      await updateUser(user);
+      setEditUserId(null); // Exit edit mode on save
+    } catch (error) {
+      console.error("Failed to update user", error);
     } finally {
       setIsLoading(false);
     }
@@ -74,13 +108,13 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            strokeWidth="1.5"
+            stroke-width="1.5"
             stroke="currentColor"
             className="w-6 h-6"
           >
             <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              stroke-linecap="round"
+              stroke-linejoin="round"
               d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z"
             />
           </svg>
@@ -99,29 +133,54 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
               <tr>
                 <th className="px-4 py-2 text-color">ID</th>
                 <th className="px-4 py-2 text-color">FullName</th>
+                <th className="px-4 py-2 text-color">Department</th>
+                <th className="px-4 py-2 text-color">State</th>
+                <th className="px-4 py-2 text-color">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
-                <tr key={index}>
-                  <td className="px-4 py-2">{user.USR_Email}</td>
-                  <td className="px-4 py-2">{user.USR_FullName}</td>
+              {users.map((userMap, index) => (
+                <tr
+                  key={index}
+                  onDoubleClick={() => handleRowDoubleClick(userMap.USR_Id ?? 0)}
+                >
+                  <td className="px-4 py-2">{userMap.USR_Email}</td>
+                  <td className="px-4 py-2">{userMap.USR_FullName}</td>
+
+                  <td>
+                    <DepartmentDropdown
+                      selectedDepartment={
+                        null
+                      }
+                      onChange={(newDeptId) =>
+                        handleDepartmentChange(userMap, newDeptId)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <StateCheckbox
+                      isChecked={userMap.USR_Status === "Active"}
+                      onChange={(e) => handleStatusChange(userMap, e)}
+                    />
+                  </td>
+                  <td>
+                    {editUserId === userMap.USR_Id && (
+                      <Button onClick={() => handleSaveClick(userMap)}>
+                        Save
+                      </Button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       )}
-      <div className="flex flex-col md:flex-row justify-between mt-4 items-center">
-        <Button
-          onClick={handleSaveClick}
-          className="md:w-auto md:px-10 mt-4 md:mt-0 rounded-xl no-print"
-        >
-          Send
-        </Button>
-      </div>
+      <div className="flex flex-col md:flex-row justify-between mt-4 items-center"></div>
     </div>
   );
 };
 
 export default Users;
+
+

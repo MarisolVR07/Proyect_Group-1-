@@ -8,25 +8,24 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [inputValue, setInputValue] = useState('');
 
-  // Using useCallback to memoize the debounced function
+
   const debouncedSearch = useCallback(
-    debounce((query: string) => { // Adding type to `query`
+    debounce((query: string) => { 
       onSearch(query);
     }, 300),
-    [onSearch] // Ensuring `onSearch` is a stable function
+    [onSearch] 
   );
 
   useEffect(() => {
-    // Only call debouncedSearch if inputValue is not empty
+
     if (inputValue) {
       debouncedSearch(inputValue);
     }
 
-    // Cleanup function to cancel the debounce on component unmount or inputValue change
     return () => {
       debouncedSearch.cancel();
     };
-  }, [inputValue, debouncedSearch]); // Correct dependencies
+  }, [inputValue, debouncedSearch]);
 
   return (
     <input
