@@ -6,12 +6,12 @@ import DebugModeToggle from "@/components/debug_mode/DebugModeToggle";
 
 export default function Home() {
   return (
-    <main className="w-full h-full flex flex-col items-center justify-center min-h-screen">
-      <MsalProvider instance={msalInstance}>
-        <DebugModeToggle>
+    <DebugModeToggle>
+      <div className="w-full h-full flex flex-col items-center justify-center min-h-screen">
+        <MsalProvider instance={msalInstance}>
           <Login />
-        </DebugModeToggle>
-      </MsalProvider>
-    </main>
+        </MsalProvider>
+      </div>
+    </DebugModeToggle>
   );
 }

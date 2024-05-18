@@ -28,13 +28,13 @@ const DebugModeToggle = ({
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col min-h-screen bg-gradient-to-br from-black via-100% via-violet-900 to-violet-800">
+    <main className="w-full h-full flex flex-col min-h-screen bg-gradient-to-br from-black via-100% via-violet-900 to-violet-800">
       {debugMode &&
         debugMessages.map((message, index) => (
           <Alert key={index} type={message.type} message={message.content} />
         ))}
       {children}
-    </div>
+    </main>
   );
 };
 
