@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import InputField from "@/components/general/InputField";
 import { useUnitStore } from "@/store/unitStore";
 import { useDepartmentsStore } from "@/store/departmentStore";
-import { Unit } from "@/app/types/entities";
+import { Department, Unit } from "@/app/types/entities";
 import { ChangeEvent } from "react";
 
 interface FormRowProps {
@@ -64,20 +64,32 @@ export default function Page() {
   const [searchQuery, setSearchQuery] = useState("");
   const {departments, getDepartments, getDepartment, saveDepartment, updateDepartment} = useDepartmentsStore();
   const { units, getUnits, getUnit, saveUnit, updateUnit } = useUnitStore();
+
   const [unit, setUnit] = useState<Unit>({
     UND_Name: " ",
     UND_Email: " ",
+    UND_Status: " ",
+  });
+
+  const [department, setDepartment] = useState<Department>({
+    DPT_Name : " ",
+    DPT_Status: " ",
   });
 
   const [unitName, setUnitName] = useState<string>("");
   const [unitEmail, setUnitEmail] = useState<string>("");
-
+  const [unitStatus, setUnitStatus] = useState<string>("");
+  const [deparmentName, setDepartmentName] = useState<string>("");
+  const [deparmentStatus, setDepartmentStatus] = useState<string>("");
   const handleSaveClickUnit = () => {
     saveUnit(unit);
-    console.log("Unit saved");
+    console.log(unit);
+    //console.log("Unit saved");
   };
   const handleSaveClickDeparment = () => {
-    console.log("Deparment saved");
+    saveDepartment(department);
+    console.log(department);
+    //console.log("Deparment saved");
   };
   const handleDeleteClick = () => {
     console.log("Deleted");
@@ -85,9 +97,32 @@ export default function Page() {
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
   };
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUnitName(e.target.value);
-    };
+  const handleChangeName = (e: string) => {
+    console.log(e);
+    setUnit(i=>({...i,UND_Name:e}));
+  };
+const handleChangeEmail= (e: string) => {
+  console.log(e);
+  setUnit(i=>({...i,UND_Email:e}));
+  };
+const handleChangeStatus= (e: string) => {
+  console.log(e);
+  setUnit(i=>({...i,UND_Status:e}));
+  };
+const handleChangeDName= (e: string) => {
+  console.log(e);
+  setUnit(i=>({...i,DPT_Name:e}));
+  };
+const handleChangeDStatus= (e: string) => {
+  console.log(e);
+  setUnit(i=>({...i,DPT_Status:e}));
+  };
+
+
+
+
+
+
 
   return (
     <div className="relative w-full flex flex-col items-center justify-center my-4 text-white font-poppins font-semibold drop-shadow-xl">
@@ -104,7 +139,7 @@ export default function Page() {
                 label=""
                 placeholder="Unit Name"
                 className="w-full rounded-md"
-                onChange = {handleChange}
+                onChange = {handleChangeName}
               />
             </div>
             <div className="bg-gray-700 w-full h-10 py-1 text-center">
@@ -116,6 +151,7 @@ export default function Page() {
                 label=""
                 placeholder="Unit Email"
                 className="w-full rounded-md"
+                onChange = {handleChangeEmail}
               />
             </div>
             <div className="bg-gray-700 w-full px-3 py-3 mb-3 flex items-center justify-between rounded-b-btn">
@@ -125,6 +161,7 @@ export default function Page() {
                   id="stateCheckbox"
                   name="stateCheckbox"
                   className="ml-2"
+                  //onChange = {handleChangeStatus}
                 />
                 <label htmlFor="stateCheckbox" className="text-white">
                   Status
@@ -172,6 +209,7 @@ export default function Page() {
               type="text"
               className="w-full rounded-md"
               placeholder="Department Name"
+              onChange={handleChangeDName}
             />
           </div>
           <div className="bg-gray-700 w-full px-3 py-3 mb-3 flex items-center justify-between rounded-b-btn">
@@ -181,6 +219,7 @@ export default function Page() {
                 id="stateCheckbox"
                 name="stateCheckbox"
                 className="ml-2"
+                //onChange={handleChangeDName}
               />
               <label htmlFor="stateCheckbox" className="text-white">
                 Status
