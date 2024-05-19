@@ -28,9 +28,9 @@ model rc_departments {
   DPT_Id                   Int                        @id @unique(map: "DPT_Id") @default(autoincrement())
   DPT_Name                 String                     @db.VarChar(100)
   DPT_Status               String?                    @db.VarChar(1)
-  DPT_Unit                 Int
+  DPT_Unit                 Int?
   rc_appliedselfassessment rc_appliedselfassessment[]
-  rc_unit                  rc_unit                    @relation(fields: [DPT_Unit], references: [UND_Id], onUpdate: Restrict, map: "Unit departments")
+  rc_unit                  rc_unit?                   @relation(fields: [DPT_Unit], references: [UND_Id], onDelete: Restrict, onUpdate: Restrict, map: "Unit departments")
   rc_users                 rc_users[]
 
   @@index([DPT_Unit], map: "IX_Relationship14")
