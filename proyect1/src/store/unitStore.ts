@@ -75,7 +75,7 @@ interface UnitState {
       set((state) => ({
         ...state,
         units: state.units.map((un) =>
-            un.UND_Id === unit.UND_Id? updatedUnit : un
+            un.UND_Id === unit.UND_Id? updatedUnit  : un
         ),
       }));
       return updatedUnit;

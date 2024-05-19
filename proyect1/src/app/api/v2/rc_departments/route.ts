@@ -8,6 +8,8 @@ export async function GET(
 ) {
   try { 
     const departments = await prisma.rc_departments.findMany({
+
+        
     });
     return NextResponse.json(departments, { status: 200 });
   } catch (error) {

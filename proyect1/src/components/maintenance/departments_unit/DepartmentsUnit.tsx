@@ -7,6 +7,11 @@ import InputForms from "../../forms/InputForms";
 import SecondaryButtom from "../../general/SecondaryButton";
 import React, { useState } from "react";
 import InputField from "@/components/general/InputField";
+import { useUnitStore } from "@/store/unitStore";
+import { useDepartmentsStore } from "@/store/departmentStore";
+import { Department, Unit } from "@/app/types/entities";
+import { ChangeEvent } from "react";
+
 interface FormRowProps {
   label: string;
   id: string;
@@ -17,6 +22,7 @@ interface SearchBarProps {
   onSearch: (query: string) => void;
   placeholder?: string;
 }
+
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch, placeholder }) => {
   return (
     <input
@@ -27,6 +33,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, placeholder }) => {
     />
   );
 };
+
 const FormRow: React.FC<FormRowProps> = ({ label, id, type = "text" }) => {
   return (
     <div
@@ -53,21 +60,77 @@ const FormRow: React.FC<FormRowProps> = ({ label, id, type = "text" }) => {
   );
 };
 
-const handleSaveClick = () => {
-  console.log("Save");
-};
-const handleAddClick = () => {
-  console.log("Add");
-};
-const handleDeleteClick = () => {
-  console.log("Add");
-};
-
 export default function Page() {
   const [searchQuery, setSearchQuery] = useState("");
+  const {
+    departments,
+    getDepartments,
+    getDepartment,
+    saveDepartment,
+    updateDepartment,
+  } = useDepartmentsStore();
+  const { units, getUnits, getUnit, saveUnit, updateUnit } = useUnitStore();
 
+  const [unit, setUnit] = useState<Unit>({
+    UND_Name: " ",
+    UND_Email: " ",
+    UND_Status: " ",
+  });
+
+  const [department, setDepartment] = useState<Department>({
+    DPT_Name: " ",
+    DPT_Status: " ",
+  });
+
+  const [unitName, setUnitName] = useState<string>("");
+  const [unitEmail, setUnitEmail] = useState<string>("");
+  const [unitStatus, setUnitStatus] = useState<string>("");
+  const [deparmentName, setDepartmentName] = useState<string>("");
+  const [deparmentStatus, setDepartmentStatus] = useState<string>("");
+  const handleSaveClickUnit = () => {
+    setUnit({
+      UND_Name: unitName,
+      UND_Email: unitEmail,
+      UND_Status: "a",
+    });
+    saveUnit(unit);
+    console.log(unit);
+    //console.log("Unit saved");
+  };
+  const handleSaveClickDeparment = () => {
+    setDepartment({
+      DPT_Name: deparmentName,
+      DPT_Status: "a",
+    });
+    saveDepartment(department);
+    console.log(department);
+    //console.log("Deparment saved");
+  };
+  const handleDeleteClick = () => {
+    console.log("Deleted");
+  };
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
+  };
+  const handleChangeName = (e: string) => {
+    console.log(e);
+    setUnit((i) => ({ ...i, UND_Name: e }));
+  };
+  const handleChangeEmail = (e: string) => {
+    console.log(e);
+    setUnit((i) => ({ ...i, UND_Email: e }));
+  };
+  const handleChangeStatus = (e: string) => {
+    console.log(e);
+    setUnit((i) => ({ ...i, UND_Status: e }));
+  };
+  const handleChangeDName = (e: string) => {
+    console.log(e);
+    setDepartment((i) => ({ ...i, DPT_Name: e }));
+  };
+  const handleChangeDStatus = (e: string) => {
+    console.log(e);
+    setDepartment((i) => ({ ...i, DPT_Status: e }));
   };
 
   return (
@@ -79,13 +142,13 @@ export default function Page() {
             <div className="bg-gray-700 w-full h-10 py-1 text-center rounded-t-xl">
               <h2 className="text-white text-base">NAME</h2>
             </div>
-
             <div className="bg-gray-700 w-full px-3 pb-3 mb-1">
               <InputForms
                 type="text"
                 label=""
                 placeholder="Unit Name"
                 className="w-full rounded-md"
+                onChange={handleChangeName}
               />
             </div>
             <div className="bg-gray-700 w-full h-10 py-1 text-center">
@@ -97,6 +160,7 @@ export default function Page() {
                 label=""
                 placeholder="Unit Email"
                 className="w-full rounded-md"
+                onChange={handleChangeEmail}
               />
             </div>
             <div className="bg-gray-700 w-full px-3 py-3 mb-3 flex items-center justify-between rounded-b-btn">
@@ -106,12 +170,13 @@ export default function Page() {
                   id="stateCheckbox"
                   name="stateCheckbox"
                   className="ml-2"
+                  //onChange = {handleChangeStatus}
                 />
                 <label htmlFor="stateCheckbox" className="text-white">
                   Status
                 </label>
               </div>
-              <Button onClick={handleSaveClick} className="rounded-xl w-44">
+              <Button onClick={handleSaveClickUnit} className="rounded-xl w-44">
                 Save
               </Button>
             </div>
@@ -129,12 +194,20 @@ export default function Page() {
                     <th className="px-4 py-2">Status</th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+
+                <tbody>
+                  {units.map((unit, index) => (
+                    <tr key={index}>
+                      <td className="px-4 py-2">{unit.UND_Name}</td>
+                      <td className="px-4 py-2">{unit.UND_Email}</td>
+                      <td className="px-4 py-2">{unit.UND_Status}</td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
             </div>
           </div>
         </div>
-
         <div className="form-control flex-1 max-w-xl p-5 rounded-md bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl text-center">
           <h2 className="text-2xl text-white mb-3">DEPARTMENTS</h2>
           <div className="bg-gray-700 w-full h-10 py-1 text-center rounded-t-xl">
@@ -145,6 +218,7 @@ export default function Page() {
               type="text"
               className="w-full rounded-md"
               placeholder="Department Name"
+              onChange={handleChangeDName}
             />
           </div>
           <div className="bg-gray-700 w-full px-3 py-3 mb-3 flex items-center justify-between rounded-b-btn">
@@ -154,12 +228,16 @@ export default function Page() {
                 id="stateCheckbox"
                 name="stateCheckbox"
                 className="ml-2"
+                //onChange={handleChangeDName}
               />
               <label htmlFor="stateCheckbox" className="text-white">
                 Status
               </label>
             </div>
-            <Button onClick={handleSaveClick} className="rounded-xl w-44">
+            <Button
+              onClick={handleSaveClickDeparment}
+              className="rounded-xl w-44"
+            >
               Add
             </Button>
           </div>
