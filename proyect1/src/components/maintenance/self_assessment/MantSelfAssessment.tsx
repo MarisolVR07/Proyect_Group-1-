@@ -24,14 +24,6 @@ const MantSelfAssessment: React.FC = () => {
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
-  const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
-
-  const dropdownLinks = [
-    { href: "", text: "D1" },
-    { href: "", text: "D2" },
-    { href: "", text: "D3" },
-  ];
-
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -53,16 +45,6 @@ const MantSelfAssessment: React.FC = () => {
       <h1 className="text-2xl text-white mb-5">
         MAINTENANCE OF SELF-ASSESSMENTS
       </h1>
-      <div className="mb-5 px-3 rounded-md">
-        <PrimaryButton
-          icon={<DownArrowIcon />}
-          className="rounded-md w-40"
-          onClick={toggleDropdown}
-        >
-          Department
-        </PrimaryButton>
-        <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />
-      </div>
       <div className="w-full mb-4 text-center">
         <div className="bg-gray-700 w-full h-10 py-1 text-center rounded-t-xl">
           <h2 className="text-white text-base">Audit</h2>
