@@ -2,7 +2,7 @@ export type Department = {
   DPT_Id?: number | null;
   DPT_Name: string;
   DPT_Status?: string;
-  DPT_Institution?: number | null | Unit;
+  DPT_Unit?: number | null | Unit;
   rc_users?: User[] | null;
 };
 

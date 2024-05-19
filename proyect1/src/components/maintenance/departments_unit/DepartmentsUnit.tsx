@@ -62,13 +62,7 @@ const FormRow: React.FC<FormRowProps> = ({ label, id, type = "text" }) => {
 
 export default function Page() {
   const [searchQuery, setSearchQuery] = useState("");
-  const {
-    departments,
-    getDepartments,
-    getDepartment,
-    saveDepartment,
-    updateDepartment,
-  } = useDepartmentsStore();
+  const {departments, getDepartments, getDepartment, saveDepartment, updateDepartment} = useDepartmentsStore();
   const { units, getUnits, getUnit, saveUnit, updateUnit } = useUnitStore();
 
   const [unit, setUnit] = useState<Unit>({
@@ -80,6 +74,7 @@ export default function Page() {
   const [department, setDepartment] = useState<Department>({
     DPT_Name: " ",
     DPT_Status: " ",
+    //DPT_Unit: ,
   });
 
   const [unitName, setUnitName] = useState<string>("");
@@ -87,11 +82,12 @@ export default function Page() {
   const [unitStatus, setUnitStatus] = useState<string>("");
   const [deparmentName, setDepartmentName] = useState<string>("");
   const [deparmentStatus, setDepartmentStatus] = useState<string>("");
+
   const handleSaveClickUnit = () => {
     setUnit({
       UND_Name: unitName,
       UND_Email: unitEmail,
-      UND_Status: "a",
+      UND_Status: " ",
     });
     saveUnit(unit);
     console.log(unit);
@@ -100,7 +96,8 @@ export default function Page() {
   const handleSaveClickDeparment = () => {
     setDepartment({
       DPT_Name: deparmentName,
-      DPT_Status: "a",
+      DPT_Status: " ",
+      //DPT_Unit: 1,
     });
     saveDepartment(department);
     console.log(department);
@@ -113,23 +110,18 @@ export default function Page() {
     setSearchQuery(query);
   };
   const handleChangeName = (e: string) => {
-    console.log(e);
     setUnit((i) => ({ ...i, UND_Name: e }));
   };
   const handleChangeEmail = (e: string) => {
-    console.log(e);
     setUnit((i) => ({ ...i, UND_Email: e }));
   };
   const handleChangeStatus = (e: string) => {
-    console.log(e);
     setUnit((i) => ({ ...i, UND_Status: e }));
   };
   const handleChangeDName = (e: string) => {
-    console.log(e);
     setDepartment((i) => ({ ...i, DPT_Name: e }));
   };
   const handleChangeDStatus = (e: string) => {
-    console.log(e);
     setDepartment((i) => ({ ...i, DPT_Status: e }));
   };
 
@@ -194,12 +186,10 @@ export default function Page() {
                     <th className="px-4 py-2">Status</th>
                   </tr>
                 </thead>
-
                 <tbody>
                   {units.map((unit, index) => (
                     <tr key={index}>
                       <td className="px-4 py-2">{unit.UND_Name}</td>
-                      <td className="px-4 py-2">{unit.UND_Email}</td>
                       <td className="px-4 py-2">{unit.UND_Status}</td>
                     </tr>
                   ))}
@@ -255,7 +245,14 @@ export default function Page() {
                   <th className="px-4 py-2">Status</th>
                 </tr>
               </thead>
-              <tbody></tbody>
+              <tbody>
+              {departments.map((departments, index) => (
+                    <tr key={index}>
+                      <td className="px-4 py-2">{departments.DPT_Name}</td>
+                      <td className="px-4 py-2">{departments.DPT_Status}</td>
+                    </tr>
+                  ))}
+              </tbody>
             </table>
           </div>
         </div>

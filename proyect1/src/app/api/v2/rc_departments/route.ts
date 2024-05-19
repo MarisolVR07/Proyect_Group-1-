@@ -6,11 +6,8 @@ export async function GET(
   req: NextRequest,
   res: NextResponse<String | ErrorResponse | null>
 ) {
-  try { 
-    const departments = await prisma.rc_departments.findMany({
-
-        
-    });
+  try {
+    const departments = await prisma.rc_departments.findMany({});
     return NextResponse.json(departments, { status: 200 });
   } catch (error) {
     return NextResponse.json(error, { status: 500 });
@@ -21,7 +18,7 @@ export async function POST(
   req: NextRequest,
   res: NextResponse<String | ErrorResponse | null>
 ) {
-  try { 
+  try {
     const department = await req.json();
     const departments = await prisma.rc_departments.create({
       data: {
