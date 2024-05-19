@@ -5,7 +5,7 @@ import Label from "../../general/Label";
 import TextArea from "../../forms/TextAreaForms";
 import InputForms from "../../forms/InputForms";
 import SecondaryButtom from "../../general/SecondaryButton";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputField from "@/components/general/InputField";
 import { useUnitStore } from "@/store/unitStore";
 import { useDepartmentsStore } from "@/store/departmentStore";
@@ -65,6 +65,10 @@ export default function Page() {
   const {departments, getDepartments, getDepartment, saveDepartment, updateDepartment} = useDepartmentsStore();
   const { units, getUnits, getUnit, saveUnit, updateUnit } = useUnitStore();
 
+  useEffect (()=>{
+    getUnits();
+  }, []);
+
   const [unit, setUnit] = useState<Unit>({
     UND_Name: " ",
     UND_Email: " ",
@@ -74,7 +78,7 @@ export default function Page() {
   const [department, setDepartment] = useState<Department>({
     DPT_Name: " ",
     DPT_Status: " ",
-    //DPT_Unit: ,
+    DPT_Unit: unit.UND_Id,
   });
 
   const [unitName, setUnitName] = useState<string>("");
@@ -83,26 +87,36 @@ export default function Page() {
   const [deparmentName, setDepartmentName] = useState<string>("");
   const [deparmentStatus, setDepartmentStatus] = useState<string>("");
 
-  const handleSaveClickUnit = () => {
-    setUnit({
-      UND_Name: unitName,
-      UND_Email: unitEmail,
-      UND_Status: " ",
-    });
-    saveUnit(unit);
-    console.log(unit);
-    //console.log("Unit saved");
+  const handleSaveClickUnit = async () => {
+    try {
+      console.log(unit);
+      const savedUnit = await saveUnit(unit);
+      console.log(savedUnit);
+      setUnit(savedUnit as Unit);
+      console.log(unit);
+    } catch (error) {
+      console.log(error);
+    }
+    console. log("Unit saved succesfull");
   };
-  const handleSaveClickDeparment = () => {
-    setDepartment({
-      DPT_Name: deparmentName,
-      DPT_Status: " ",
-      //DPT_Unit: 1,
-    });
-    saveDepartment(department);
-    console.log(department);
-    //console.log("Deparment saved");
+
+  const handleSaveClickDeparment = async () => {
+    if (unit.UND_Id) {
+      setDepartment((i) => ({
+        DPT_Unit: unit.UND_Id,
+        ...i,
+      }));
+      console.log(department);
+      const savedDepartment = await saveDepartment({... department, DPT_Unit: unit.UND_Id,
+         });
+      console.log(savedDepartment);
+      console.log(department);
+    } else {
+      console.log("Unit not saved");
+    }
+    console. log("Department saved succesfull");
   };
+
   const handleDeleteClick = () => {
     console.log("Deleted");
   };
@@ -115,14 +129,14 @@ export default function Page() {
   const handleChangeEmail = (e: string) => {
     setUnit((i) => ({ ...i, UND_Email: e }));
   };
-  const handleChangeStatus = (e: string) => {
-    setUnit((i) => ({ ...i, UND_Status: e }));
+  const handleChangeStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUnit((i) => ({ ...i, UND_Status: e.target.checked? "a" : "i" }));
   };
   const handleChangeDName = (e: string) => {
     setDepartment((i) => ({ ...i, DPT_Name: e }));
   };
-  const handleChangeDStatus = (e: string) => {
-    setDepartment((i) => ({ ...i, DPT_Status: e }));
+  const handleChangeDStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDepartment((i) => ({ ...i, DPT_Status: e.target.checked? "a" : "i" }));
   };
 
   return (
@@ -162,7 +176,7 @@ export default function Page() {
                   id="stateCheckbox"
                   name="stateCheckbox"
                   className="ml-2"
-                  //onChange = {handleChangeStatus}
+                  onChange = {handleChangeStatus}
                 />
                 <label htmlFor="stateCheckbox" className="text-white">
                   Status
@@ -190,7 +204,8 @@ export default function Page() {
                   {units.map((unit, index) => (
                     <tr key={index}>
                       <td className="px-4 py-2">{unit.UND_Name}</td>
-                      <td className="px-4 py-2">{unit.UND_Status}</td>
+                      <td className="px-4 py-2">{unit.UND_Status === "a"?"Active":"Inactive"}</td>
+
                     </tr>
                   ))}
                 </tbody>
@@ -218,7 +233,7 @@ export default function Page() {
                 id="stateCheckbox"
                 name="stateCheckbox"
                 className="ml-2"
-                //onChange={handleChangeDName}
+                onChange={handleChangeDStatus}
               />
               <label htmlFor="stateCheckbox" className="text-white">
                 Status
@@ -246,12 +261,12 @@ export default function Page() {
                 </tr>
               </thead>
               <tbody>
-              {departments.map((departments, index) => (
-                    <tr key={index}>
-                      <td className="px-4 py-2">{departments.DPT_Name}</td>
-                      <td className="px-4 py-2">{departments.DPT_Status}</td>
-                    </tr>
-                  ))}
+                {departments.map((departments, index) => (
+                  <tr key={index}>
+                    <td className="px-4 py-2">{departments.DPT_Name}</td>
+                    <td className="px-4 py-2">{departments.DPT_Status === "a"?"Active":"Inactive"}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

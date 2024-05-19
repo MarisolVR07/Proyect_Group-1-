@@ -28,7 +28,7 @@ export async function POST(
       },
       // include: {rc_departments: true}
     });
-    return NextResponse.json(unit, { status: 201 });
+    return NextResponse.json(units, { status: 201 });
   } catch (error) {
     return NextResponse.json(error, { status: 500 });
   }
