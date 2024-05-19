@@ -8,6 +8,7 @@ import { AccountInfo } from "@azure/msal-browser";
 import { useUserStore } from "@/store/userStore";
 import { ErrorResponse } from "@/app/types/api";
 import { useAuthStore } from "@/store/authStore";
+import Cookies from 'js-cookie';
 
 const LoginButton = () => {
   const [error, setError] = useState<ErrorResponse>();
@@ -20,8 +21,15 @@ const LoginButton = () => {
     try {
       const loginResponse = await instance.loginPopup(loginRequest);
       const userInfo = loginResponse.account;
+      const token = loginResponse.accessToken;
+
+      Cookies.set('auth_token', token, { secure: true, sameSite: 'strict' });
+
+
       await getUserInfo(userInfo);
       window.location.href = "views/dashboard";
+      
+      
     } catch (error) {
       console.error("Error logging in:", error);
     }
@@ -34,6 +42,7 @@ const LoginButton = () => {
         createUser(user.username, user.name || "");
       } else {
         setCurrentUser(userData);
+        
       }
     } catch (error) {
       console.error(error);

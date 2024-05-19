@@ -25,15 +25,15 @@ model rc_answers {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model rc_departments {
-  DPT_Id             Int                  @id @unique(map: "DPT_Id") @default(autoincrement())
-  DPT_Name           String               @db.VarChar(100)
-  DPT_Status         String?              @db.VarChar(1)
-  DPT_Institution    Int?
-  rc_institution     rc_unit?             @relation(fields: [DPT_Institution], references: [UND_Id], onDelete: Restrict, onUpdate: Restrict, map: "Institution departments")
-  rc_selfassessments rc_selfassessments[]
-  rc_users           rc_users[]
+  DPT_Id                   Int                        @id @unique(map: "DPT_Id") @default(autoincrement())
+  DPT_Name                 String                     @db.VarChar(100)
+  DPT_Status               String?                    @db.VarChar(1)
+  DPT_Unit                 Int
+  rc_appliedselfassessment rc_appliedselfassessment[]
+  rc_unit                  rc_unit                    @relation(fields: [DPT_Unit], references: [UND_Id], onUpdate: Restrict, map: "Unit departments")
+  rc_users                 rc_users[]
 
-  @@index([DPT_Institution], map: "IX_Relationship14")
+  @@index([DPT_Unit], map: "IX_Relationship14")
 }
 
 model rc_parameters {
@@ -73,12 +73,8 @@ model rc_selfassessments {
   SAT_Status               String?                    @db.VarChar(1)
   SAT_Audit                String                     @db.VarChar(255)
   SAT_Description          String                     @db.VarChar(255)
-  SAT_Department           Int
   rc_appliedselfassessment rc_appliedselfassessment[]
   rc_sections              rc_sections[]
-  rc_departments           rc_departments             @relation(fields: [SAT_Department], references: [DPT_Id], onUpdate: Restrict, map: "SelfAssessment Department")
-
-  @@index([SAT_Department], map: "IX_Relationship12")
 }
 
 model rc_users {
@@ -113,10 +109,13 @@ model rc_appliedselfassessment {
   ASA_ReviewedBy     String             @db.VarChar(30)
   ASA_MadeBy         String             @db.VarChar(30)
   ASA_Assessment     Int
+  ASA_Department     Int
   rc_answers         rc_answers[]
+  rc_departments     rc_departments     @relation(fields: [ASA_Department], references: [DPT_Id], onUpdate: Restrict, map: "Department by evaluation carried out")
   rc_selfassessments rc_selfassessments @relation(fields: [ASA_Assessment], references: [SAT_Id], onUpdate: Restrict, map: "SelfAssessment")
 
   @@index([ASA_Assessment], map: "IX_Relationship9")
+  @@index([ASA_Department], map: "IX_Relationship2")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments

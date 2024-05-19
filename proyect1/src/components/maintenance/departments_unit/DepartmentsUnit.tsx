@@ -62,7 +62,13 @@ const FormRow: React.FC<FormRowProps> = ({ label, id, type = "text" }) => {
 
 export default function Page() {
   const [searchQuery, setSearchQuery] = useState("");
-  const {departments, getDepartments, getDepartment, saveDepartment, updateDepartment} = useDepartmentsStore();
+  const {
+    departments,
+    getDepartments,
+    getDepartment,
+    saveDepartment,
+    updateDepartment,
+  } = useDepartmentsStore();
   const { units, getUnits, getUnit, saveUnit, updateUnit } = useUnitStore();
 
   const [unit, setUnit] = useState<Unit>({
@@ -72,7 +78,7 @@ export default function Page() {
   });
 
   const [department, setDepartment] = useState<Department>({
-    DPT_Name : " ",
+    DPT_Name: " ",
     DPT_Status: " ",
   });
 
@@ -82,11 +88,20 @@ export default function Page() {
   const [deparmentName, setDepartmentName] = useState<string>("");
   const [deparmentStatus, setDepartmentStatus] = useState<string>("");
   const handleSaveClickUnit = () => {
+    setUnit({
+      UND_Name: unitName,
+      UND_Email: unitEmail,
+      UND_Status: "a",
+    });
     saveUnit(unit);
     console.log(unit);
     //console.log("Unit saved");
   };
   const handleSaveClickDeparment = () => {
+    setDepartment({
+      DPT_Name: deparmentName,
+      DPT_Status: "a",
+    });
     saveDepartment(department);
     console.log(department);
     //console.log("Deparment saved");
@@ -99,30 +114,24 @@ export default function Page() {
   };
   const handleChangeName = (e: string) => {
     console.log(e);
-    setUnit(i=>({...i,UND_Name:e}));
-  };
-const handleChangeEmail= (e: string) => {
-  console.log(e);
-  setUnit(i=>({...i,UND_Email:e}));
-  };
-const handleChangeStatus= (e: string) => {
-  console.log(e);
-  setUnit(i=>({...i,UND_Status:e}));
-  };
-const handleChangeDName= (e: string) => {
-  console.log(e);
-  setUnit(i=>({...i,DPT_Name:e}));
-  };
-const handleChangeDStatus= (e: string) => {
-  console.log(e);
-  setUnit(i=>({...i,DPT_Status:e}));
-  };
-
-
-
-
-
-
+    setUnit((i) => ({ ...i, UND_Name: e }));
+  };
+  const handleChangeEmail = (e: string) => {
+    console.log(e);
+    setUnit((i) => ({ ...i, UND_Email: e }));
+  };
+  const handleChangeStatus = (e: string) => {
+    console.log(e);
+    setUnit((i) => ({ ...i, UND_Status: e }));
+  };
+  const handleChangeDName = (e: string) => {
+    console.log(e);
+    setDepartment((i) => ({ ...i, DPT_Name: e }));
+  };
+  const handleChangeDStatus = (e: string) => {
+    console.log(e);
+    setDepartment((i) => ({ ...i, DPT_Status: e }));
+  };
 
   return (
     <div className="relative w-full flex flex-col items-center justify-center my-4 text-white font-poppins font-semibold drop-shadow-xl">
@@ -139,7 +148,7 @@ const handleChangeDStatus= (e: string) => {
                 label=""
                 placeholder="Unit Name"
                 className="w-full rounded-md"
-                onChange = {handleChangeName}
+                onChange={handleChangeName}
               />
             </div>
             <div className="bg-gray-700 w-full h-10 py-1 text-center">
@@ -151,7 +160,7 @@ const handleChangeDStatus= (e: string) => {
                 label=""
                 placeholder="Unit Email"
                 className="w-full rounded-md"
-                onChange = {handleChangeEmail}
+                onChange={handleChangeEmail}
               />
             </div>
             <div className="bg-gray-700 w-full px-3 py-3 mb-3 flex items-center justify-between rounded-b-btn">
