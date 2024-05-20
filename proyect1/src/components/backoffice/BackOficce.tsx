@@ -129,7 +129,7 @@ const BackOffice = () => {
             <InputField
               type="text"
               label=""
-              placeholder="Institution"
+              placeholder="Institution name"
               value={PRM_Institution || ""}
               onChange={(value: string) => setPRM_Institution(value)}
             />
