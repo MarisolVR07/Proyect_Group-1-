@@ -9,11 +9,13 @@ import PageButton from "../../general/PageButton";
 import SecondaryButtom from "../../general/SecondaryButton";
 import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
 import { useSectionStore } from "@/store/sectionStore";
-import { SelfAssessments, Section } from "@/app/types/entities";
+import { useQuestionStore } from "@/store/questionStore";
+import { SelfAssessments, Section, Question } from "@/app/types/entities";
 
 const MantSelfAssessment: React.FC = () => {
   const selfAssessmentStore = useSelfAssessmentsStore();
   const sectionStore = useSectionStore();
+  const questionStore = useQuestionStore();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [audit, setAudit] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -56,7 +58,6 @@ const MantSelfAssessment: React.FC = () => {
       return;
     }
 
-    // Check if all section names and questions are filled
     for (let key in sectionData) {
       if (!sectionData[key].sectionName.trim()) {
         alert(`Please fill in the Section Name for Section ${key}.`);
@@ -71,13 +72,11 @@ const MantSelfAssessment: React.FC = () => {
       }
     }
 
-    // Crear la estructura de datos de la autoevaluación
     const selfAssessmentData: SelfAssessments = {
       SAT_Audit: audit.trim(),
       SAT_Description: description.trim(),
     };
 
-    // Guardar la autoevaluación utilizando la función definida en el store
     const savedSelfAssessment = await selfAssessmentStore.saveSelfAssessment(
       selfAssessmentData
     );
@@ -103,12 +102,33 @@ const MantSelfAssessment: React.FC = () => {
       const savedSection = await sectionStore.saveSection(sectionDataItem);
 
       if ("error" in savedSection) {
-        alert(
-          "Error al guardar la seccion."
-        );
+        alert("Error al guardar la seccion.");
         return;
       }
+
+      const sectionQuestions = sectionData[key].questions.map(
+        (questionText, index) => {
+          const questionData: Question = {
+            QES_Number: `${savedSection.SEC_Number}.${index + 1}`,
+            QES_Text: questionText.trim(),
+            QES_Section:
+              savedSection.SEC_Id !== undefined ? savedSection.SEC_Id : null,
+          };
+
+          return questionData;
+        }
+      );
+
+      for (let question of sectionQuestions) {
+        const savedQuestion = await questionStore.saveQuestion(question);
+
+        if ("error" in savedQuestion) {
+          alert("Error al guardar la pregunta.");
+          return;
+        }
+      }
     }
+
     alert("Form submitted successfully!");
   };
 
