@@ -87,9 +87,7 @@ const BackOffice = () => {
               <thead>
                 <tr className="bg-violet-800 text-white">
                   <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Name</th>
-                  <th className="px-4 py-2">First Last Name</th>
-                  <th className="px-4 py-2">Second Last Name</th>
+                  <th className="px-4 py-2">FullName</th>
                   <th className="px-4 py-2">State</th>
                 </tr>
               </thead>

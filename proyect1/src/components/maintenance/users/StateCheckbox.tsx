@@ -6,6 +6,7 @@ interface StateCheckboxProps {
 }
 
 const StateCheckbox: React.FC<StateCheckboxProps> = ({ isChecked, onChange }) => {
+  console.log(`Renderizando StateCheckbox, isChecked: ${isChecked}`);
   return (
     <input type="checkbox" checked={isChecked} onChange={onChange} />
   );

@@ -84,7 +84,7 @@ export async function getUsers(): Promise<User[] | ErrorResponse> {
 
 export async function updateUser(user: User): Promise<User | ErrorResponse> {
   try {
-    const res = await fetch(API_URL + `rc_users/${user.USR_Email}`, {
+    const res = await fetch(API_URL + `rc_users/${user.USR_Id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

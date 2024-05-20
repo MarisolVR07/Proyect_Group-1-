@@ -18,6 +18,9 @@ interface UsersProps {
 }
 
 const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
+  useEffect(() => {
+    console.log('Componente Users montado o actualizado');
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [editUserId, setEditUserId] = useState<number | null>(null);
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
@@ -47,6 +50,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
 
   const handleStatusChange = (user: User, event: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.target.checked;
+    console.log(`Checkbox para usuario ${user.USR_Id} intenta cambiar a: ${isChecked ? 'Active' : 'Inactive'}`);
     const updatedUser = {
       ...user,
       USR_Status: isChecked ? "Active" : "Inactive",
