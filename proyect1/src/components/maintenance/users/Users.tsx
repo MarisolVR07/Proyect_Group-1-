@@ -5,6 +5,7 @@ import { useUserStore } from "@/store/userStore";
 import { useAuthStore } from "@/store/authStore";
 import Spinner from "@/components/skeletons/Spinner";
 import DepartmentDropdown from "./DepartmentDropdown";
+import RolDropdown from "./RolDropdowm";
 import StateCheckbox from "./StateCheckbox";
 import { User } from "@/app/types/entities";
 
@@ -17,12 +18,8 @@ interface UsersProps {
   onDebugMessage: (message: DebugMessage) => void;
 }
 
-
-
-
 const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
-  useEffect(() => {
-  });
+  useEffect(() => {});
   const [searchQuery, setSearchQuery] = useState("");
   const [editUserId, setEditUserId] = useState<number | null>(null);
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
@@ -50,9 +47,16 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     fetchData();
   }, []);
 
-  const handleStatusChange = (user: User, event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleStatusChange = (
+    user: User,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const isChecked = event.target.checked;
-    console.log(`Checkbox para usuario ${user.USR_Id} intenta cambiar a: ${isChecked ? 'Active' : 'Inactive'}`);
+    console.log(
+      `Checkbox para usuario ${user.USR_Id} intenta cambiar a: ${
+        isChecked ? "Active" : "Inactive"
+      }`
+    );
     const updatedUser = {
       ...user,
       USR_Status: isChecked ? "a" : "i",
@@ -61,10 +65,20 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   };
 
   const handleDepartmentChange = (user: User, newDeptId: number) => {
-    console.log(`Usuario ${user.USR_Id} intenta cambiar de departamento a: ${newDeptId}`);
-    const updatedUser:User = { ...user, USR_Department: newDeptId  !== undefined ? newDeptId : null};
+    console.log(
+      `Usuario ${user.USR_Id} intenta cambiar de departamento a: ${newDeptId}`
+    );
+    const updatedUser: User = {
+      ...user,
+      USR_Department: newDeptId !== undefined ? newDeptId : null,
+    };
     updateUser(updatedUser);
   };
+
+  const handleRolChange = (user: User, newRol: string) => {
+    const updatedUser: User = { ...user, USR_Role: newRol };
+    updateUser(updatedUser);
+};
 
   const handleSearchChange = async (query: string) => {
     if (searchQuery === query) return;
@@ -77,19 +91,6 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     } catch (error) {
       console.error("Error searching users", error);
       onDebugMessage({ content: "Error searching users", type: "Error" });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-
-  const handleSaveClick = async (user: User) => {
-    setIsLoading(true);
-    try {
-      await updateUser(user);
-      setEditUserId(null); // Exit edit mode on save
-    } catch (error) {
-      console.error("Failed to update user", error);
     } finally {
       setIsLoading(false);
     }
@@ -137,24 +138,28 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
                 <th className="px-4 py-2 text-color">Email</th>
                 <th className="px-4 py-2 text-color">FullName</th>
                 <th className="px-4 py-2 text-color">Department</th>
+                <th className="px-4 py-2 text-color">Rol</th>
                 <th className="px-4 py-2 text-color">State</th>
               </tr>
             </thead>
             <tbody>
               {users.map((userMap, index) => (
-                <tr
-                  key={index} >
+                <tr key={index}>
                   <td className="px-4 py-2">{userMap.USR_Email}</td>
                   <td className="px-4 py-2">{userMap.USR_FullName}</td>
 
                   <td>
                     <DepartmentDropdown
-                      selectedDepartment={
-                        userMap.USR_Department
-                      }
+                      selectedDepartment={userMap.USR_Department}
                       onChange={(newDeptId) =>
                         handleDepartmentChange(userMap, newDeptId)
                       }
+                    />
+                  </td>
+                  <td>
+                    <RolDropdown
+                      selectedRol={userMap.USR_Role}
+                      onChange={(newRol) => handleRolChange(userMap, newRol)}
                     />
                   </td>
                   <td>
@@ -163,7 +168,6 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
                       onChange={(e) => handleStatusChange(userMap, e)}
                     />
                   </td>
-                 
                 </tr>
               ))}
             </tbody>
@@ -176,5 +180,3 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
 };
 
 export default Users;
-
-
