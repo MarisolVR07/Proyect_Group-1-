@@ -8,10 +8,12 @@ import Button from "../../general/PrimaryButton";
 import PageButton from "../../general/PageButton";
 import SecondaryButtom from "../../general/SecondaryButton";
 import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
-import { SelfAssessments } from "@/app/types/entities";
+import { useSectionStore } from "@/store/sectionStore";
+import { SelfAssessments, Section } from "@/app/types/entities";
 
 const MantSelfAssessment: React.FC = () => {
   const selfAssessmentStore = useSelfAssessmentsStore();
+  const sectionStore = useSectionStore();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [audit, setAudit] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -85,6 +87,27 @@ const MantSelfAssessment: React.FC = () => {
         "Error al guardar la autoevaluación. Por favor, inténtelo de nuevo."
       );
       return;
+    }
+    const selfAssessmentId = savedSelfAssessment.SAT_Id;
+
+    for (let key in sectionData) {
+      const sectionName = sectionData[key].sectionName.trim();
+
+      const sectionDataItem: Section = {
+        SEC_Name: sectionName,
+        SEC_Number: key,
+        SEC_SelfAssessments:
+          selfAssessmentId !== undefined ? selfAssessmentId : null,
+      };
+
+      const savedSection = await sectionStore.saveSection(sectionDataItem);
+
+      if ("error" in savedSection) {
+        alert(
+          "Error al guardar la seccion."
+        );
+        return;
+      }
     }
     alert("Form submitted successfully!");
   };
