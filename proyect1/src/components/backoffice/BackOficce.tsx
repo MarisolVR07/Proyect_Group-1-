@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CardsSection from "./CardsSectionBackoficce";
 import DateTimePicker from "../general/DateTimePicker";
 import SearchBar from "../maintenance/users/SearchBar";
@@ -7,17 +7,45 @@ import Image from "next/image";
 import InputField from "../general/InputField";
 import PrimaryButton from "../general/PrimaryButton";
 import { useAuthStore } from "@/store/authStore";
+import { useUserStore } from "@/store/userStore";
+import Spinner from "@/components/skeletons/Spinner";
 
 const BackOffice = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoURL, setLogoURL] = useState<string | null>(null);
   const { currentUser } = useAuthStore();
-
+  const { users, getUsers, getUsersByName, updateUser } = useUserStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const filteredUsers = users.filter(user => user.USR_Role === "none");
   console.log(currentUser);
-  const handleSearchChange = (query: string) => {
+  const handleSearchChange = async (query: string) => {
+    if (searchQuery === query) return;
     setSearchQuery(query);
+    if (!query.trim()) return;
+    setIsLoading(true);
+    try {
+      const results =
+        query.length > 0 ? await getUsersByName(query) : await getUsers();
+    } catch (error) {
+      console.error("Error searching users", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        await getUsers();
+      } catch (error) {
+        console.error("Failed to fetch users", error);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
 
   const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
@@ -81,18 +109,32 @@ const BackOffice = () => {
 
           <div className=" w-full px-3 pb-3 pt-4 mb-1 bg-gray-600 rounded-md items-center justify-center">
             <SearchBar onSearch={handleSearchChange} />
-          </div>
-          <div className="overflow-x-auto mt-4 rounded-md">
-            <table className="table-auto w-full">
-              <thead>
-                <tr className="bg-violet-800 text-white">
-                  <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">FullName</th>
-                  <th className="px-4 py-2">State</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <div className="overflow-x-auto mt-4 rounded-md print-only">
+                <table className="table-auto w-full text-color">
+                  <thead className="bg-violet-800 text-white">
+                    <tr>
+                      <th className="px-4 py-2 text-color">Email</th>
+                      <th className="px-4 py-2 text-color">FullName</th>
+                      <th className="px-4 py-2 text-color">Rol</th>
+                      <th className="px-4 py-2 text-color">State</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredUsers.map((userMap, index) => (
+                      <tr key={index}>
+                        <td className="px-4 py-2">{userMap.USR_Email}</td>
+                        <td className="px-4 py-2">{userMap.USR_FullName}</td>
+                        <td className="px-4 py-2">{userMap.USR_Role}</td>
+                        <td className="px-4 py-2">{userMap.USR_Status}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       </div>
