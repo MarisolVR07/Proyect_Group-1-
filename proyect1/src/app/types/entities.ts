@@ -48,3 +48,13 @@ export type Question = {
   QES_Section: number | null;
   rc_sections?: Section | null;
 };
+
+
+export type Parameter = {
+  PRM_Id?: number | null;
+  PRM_ActivationDate: Date;
+  PRM_DeactivationDate: Date;
+  PRM_Logo?: Blob | null;
+  PRM_Email?: String | null;
+  PRM_Institution?: String | null;
+};
