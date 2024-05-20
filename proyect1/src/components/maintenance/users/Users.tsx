@@ -17,9 +17,11 @@ interface UsersProps {
   onDebugMessage: (message: DebugMessage) => void;
 }
 
+
+
+
 const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   useEffect(() => {
-    console.log('Componente Users montado o actualizado');
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [editUserId, setEditUserId] = useState<number | null>(null);
@@ -53,15 +55,15 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     console.log(`Checkbox para usuario ${user.USR_Id} intenta cambiar a: ${isChecked ? 'Active' : 'Inactive'}`);
     const updatedUser = {
       ...user,
-      USR_Status: isChecked ? "Active" : "Inactive",
+      USR_Status: isChecked ? "a" : "i",
     };
     updateUser(updatedUser);
   };
 
-  const handleDepartmentChange = (user: User, newDeptId: Number) => {
-    // Update user's department locally and prepare to save
-    const updatedUser = { ...user, USR_Department: { DPT_Id: newDeptId } };
-    //updateUser(updatedUser);
+  const handleDepartmentChange = (user: User, newDeptId: number) => {
+    console.log(`Usuario ${user.USR_Id} intenta cambiar de departamento a: ${newDeptId}`);
+    const updatedUser:User = { ...user, USR_Department: newDeptId  !== undefined ? newDeptId : null};
+    updateUser(updatedUser);
   };
 
   const handleSearchChange = async (query: string) => {
@@ -80,9 +82,6 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     }
   };
 
-  const handleRowDoubleClick = (userId: number) => {
-    setEditUserId(userId);
-  };
 
   const handleSaveClick = async (user: User) => {
     setIsLoading(true);
@@ -135,26 +134,23 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
           <table className="table-auto w-full text-color">
             <thead className="bg-violet-800 text-white">
               <tr>
-                <th className="px-4 py-2 text-color">ID</th>
+                <th className="px-4 py-2 text-color">Email</th>
                 <th className="px-4 py-2 text-color">FullName</th>
                 <th className="px-4 py-2 text-color">Department</th>
                 <th className="px-4 py-2 text-color">State</th>
-                <th className="px-4 py-2 text-color">Actions</th>
               </tr>
             </thead>
             <tbody>
               {users.map((userMap, index) => (
                 <tr
-                  key={index}
-                  onDoubleClick={() => handleRowDoubleClick(userMap.USR_Id ?? 0)}
-                >
+                  key={index} >
                   <td className="px-4 py-2">{userMap.USR_Email}</td>
                   <td className="px-4 py-2">{userMap.USR_FullName}</td>
 
                   <td>
                     <DepartmentDropdown
                       selectedDepartment={
-                        null
+                        userMap.USR_Department
                       }
                       onChange={(newDeptId) =>
                         handleDepartmentChange(userMap, newDeptId)
@@ -163,17 +159,11 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
                   </td>
                   <td>
                     <StateCheckbox
-                      isChecked={userMap.USR_Status === "Active"}
+                      isChecked={userMap.USR_Status === "a"}
                       onChange={(e) => handleStatusChange(userMap, e)}
                     />
                   </td>
-                  <td>
-                    {editUserId === userMap.USR_Id && (
-                      <Button onClick={() => handleSaveClick(userMap)}>
-                        Save
-                      </Button>
-                    )}
-                  </td>
+                 
                 </tr>
               ))}
             </tbody>

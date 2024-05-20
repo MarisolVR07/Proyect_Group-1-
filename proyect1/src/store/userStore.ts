@@ -60,9 +60,7 @@ export const useUserStore = create<UserState>((set) => ({
     return users;
   },
   updateUser: async (user: User) => {
-    console.log('Intentando actualizar usuario:', user);
     const updatedUser = await updateUser(user);
-    console.log('Resultado de la actualización:', updatedUser);
     console.log('Actualizando usuario:', updatedUser);
     if ("error" in updatedUser) {
       return updatedUser;
@@ -70,7 +68,7 @@ export const useUserStore = create<UserState>((set) => ({
     set((state) => ({
       ...state,
       users: state.users.map((u) =>
-        u.USR_Id === user.USR_Id ? updatedUser : u
+        u.USR_Email === user.USR_Email ? updatedUser : u
       ),
     }));
     return updatedUser;

@@ -12,7 +12,7 @@ export type User = {
   USR_Email: string;
   USR_FullName: string;
   USR_Role: string;
-  USR_Department?: number | null | Department;
+  USR_Department?: number | null;
   USR_Status?: string;
 };
 
