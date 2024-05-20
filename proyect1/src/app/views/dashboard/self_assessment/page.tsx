@@ -7,9 +7,7 @@ export default function Page() {
     <>
       <DebugModeToggle>
         <Header />
-        <div className="px-8 py-4">
           <SelfAssessment />
-        </div>
       </DebugModeToggle>
     </>
   );

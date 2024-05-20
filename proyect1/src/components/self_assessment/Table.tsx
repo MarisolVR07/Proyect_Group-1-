@@ -131,7 +131,7 @@ const Table: React.FC<TableProps> = ({ id, onDataChange }) => {
   };
 
   return (
-    <div className="form-control my-3 py-4 px-7 w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
+    <div className="form-control my-1 p-2 w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
       <div className="border-2 border-gray-600 w-full">
         <TableHeader />
         <TableSection number={id} />

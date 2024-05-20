@@ -48,7 +48,7 @@ const MantSection: React.FC<MantSectionProps> = ({
             spam={`${number}.${index + 1}`}
             value={question}
             onChange={(value) => handleQuestionTextChange(value, index)}
-            className="w-[530px] mb-1"
+            className="w-full mb-1"
           />
         ))}
       </div>

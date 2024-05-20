@@ -90,7 +90,7 @@ const SelfAssessment: React.FC = () => {
         style={{ display: index === currentPage - 1 ? "block" : "none" }}
       >
         <Table
-          id={`1.${index + 1}`}
+          id={`${index + 1}`}
           onDataChange={(data: TableRowData[]) =>
             handleTableDataChange(currentPage, data)
           }
@@ -100,12 +100,12 @@ const SelfAssessment: React.FC = () => {
   };
 
   return (
-    <div className="form-control my-3 py-8 px-16 w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
+    <div className="form-control my-3 mx-8 py-5 px-10 w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
       <div className=" bg-gray-700 w-full py-3 px-3 items-center justify-center text-center rounded-xl">
-        <h1 className="text-2xl text-white my-3">Institution</h1>
+        <h1 className="text-2xl text-white mb-2">Institution</h1>
         <h2 className="text-white text-xl mb-1">Audit</h2>
         <h2 className="text-white text-base ">Description</h2>
-        <div className="flex w-full space-x-3 rounded-xl bg-gray-700 py-1 px-3 my-4 items-center justify-center">
+        <div className="flex w-full space-x-3 rounded-xl bg-gray-700 py-1 px-3 my-2 items-center justify-center">
           <SecondaryButton onClick={handlePrevPage} className="rounded-xl w-20">
             Previous
           </SecondaryButton>
