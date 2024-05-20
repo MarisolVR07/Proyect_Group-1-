@@ -17,8 +17,17 @@ const BackOffice = () => {
   const { currentUser } = useAuthStore();
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
-  const filteredUsers = users.filter(user => user.USR_Role === "none");
+  const filteredUsers = users.filter((user) => user.USR_Role === "none");
   console.log(currentUser);
+
+  const [PRM_ActivationDate, setPRM_ActivationDate] = useState<Date | null>(
+    null
+  );
+  const [PRM_DesactivationDate, setPRM_DesactivationDate] =
+    useState<Date | null>(null);
+  const [PRM_Email, setPRM_Email] = useState<string | null>(null);
+  const [PRM_Institution, setPRM_Institution] = useState<string | null>(null);
+
   const handleSearchChange = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
@@ -56,29 +65,86 @@ const BackOffice = () => {
     }
   };
 
+  const handleSaveP = async () => {
+    if (!logoFile || !PRM_Institution || !PRM_Email) {
+      alert("Please complete all parameter fields.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append(
+      "PRM_ActivationDate",
+      PRM_ActivationDate ? PRM_ActivationDate.toISOString() : ""
+    );
+    formData.append(
+      "PRM_DesactivationDate",
+      PRM_DesactivationDate ? PRM_DesactivationDate.toISOString() : ""
+    );
+    formData.append("PRM_Logo", logoFile);
+    formData.append("PRM_Email", PRM_Email || "");
+    formData.append("PRM_Institution", PRM_Institution || "");
+
+    try {
+      const response = await fetch("/api/parameters", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Error saving institution parameters.");
+      }
+
+      const data = await response.json();
+      console.log("Parameters saved successfully:", data);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error saving parameters, please try again.");
+    }
+  };
+
   return (
     <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
       <CardsSection />
       <div className="flex flex-col md:flex-row space-x-0 md:space-x-3 mx-9 text-center justify-center">
         <div className="bg-gray-700 p-3 text-center items-center justify-center border-2 border-white rounded-xl">
           <h2 className="text-xl text-center text-white mb-3 font-semibold">
-            APP ACTIVATION/DEACTIVATION DATE-TIME
+            APP ACTIVATION/DESACTIVATION DATE-TIME
           </h2>
           <div className="flex flex-col md:flex-row space-x-0 md:space-x-32 items-center justify-center">
-            <DateTimePicker text="Select activation date and time:" />
-            <DateTimePicker text="Select deactivation date and time:" />
+            <DateTimePicker
+              text="Select activation date and time:"
+              value={PRM_ActivationDate}
+              onChange={setPRM_ActivationDate}
+            />
+            <DateTimePicker
+              text="Select desactivation date and time:"
+              value={PRM_DesactivationDate}
+              onChange={setPRM_DesactivationDate}
+            />
           </div>
           <div className="mt-3">
             <h2 className="text-xl text-center text-white font-semibold">
               INSTITUTION
             </h2>
-            <InputField type="text" label="" placeholder="Institution" />
+            <InputField
+              type="text"
+              label=""
+              placeholder="Institution"
+              value={PRM_Institution || ""}
+              onChange={(value: string) => setPRM_Institution(value)}
+            />
           </div>
           <div className="mt-3">
             <h2 className="text-xl text-center text-white font-semibold">
               EMAIL
             </h2>
-            <InputField type="email" label="" placeholder="Email" />
+            <InputField
+              type="email"
+              label=""
+              placeholder="Email"
+              value={PRM_Email || ""}
+              onChange={(value: string) => setPRM_Email(value)}
+            />
           </div>
           <div className="">
             <h2 className="text-xl text-center text-white mb-3 font-semibold">
@@ -98,15 +164,18 @@ const BackOffice = () => {
               </div>
             )}
           </div>
-          <PrimaryButton className="w-44 rounded-md mt-4 mx-auto">
+          <PrimaryButton
+            className="w-44 rounded-md mt-4 mx-auto"
+            onClick={handleSaveP}
+          >
             Save
           </PrimaryButton>
         </div>
+
         <div className="form-control flex-1 p-8 rounded-xl bg-gray-700 border-2 border-white text-white">
           <div className=" w-full h-10 py-1 items-center justify-center text-center">
             <h2 className="text-xl text-white font-semibold">NEW USERS</h2>
           </div>
-
           <div className=" w-full px-3 pb-3 pt-4 mb-1 bg-gray-600 rounded-md items-center justify-center">
             <SearchBar onSearch={handleSearchChange} />
             {isLoading ? (
