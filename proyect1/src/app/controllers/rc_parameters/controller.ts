@@ -7,7 +7,7 @@ const API_URL =
   currentUrl.split("//")[1].split("/")[0] +
   "/api/v2/";
 
-export async function getParameter(id: string): Promise<Parameter | ErrorResponse> {
+export async function getParameter(id: number): Promise<Parameter | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + `rc_parameters/${id}`);
     //validateResponse(res);
@@ -32,7 +32,9 @@ export async function getParametersByName(
 }
 
 
-export async function deleteParameter(id: string): Promise<Parameter | ErrorResponse> {
+ export async function deleteParameter(
+  id: number
+): Promise<Parameter | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + `rc_parameters/${id}`, {
       method: "DELETE",
