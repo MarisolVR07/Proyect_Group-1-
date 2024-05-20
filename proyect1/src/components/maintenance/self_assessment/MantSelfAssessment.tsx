@@ -7,8 +7,11 @@ import TextArea from "../../forms/TextAreaForms";
 import Button from "../../general/PrimaryButton";
 import PageButton from "../../general/PageButton";
 import SecondaryButtom from "../../general/SecondaryButton";
+import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
+import { SelfAssessments } from "@/app/types/entities";
 
 const MantSelfAssessment: React.FC = () => {
+  const selfAssessmentStore = useSelfAssessmentsStore();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [audit, setAudit] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -40,7 +43,7 @@ const MantSelfAssessment: React.FC = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!audit.trim()) {
       alert("Please fill in the Audit field.");
       return;
@@ -66,8 +69,23 @@ const MantSelfAssessment: React.FC = () => {
       }
     }
 
-    // If all fields are filled, proceed with saving
-    // Your save logic goes here
+    // Crear la estructura de datos de la autoevaluación
+    const selfAssessmentData: SelfAssessments = {
+      SAT_Audit: audit.trim(),
+      SAT_Description: description.trim(),
+    };
+
+    // Guardar la autoevaluación utilizando la función definida en el store
+    const savedSelfAssessment = await selfAssessmentStore.saveSelfAssessment(
+      selfAssessmentData
+    );
+
+    if ("error" in savedSelfAssessment) {
+      alert(
+        "Error al guardar la autoevaluación. Por favor, inténtelo de nuevo."
+      );
+      return;
+    }
     alert("Form submitted successfully!");
   };
 

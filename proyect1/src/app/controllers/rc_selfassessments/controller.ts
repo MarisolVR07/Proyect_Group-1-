@@ -6,13 +6,13 @@ const API_URL =
   currentUrl.split("/")[0] +
   "//" +
   currentUrl.split("//")[1].split("/")[0] +
-  "/api/v2";
+  "/api/v2/";
 
 export async function getSelfAssessment(
   id: number
 ): Promise<SelfAssessments | ErrorResponse> {
   try {
-    const res: Response = await fetch(API_URL + `rc_selfassessment/${id}`);
+    const res: Response = await fetch(API_URL + `rc_selfassessments/${id}`);
     //validateResponse(res);
     const selfAssessment: SelfAssessments | ErrorResponse = await res.json();
 
@@ -26,7 +26,7 @@ export async function deleteSelfAssessment(
   id: number
 ): Promise<SelfAssessments | ErrorResponse> {
   try {
-    const res: Response = await fetch(API_URL + `rc_selfassessment/${id}`, {
+    const res: Response = await fetch(API_URL + `rc_selfassessments/${id}`, {
       method: "DELETE",
     });
     //validateResponse(res);
@@ -43,7 +43,7 @@ export async function saveSelfAssessment(
   selfAssessment: SelfAssessments
 ): Promise<SelfAssessments | ErrorResponse> {
   try {
-    const res: Response = await fetch(API_URL + "rc_selfassessment", {
+    const res: Response = await fetch(API_URL + "rc_selfassessments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,7 +66,7 @@ export async function getSelfAssessments(): Promise<
 > {
   try {
     console.log(process.env.API_DIRECTION);
-    const res: Response = await fetch(API_URL + "rc_selfassessment");
+    const res: Response = await fetch(API_URL + "rc_selfassessments");
     //validateResponse(res);
 
     const selfAssessments: SelfAssessments[] | ErrorResponse = await res.json();
@@ -82,7 +82,7 @@ export async function updateSelfAssessment(
 ): Promise<SelfAssessments | ErrorResponse> {
   try {
     const res = await fetch(
-      API_URL + `rc_selfassessment/${selfAssessment.SAT_Id}`,
+      API_URL + `rc_selfassessments/${selfAssessment.SAT_Id}`,
       {
         method: "PUT",
         headers: {
