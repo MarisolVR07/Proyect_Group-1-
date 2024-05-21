@@ -9,6 +9,9 @@ import PrimaryButton from "../general/PrimaryButton";
 import { useAuthStore } from "@/store/authStore";
 import { useUserStore } from "@/store/userStore";
 import Spinner from "@/components/skeletons/Spinner";
+import { useParameterStore } from "@/store/parameterStore";
+import { Parameter } from "@/app/types/entities";
+
 
 const BackOffice = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,18 +19,18 @@ const BackOffice = () => {
   const [logoURL, setLogoURL] = useState<string | null>(null);
   const { currentUser } = useAuthStore();
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
+  const { parameters, getParameters, getParametersByName, updateParameter,saveParameter } =
+    useParameterStore();
   const [isLoading, setIsLoading] = useState(false);
   const filteredUsers = users.filter((user) => user.USR_Role === "none");
+  const [email, setEmail] = useState("");
+  const [institution, setInstitution] = useState("");
+  const [activationDate, setActivationDate] = useState<Date| null>();
+  const [deactivationDate, setDeactivationDate] = useState<Date | null>();
+  const convertFileToBlob = async (file: File): Promise<Blob> => {
+    return new Blob([file], { type: file.type });
+  };
   console.log(currentUser);
-
-  const [PRM_ActivationDate, setPRM_ActivationDate] = useState<Date | null>(
-    null
-  );
-  const [PRM_DesactivationDate, setPRM_DesactivationDate] =
-    useState<Date | null>(null);
-  const [PRM_Email, setPRM_Email] = useState<string | null>(null);
-  const [PRM_Institution, setPRM_Institution] = useState<string | null>(null);
-
   const handleSearchChange = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
@@ -56,6 +59,8 @@ const BackOffice = () => {
     fetchData();
   }, []);
 
+  //Parameters
+
   const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
     if (file) {
@@ -65,91 +70,95 @@ const BackOffice = () => {
     }
   };
 
-  const handleSaveP = async () => {
-    if (!logoFile || !PRM_Institution || !PRM_Email) {
-      alert("Please complete all parameter fields.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append(
-      "PRM_ActivationDate",
-      PRM_ActivationDate ? PRM_ActivationDate.toISOString() : ""
-    );
-    formData.append(
-      "PRM_DesactivationDate",
-      PRM_DesactivationDate ? PRM_DesactivationDate.toISOString() : ""
-    );
-    formData.append("PRM_Logo", logoFile);
-    formData.append("PRM_Email", PRM_Email || "");
-    formData.append("PRM_Institution", PRM_Institution || "");
-
-    try {
-      const response = await fetch("/api/parameters", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Error saving institution parameters.");
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        await getParameters();
+      } catch (error) {
+        console.error("Failed to fetch users", error);
       }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
 
-      const data = await response.json();
-      console.log("Parameters saved successfully:", data);
+  const handleEmailChange = (newEmail: string) => {
+    setEmail(newEmail);
+  };
+
+  const handleInstitutionChange = (newInstitution: string) => {
+    setInstitution(newInstitution);
+  };
+
+  
+  const handleSave = async () => {
+    console.log("Save button clicked");
+    const parameterToUpdate: Parameter = {
+      PRM_Email: email,
+      PRM_Institution: institution,
+      PRM_ActivationDate: activationDate?.toISOString() ?? null,
+      PRM_DeactivationDate: deactivationDate?.toISOString() ?? null,
+      PRM_Logo: logoFile ? await convertFileToBlob(logoFile) : null,
+      
+    };
+    console.log("Parameter to update:", parameterToUpdate);
+    try {
+      const result = await saveParameter(parameterToUpdate);
+      if ("error" in result) {
+        console.error("Failed to update parameters:", result.error);
+      } else {
+        console.log("Parameters updated successfully:", result);
+      }
     } catch (error) {
-      console.error("Error:", error);
-      alert("Error saving parameters, please try again.");
+      console.error("Error updating parameters:", error);
     }
   };
 
+
+  
   return (
     <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
       <CardsSection />
-      <div className="flex flex-col md:flex-row space-x-0 md:space-x-3 mx-9 text-center justify-center">
-        <div className="bg-gray-700 p-3 text-center items-center justify-center border-2 border-white rounded-xl">
-          <h2 className="text-xl text-center text-white mb-3 font-semibold">
-            APP ACTIVATION/DESACTIVATION DATE-TIME
+      <div className="flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-4 mx-4">
+        <div className="flex-1 bg-gray-700 p-3 text-center border-2 border-white rounded-xl overflow-hidden">
+          <h2 className="text-xl text-white mb-3 font-semibold">
+            APP ACTIVATION/DEACTIVATION DATE-TIME
           </h2>
-          <div className="flex flex-col md:flex-row space-x-0 md:space-x-32 items-center justify-center">
-            <DateTimePicker
+          <div className="flex flex-col md:flex-row space-x-0 md:space-x-10 items-center justify-center">
+          <DateTimePicker
               text="Select activation date and time:"
-              value={PRM_ActivationDate}
-              onChange={setPRM_ActivationDate}
+              value={activationDate}
+              onChange={setActivationDate}
             />
             <DateTimePicker
-              text="Select desactivation date and time:"
-              value={PRM_DesactivationDate}
-              onChange={setPRM_DesactivationDate}
+              text="Select deactivation date and time:"
+              value={deactivationDate}
+              onChange={setDeactivationDate}
             />
+
           </div>
           <div className="mt-3">
-            <h2 className="text-xl text-center text-white font-semibold">
-              INSTITUTION
-            </h2>
             <InputField
               type="text"
-              label=""
-              placeholder="Institution name"
-              value={PRM_Institution || ""}
-              onChange={(value: string) => setPRM_Institution(value)}
+              label="Institution"
+              placeholder="Enter the Institution Name"
+              value={institution}
+              onChange={handleInstitutionChange}
             />
           </div>
           <div className="mt-3">
-            <h2 className="text-xl text-center text-white font-semibold">
-              EMAIL
-            </h2>
+            <h2 className="text-xl text-white font-semibold">EMAIL</h2>
             <InputField
               type="email"
-              label=""
-              placeholder="Email"
-              value={PRM_Email || ""}
-              onChange={(value: string) => setPRM_Email(value)}
+              label="Email Address"
+              placeholder="Enter your email"
+              value={email}
+              onChange={handleEmailChange}
             />
           </div>
-          <div className="">
-            <h2 className="text-xl text-center text-white mb-3 font-semibold">
-              LOGO
-            </h2>
+          <div>
+            <h2 className="text-xl text-white mb-3 font-semibold">LOGO</h2>
             <input type="file" onChange={handleLogoChange} />
             {logoFile && (
               <div className="my-4 flex justify-center">
@@ -164,51 +173,49 @@ const BackOffice = () => {
               </div>
             )}
           </div>
-          <PrimaryButton
-            className="w-44 rounded-md mt-4 mx-auto"
-            onClick={handleSaveP}
-          >
-            Save
-          </PrimaryButton>
+          <div className="save-section">
+      <PrimaryButton
+        onClick={handleSave}
+        className="w-44 rounded-md mt-4 mx-auto"
+            >
+        Save
+      </PrimaryButton>
+    </div>
         </div>
-
-        <div className="form-control flex-1 p-8 rounded-xl bg-gray-700 border-2 border-white text-white">
-          <div className=" w-full h-10 py-1 items-center justify-center text-center">
+        <div className="flex-1 bg-gray-700 p-8 rounded-xl border-2 border-white text-white overflow-x-auto">
+          <div className="w-full py-1 items-center justify-center text-center">
             <h2 className="text-xl text-white font-semibold">NEW USERS</h2>
           </div>
-          <div className=" w-full px-3 pb-3 pt-4 mb-1 bg-gray-600 rounded-md items-center justify-center">
-            <SearchBar onSearch={handleSearchChange} />
-            {isLoading ? (
-              <Spinner />
-            ) : (
-              <div className="overflow-x-auto mt-4 rounded-md print-only">
-                <table className="table-auto w-full text-color">
-                  <thead className="bg-violet-800 text-white">
-                    <tr>
-                      <th className="px-4 py-2 text-color">Email</th>
-                      <th className="px-4 py-2 text-color">FullName</th>
-                      <th className="px-4 py-2 text-color">Rol</th>
-                      <th className="px-4 py-2 text-color">State</th>
+          <SearchBar onSearch={handleSearchChange} />
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <div className="overflow-x-auto mt-4 rounded-md">
+              <table className="table-auto w-full text-color">
+                <thead className="bg-violet-800 text-white">
+                  <tr>
+                    <th className="px-4 py-2">Email</th>
+                    <th className="px-4 py-2">FullName</th>
+                    <th className="px-4 py-2">Role</th>
+                    <th className="px-4 py-2">State</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredUsers.map((userMap, index) => (
+                    <tr key={index}>
+                      <td className="px-4 py-2">{userMap.USR_Email}</td>
+                      <td className="px-4 py-2">{userMap.USR_FullName}</td>
+                      <td className="px-4 py-2">{userMap.USR_Role}</td>
+                      <td className="px-4 py-2">{userMap.USR_Status}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {filteredUsers.map((userMap, index) => (
-                      <tr key={index}>
-                        <td className="px-4 py-2">{userMap.USR_Email}</td>
-                        <td className="px-4 py-2">{userMap.USR_FullName}</td>
-                        <td className="px-4 py-2">{userMap.USR_Role}</td>
-                        <td className="px-4 py-2">{userMap.USR_Status}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 };
-
 export default BackOffice;

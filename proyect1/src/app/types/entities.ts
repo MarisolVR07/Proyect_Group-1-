@@ -52,8 +52,8 @@ export type Question = {
 
 export type Parameter = {
   PRM_Id?: number | null;
-  PRM_ActivationDate: Date;
-  PRM_DesactivationDate: Date;
+  PRM_ActivationDate: String | null;
+  PRM_DeactivationDate: String| null;
   PRM_Logo?: Blob | null;
   PRM_Email?: String | null;
   PRM_Institution?: String | null;
