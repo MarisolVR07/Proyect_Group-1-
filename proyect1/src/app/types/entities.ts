@@ -49,7 +49,6 @@ export type Question = {
   rc_sections?: Section | null;
 };
 
-
 export type Parameter = {
   PRM_Id?: number | null;
   PRM_ActivationDate: String | null;

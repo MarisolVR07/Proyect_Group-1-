@@ -12,7 +12,6 @@ import Spinner from "@/components/skeletons/Spinner";
 import { useParameterStore } from "@/store/parameterStore";
 import { Parameter } from "@/app/types/entities";
 
-
 const BackOffice = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -60,7 +59,6 @@ const BackOffice = () => {
   }, []);
 
   //Parameters
-
   const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
     if (file) {
@@ -91,7 +89,6 @@ const BackOffice = () => {
     setInstitution(newInstitution);
   };
 
-  
   const handleSave = async () => {
     console.log("Save button clicked");
     const parameterToUpdate: Parameter = {
@@ -114,16 +111,13 @@ const BackOffice = () => {
       console.error("Error updating parameters:", error);
     }
   };
-
-
-  
   return (
     <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
       <CardsSection />
       <div className="flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-4 mx-4">
         <div className="flex-1 bg-gray-700 p-3 text-center border-2 border-white rounded-xl overflow-hidden">
           <h2 className="text-xl text-white mb-3 font-semibold">
-            APP ACTIVATION/DEACTIVATION DATE-TIME
+            APP ACTIVATION/DESACTIVATION DATE-TIME
           </h2>
           <div className="flex flex-col md:flex-row space-x-0 md:space-x-10 items-center justify-center">
           <DateTimePicker
@@ -132,11 +126,10 @@ const BackOffice = () => {
               onChange={setActivationDate}
             />
             <DateTimePicker
-              text="Select deactivation date and time:"
+              text="Select desactivation date and time:"
               value={deactivationDate}
               onChange={setDeactivationDate}
             />
-
           </div>
           <div className="mt-3">
             <InputField
@@ -197,7 +190,7 @@ const BackOffice = () => {
                     <th className="px-4 py-2">Email</th>
                     <th className="px-4 py-2">FullName</th>
                     <th className="px-4 py-2">Role</th>
-                    <th className="px-4 py-2">State</th>
+                    <th className="px-4 py-2">Status</th>
                   </tr>
                 </thead>
                 <tbody>

@@ -6,9 +6,6 @@ import jwt from 'jsonwebtoken';
 import Cookies from 'js-cookie';
 import { useEffect } from "react";
 
-
-
-
 const Dashboard = () => {
   const { currentUser } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState("");

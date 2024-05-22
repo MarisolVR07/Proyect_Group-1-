@@ -137,9 +137,9 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
               <tr>
                 <th className="px-4 py-2 text-color">Email</th>
                 <th className="px-4 py-2 text-color">FullName</th>
-                <th className="px-4 py-2 text-color">Department</th>
-                <th className="px-4 py-2 text-color">Rol</th>
-                <th className="px-4 py-2 text-color">State</th>
+                <th className="px-4 py-2 text-color no-print">Department</th>
+                <th className="px-4 py-2 text-color ">Rol</th>
+                <th className="px-4 py-2 text-color no-print">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -148,7 +148,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
                   <td className="px-4 py-2">{userMap.USR_Email}</td>
                   <td className="px-4 py-2">{userMap.USR_FullName}</td>
 
-                  <td>
+                  <td className="no-print">
                     <DepartmentDropdown
                       selectedDepartment={userMap.USR_Department}
                       onChange={(newDeptId) =>
@@ -162,7 +162,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
                       onChange={(newRol) => handleRolChange(userMap, newRol)}
                     />
                   </td>
-                  <td>
+                  <td className="no-print">
                     <StateCheckbox
                       isChecked={userMap.USR_Status === "a"}
                       onChange={(e) => handleStatusChange(userMap, e)}
