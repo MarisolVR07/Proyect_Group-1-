@@ -29,8 +29,6 @@ const MantSelfAssessment: React.FC = () => {
     "5": { sectionName: "", questions: Array.from({ length: 4 }, () => "") },
   });
 
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
