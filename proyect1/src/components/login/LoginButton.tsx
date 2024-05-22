@@ -8,33 +8,43 @@ import { AccountInfo } from "@azure/msal-browser";
 import { useUserStore } from "@/store/userStore";
 import { ErrorResponse } from "@/app/types/api";
 import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie';
+import jwt from 'jsonwebtoken';
 
 const LoginButton = () => {
   const [error, setError] = useState<ErrorResponse>();
   const { getUser, saveUser } = useUserStore();
   const [user, setUser] = useState<User | ErrorResponse>();
   const { setCurrentUser } = useAuthStore();
-
   const { instance } = useMsal();
+  const router = useRouter()
+  
   const handleLogin = async () => {
     try {
       const loginResponse = await instance.loginPopup(loginRequest);
       const userInfo = loginResponse.account;
-      const token = loginResponse.accessToken;
+      const { name, username } = userInfo;
+     console.log(userInfo)
+     if (typeof userInfo !== 'object') {
+      throw new Error('Información del usuario inválida');
+    }
 
-      Cookies.set('auth_token', token, { secure: true, sameSite: 'strict' });
+    const secretKey = "EmKKi2PNCmdn1qhvRsBDolXubPNcK7dl"; 
+    const payload = { name, username };  
+    const token = jwt.sign(payload, secretKey);
 
+    console.log(token);
+      
+      Cookies.set('auth_token', token, { secure: true, sameSite: 'strict', expiresIn: '1h' });
 
       await getUserInfo(userInfo);
-      window.location.href = "views/dashboard";
-      
-      
+     
+      router.push("views/dashboard")
     } catch (error) {
       console.error("Error logging in:", error);
     }
   };
-
   const getUserInfo = async (user: AccountInfo) => {
     try {
       const userData = await getUser(user.username);

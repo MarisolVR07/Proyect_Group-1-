@@ -2,32 +2,30 @@
 import React, { useState } from "react";
 import CardsSectionDashBoard from "./CardsSectionDashboard";
 import { useAuthStore } from "@/store/authStore";
-import jwt from 'jsonwebtoken';
-import Cookies from 'js-cookie';
+import jwt, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
+import Cookies from "js-cookie";
 import { useEffect } from "react";
+import { verifyToken, DecodedToken } from "@/app/utils/verifyToken";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
   const { currentUser } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoURL, setLogoURL] = useState<string | null>(null);
-
+  const [token, setToken] = useState<string | null>(
+    Cookies.get("auth_token") || null
+  );
+  const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
+  const router = useRouter();
   useEffect(() => {
-    const token = Cookies.get('auth_token');
-        if (!token) {
-        //  window.location.href = "/";
-          return;
-        }
-    
-        try {
-          jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET as string);
-        } catch (error) {
-          console.error('JWT verification failed:', error);
-        //  window.location.href = "/";
-        }
-      }, []);
-    
-  console.log(currentUser);
+    if (token) {
+      const decoded = verifyToken(token);
+      setDecodedToken(decoded);
+    } else {
+      router.push("/");
+    }
+  }, [token]);
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
