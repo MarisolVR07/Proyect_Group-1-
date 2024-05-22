@@ -19,7 +19,7 @@ const LoginButton = () => {
   const { setCurrentUser } = useAuthStore();
   const { instance } = useMsal();
   const router = useRouter()
-  
+
   const handleLogin = async () => {
     try {
       const loginResponse = await instance.loginPopup(loginRequest);
@@ -36,10 +36,10 @@ const LoginButton = () => {
 
     console.log(token);
       
-      Cookies.set('auth_token', token, { secure: true, sameSite: 'strict', expiresIn: '1h' });
+      
 
       await getUserInfo(userInfo);
-     
+      Cookies.set('auth_token', token, { secure: true, sameSite: 'strict', expiresIn: '1h' });
       router.push("views/dashboard")
     } catch (error) {
       console.error("Error logging in:", error);
