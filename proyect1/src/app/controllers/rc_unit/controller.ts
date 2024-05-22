@@ -98,3 +98,15 @@ export async function updateUnit(
     return { error: error.message };
   }
 }
+
+export async function getUnitsByName(
+  name: string
+): Promise<Unit[] | ErrorResponse> {
+  try {
+    const res: Response = await fetch(API_URL + `rc_unit/findname/${name}`);
+    const units: Unit[] | ErrorResponse = await res.json();
+    return units;
+  } catch (error: any) {
+    return error;
+  }
+}

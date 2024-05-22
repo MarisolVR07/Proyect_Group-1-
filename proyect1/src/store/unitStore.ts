@@ -5,6 +5,7 @@ import {
     saveUnit,
     getUnits,
     updateUnit,
+    getUnitsByName
 } from "@/app/controllers/rc_unit/controller";
 import { Unit } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
@@ -23,6 +24,7 @@ interface UnitState {
     updateUnit: (
         unit : Unit
     ) => Promise<Unit | ErrorResponse>;
+    getUnitsByName: (name: string) => Promise<Unit[]  | ErrorResponse>;
   }
 
   export const useUnitStore = create<UnitState>((set) => ({
@@ -80,5 +82,15 @@ interface UnitState {
       }));
       return updatedUnit;
     },
+
+    getUnitsByName: async (name: string) => {
+      const units = await getUnitsByName(name);
+      if ("error" in units) {
+        return units;
+      }
+      set((state) => ({ ...state, units }));
+      return units;
+    },
+
   }));
   

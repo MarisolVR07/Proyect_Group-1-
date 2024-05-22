@@ -117,7 +117,7 @@ const BackOffice = () => {
       <div className="flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-4 mx-4">
         <div className="flex-1 bg-gray-700 p-3 text-center border-2 border-white rounded-xl overflow-hidden">
           <h2 className="text-xl text-white mb-3 font-semibold">
-            APP ACTIVATION/DESACTIVATION DATE-TIME
+            APP ACTIVATION/DEACTIVATION DATE-TIME
           </h2>
           <div className="flex flex-col md:flex-row space-x-0 md:space-x-10 items-center justify-center">
           <DateTimePicker
@@ -126,7 +126,7 @@ const BackOffice = () => {
               onChange={setActivationDate}
             />
             <DateTimePicker
-              text="Select desactivation date and time:"
+              text="Select deactivation date and time:"
               value={deactivationDate}
               onChange={setDeactivationDate}
             />

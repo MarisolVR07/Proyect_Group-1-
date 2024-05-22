@@ -90,3 +90,15 @@ export async function updateDepartment(
       return { error: error.message };
     }
   }
+
+  export async function getDepartmentsByName(
+    name: string
+  ): Promise<Department[] | ErrorResponse> {
+    try {
+      const res: Response = await fetch(API_URL + `rc_departments/findname/${name}`);
+      const departments: Department[] | ErrorResponse = await res.json();
+      return departments;
+    } catch (error: any) {
+      return error;
+    }
+  }

@@ -11,6 +11,8 @@ import { useUnitStore } from "@/store/unitStore";
 import { useDepartmentsStore } from "@/store/departmentStore";
 import { Department, Unit } from "@/app/types/entities";
 import { ChangeEvent } from "react";
+import SearchBarUnit from "./SearchBarUnits";
+import SearchBarDepartment from "./SearchBarDepartments";
 
 interface FormRowProps {
   label: string;
@@ -120,9 +122,16 @@ export default function Page() {
   const handleDeleteClick = () => {
     console.log("Deleted");
   };
-  const handleSearchChange = (query: string) => {
+
+
+  const handleSearchChangeUnit = (query: string) => {
     setSearchQuery(query);
   };
+  const handleSearchChangeDepartment = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  
   const handleChangeName = (e: string) => {
     setUnit((i) => ({ ...i, UND_Name: e }));
   };
@@ -187,9 +196,8 @@ export default function Page() {
               </Button>
             </div>
             <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center">
-              <SearchBar
-                onSearch={handleSearchChange}
-                placeholder="Search Departments Units"
+              <SearchBarUnit
+                onSearch={handleSearchChangeUnit}
               />
             </div>
             <div className="overflow-x-auto mt-1 rounded-md">
@@ -247,9 +255,8 @@ export default function Page() {
             </Button>
           </div>
           <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center">
-            <SearchBar
-              onSearch={handleSearchChange}
-              placeholder="Search Departments"
+            <SearchBarDepartment
+              onSearch={handleSearchChangeDepartment}
             />
           </div>
           <div className="overflow-x-auto mt-1 rounded-md">
