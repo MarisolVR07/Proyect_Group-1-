@@ -13,7 +13,7 @@ import { Department, Unit } from "@/app/types/entities";
 import { ChangeEvent } from "react";
 import SearchBarUnit from "./SearchBarUnits";
 import SearchBarDepartment from "./SearchBarDepartments";
-
+import Spinner from "@/components/skeletons/Spinner";
 interface FormRowProps {
   label: string;
   id: string;
@@ -64,12 +64,42 @@ const FormRow: React.FC<FormRowProps> = ({ label, id, type = "text" }) => {
 
 export default function Page() {
   const [searchQuery, setSearchQuery] = useState("");
-  const {departments, getDepartments, getDepartment, saveDepartment, updateDepartment} = useDepartmentsStore();
-  const { units, getUnits, getUnit, saveUnit, updateUnit } = useUnitStore();
+  const {departments, getDepartments, getDepartment, saveDepartment, updateDepartment, getDepartmentsByName} = useDepartmentsStore();
+  const { units, getUnits, getUnit, saveUnit, updateUnit, getUnitsByName } = useUnitStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading2, setIsLoading2] = useState(false);
 
-  useEffect (()=>{
-    getUnits();
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading2(true);
+      try {
+        await getDepartments();
+        
+      } catch (error) {
+        console.error("Failed to fetch departments", error);
+       
+      }
+      setIsLoading2(false);
+    };
+    fetchData();
   }, []);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        await getUnits();
+        
+      } catch (error) {
+        console.error("Failed to fetch units", error);
+       
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
 
   const [unit, setUnit] = useState<Unit>({
     UND_Name: " ",
@@ -124,11 +154,33 @@ export default function Page() {
   };
 
 
-  const handleSearchChangeUnit = (query: string) => {
+  const handleSearchChangeUnit = async (query: string) => {
+    if (searchQuery === query) return;
     setSearchQuery(query);
+    if (!query.trim()) return;
+    setIsLoading(true);
+    try {
+      const results =
+        query.length > 0 ? await getUnitsByName(query) : await getUnits();
+    } catch (error) {
+      console.error("Error searching users", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
-  const handleSearchChangeDepartment = (query: string) => {
+  const handleSearchChangeDepartment =  async (query: string) => {
+    if (searchQuery === query) return;
     setSearchQuery(query);
+    if (!query.trim()) return;
+    setIsLoading2(true);
+    try {
+      const results =
+        query.length > 0 ? await getDepartmentsByName(query) : await getDepartments();
+    } catch (error) {
+      console.error("Error searching users", error);
+    } finally {
+      setIsLoading2(false);
+    }
   };
 
   
@@ -200,7 +252,7 @@ export default function Page() {
                 onSearch={handleSearchChangeUnit}
               />
             </div>
-            <div className="overflow-x-auto mt-1 rounded-md">
+            {isLoading ? (<Spinner />) : (<div className="overflow-x-auto mt-1 rounded-md">
               <table className="table-auto w-full">
                 <thead>
                   <tr className="bg-violet-800 text-white">
@@ -218,7 +270,8 @@ export default function Page() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </div>)}
+
           </div>
         </div>
         <div className="form-control flex-1 max-w-xl p-5 rounded-md bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl text-center">
@@ -259,7 +312,7 @@ export default function Page() {
               onSearch={handleSearchChangeDepartment}
             />
           </div>
-          <div className="overflow-x-auto mt-1 rounded-md">
+          {isLoading2 ? (<Spinner />):(<div className="overflow-x-auto mt-1 rounded-md">
             <table className="table-auto w-full">
               <thead>
                 <tr className="bg-violet-800 text-white">
@@ -276,7 +329,8 @@ export default function Page() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </div>)}
+          
         </div>
       </div>
     </div>
