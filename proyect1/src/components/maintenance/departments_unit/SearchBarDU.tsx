@@ -5,9 +5,8 @@ interface SearchBarProps {
   onSearch: (query: string) => void;
 }
 
-const SearchBarDepartment: React.FC<SearchBarProps> = ({ onSearch }) => {
+const SearchBarDU: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [inputValue, setInputValue] = useState('');
-
 
   const debouncedSearch = useCallback(
     debounce((query: string) => { 
@@ -30,7 +29,7 @@ const SearchBarDepartment: React.FC<SearchBarProps> = ({ onSearch }) => {
   return (
     <input
       type="text"
-      placeholder="Search the department by name..."
+      placeholder="Search by name..."
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
       className="w-full p-2 rounded-md no-print"
@@ -38,4 +37,4 @@ const SearchBarDepartment: React.FC<SearchBarProps> = ({ onSearch }) => {
   );
 };
 
-export default SearchBarDepartment;
+export default SearchBarDU;
