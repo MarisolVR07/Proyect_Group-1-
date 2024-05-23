@@ -5,6 +5,8 @@ import {
   getSelfAssessment,
   saveSelfAssessment,
   updateSelfAssessment,
+  updateCompleteSelfAssessment,
+  getCompleteSelfAssessment,
 } from "@/app/controllers/rc_selfassessments/controller";
 import { SelfAssessments } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
@@ -22,6 +24,12 @@ interface SelfAssessmentState {
   getSelfAssessments: () => Promise<SelfAssessments[] | ErrorResponse>;
   updateSelfAssessment: (
     selfAssessment: SelfAssessments
+  ) => Promise<SelfAssessments | ErrorResponse>;
+  updateCompleteSelfAssessment: (
+    selfAssessment: SelfAssessments
+  ) => Promise<SelfAssessments | ErrorResponse>;
+  getCompleteSelfAssessment: (
+    id: number
   ) => Promise<SelfAssessments | ErrorResponse>;
 }
 
@@ -79,5 +87,32 @@ export const useSelfAssessmentsStore = create<SelfAssessmentState>((set) => ({
       ),
     }));
     return updatedSelfAssessment;
+  },
+  updateCompleteSelfAssessment: async (selfAssessment: SelfAssessments) => {
+    const updatedSelfAssessment = await updateCompleteSelfAssessment(
+      selfAssessment
+    );
+    if ("error" in updatedSelfAssessment) {
+      return updatedSelfAssessment;
+    }
+    set((state) => ({
+      ...state,
+      selfAssessments: state.selfAssessments.map((sa) =>
+        sa.SAT_Id === selfAssessment.SAT_Id ? updatedSelfAssessment : sa
+      ),
+    }));
+    return updatedSelfAssessment;
+  },
+  getCompleteSelfAssessment: async (id: number) => {
+    const completeSelfAssessment = await getCompleteSelfAssessment(id);
+    if ("error" in completeSelfAssessment) {
+      return completeSelfAssessment;
+    }
+    set((state) => ({
+      ...state,
+      selfAssessments: [completeSelfAssessment],
+      currentSelfAssessment: completeSelfAssessment,
+    }));
+    return completeSelfAssessment;
   },
 }));

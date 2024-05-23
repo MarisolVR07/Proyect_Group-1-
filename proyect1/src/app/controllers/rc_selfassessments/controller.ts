@@ -98,3 +98,42 @@ export async function updateSelfAssessment(
     return { error: error.message };
   }
 }
+
+export async function getCompleteSelfAssessment(
+  id: number
+): Promise<SelfAssessments | ErrorResponse> {
+  try {
+    const res: Response = await fetch(
+      API_URL + `rc_selfassessments/complete/${id}`
+    );
+    const completeSelfAssessment: SelfAssessments | ErrorResponse =
+      await res.json();
+    return completeSelfAssessment;
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
+export async function updateCompleteSelfAssessment(
+  selfAssessment: SelfAssessments
+): Promise<SelfAssessments | ErrorResponse> {
+  try {
+    const res: Response = await fetch(
+      API_URL + `rc_selfassessments/complete/${selfAssessment.SAT_Id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(selfAssessment),
+      }
+    );
+
+    const updatedSelfAssessment: SelfAssessments | ErrorResponse =
+      await res.json();
+    return updatedSelfAssessment;
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+

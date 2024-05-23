@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MantSection from "./MantSection";
 import InputForms from "../../forms/InputForms";
 import TextArea from "../../forms/TextAreaForms";
 import Button from "../../general/PrimaryButton";
 import PageButton from "../../general/PageButton";
-import SecondaryButtom from "../../general/SecondaryButton";
+import SecondaryButton from "../../general/SecondaryButton";
 import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
 import { useSectionStore } from "@/store/sectionStore";
 import { useQuestionStore } from "@/store/questionStore";
 import { SelfAssessments, Section, Question } from "@/app/types/entities";
+import LoadingCircle from "@/components/skeletons/LoadingCircle";
 
 const MantSelfAssessment: React.FC = () => {
   const selfAssessmentStore = useSelfAssessmentsStore();
@@ -19,6 +20,8 @@ const MantSelfAssessment: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [audit, setAudit] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [loadedSelfAssessment, setLoadedSelfAssessment] =
+    useState<SelfAssessments | null>(null);
   const [sectionData, setSectionData] = useState<{
     [key: string]: { sectionName: string; questions: string[] };
   }>({
@@ -28,6 +31,64 @@ const MantSelfAssessment: React.FC = () => {
     "4": { sectionName: "", questions: Array.from({ length: 4 }, () => "") },
     "5": { sectionName: "", questions: Array.from({ length: 4 }, () => "") },
   });
+  const [saving, setSaving] = useState<boolean>(false);
+
+  useEffect(() => {
+        loadSelfAssessmentData(
+          selfAssessmentStore,
+          setLoadedSelfAssessment,
+          setAudit,
+          setDescription,
+          setSectionData
+        );
+  }, []);
+
+  const loadSelfAssessmentData = async (
+    selfAssessmentStore: any,
+    setLoadedSelfAssessment: any,
+    setAudit: any,
+    setDescription: any,
+    setSectionData: any
+  ) => {
+    try {
+      const selfAssessment =
+        await selfAssessmentStore.getCompleteSelfAssessment(1);
+      if (!("error" in selfAssessment)) {
+        setLoadedSelfAssessment(selfAssessment);
+        setAudit(selfAssessment.SAT_Audit);
+        setDescription(selfAssessment.SAT_Description);
+        loadSectionData(selfAssessment, setSectionData);
+      } else {
+        console.error(
+          "Error al cargar la autoevaluación:",
+          selfAssessment.error
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching self-assessment data:", error);
+    }
+  };
+
+  const loadSectionData = (selfAssessment: any, setSectionData: any) => {
+    if (selfAssessment.rc_sections && selfAssessment.rc_sections.length > 0) {
+      const updatedSectionData: {
+        [key: string]: { sectionName: string; questions: string[] };
+      } = {};
+      selfAssessment.rc_sections.forEach((section: any, index: number) => {
+        const sectionName = section.SEC_Name;
+        const questions = section.rc_questions
+          ? section.rc_questions.map((question: any) => question.QES_Text)
+          : Array.from({ length: 4 }, () => "");
+        updatedSectionData[(index + 1).toString()] = {
+          sectionName,
+          questions,
+        };
+      });
+      setSectionData(updatedSectionData);
+    } else {
+      console.warn("La autoevaluación no tiene secciones definidas.");
+    }
+  };
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -46,88 +107,147 @@ const MantSelfAssessment: React.FC = () => {
   };
 
   const handleSave = async () => {
+    if (!verifyFields()) {
+      return;
+    }
+    setSaving(true);
+    updateSelfAssessment();
+  };
+
+  const updateSelfAssessment = async () => {
+    try {
+      if (loadedSelfAssessment && loadedSelfAssessment.rc_sections) {
+        const updatedSelfAssessment = await updateSelfAssessmentData();
+        if (updatedSelfAssessment && "error" in updatedSelfAssessment) {
+          setSaving(false);
+          alert("Error updating the self-assessment");
+          return;
+        }
+
+        for (
+          let index = 0;
+          index < loadedSelfAssessment.rc_sections.length;
+          index++
+        ) {
+          const sectionSAT = loadedSelfAssessment.rc_sections[index];
+          const sectionDataForCurrentIndex =
+            sectionData[(index + 1).toString()];
+
+          const updatedSectionResponse = await updateSectionData(
+            sectionSAT,
+            sectionDataForCurrentIndex,
+            index
+          );
+          if ("error" in updatedSectionResponse) {
+            setSaving(false);
+            alert("Error updating section: " + index);
+            return;
+          }
+
+          if (sectionSAT.rc_questions && sectionSAT.rc_questions.length > 0) {
+            const updatedQuestionsResponse = await updateQuestionsData(
+              sectionSAT,
+              sectionDataForCurrentIndex
+            );
+            if ("error" in updatedQuestionsResponse) {
+              setSaving(false);
+              alert("Error updating section questions: " + index);
+              return;
+            }
+          }
+        }
+        setSaving(false);
+        alert("Form submitted successfully!");
+      }
+    } catch (error) {
+      setSaving(false);
+      console.error("Error updating the self-assessment:", error);
+    }
+  };
+
+  const updateSelfAssessmentData = async () => {
+    if (!loadedSelfAssessment) {
+      return null;
+    }
+
+    const updatedSelfAssessment: SelfAssessments = {
+      SAT_Id: loadedSelfAssessment.SAT_Id,
+      SAT_Audit: audit,
+      SAT_Description: description,
+    };
+    return await selfAssessmentStore.updateSelfAssessment(
+      updatedSelfAssessment
+    );
+  };
+
+  const updateSectionData = async (
+    sectionSAT: Section,
+    sectionDataForCurrentIndex: { sectionName: string; questions: string[] },
+    index: number
+  ) => {
+    const updatedSection: Section = {
+      SEC_Id: sectionSAT.SEC_Id,
+      SEC_Name: sectionDataForCurrentIndex.sectionName,
+      SEC_Number: sectionSAT.SEC_Number,
+      SEC_SelfAssessments: sectionSAT.SEC_SelfAssessments,
+    };
+    return await sectionStore.updateSection(updatedSection);
+  };
+
+  const updateQuestionsData = async (
+    sectionSAT: Section,
+    sectionDataForCurrentIndex: { sectionName: string; questions: string[] }
+  ) => {
+    if (sectionSAT.rc_questions) {
+      for (let qIndex = 0; qIndex < sectionSAT.rc_questions.length; qIndex++) {
+        const questionSAT = sectionSAT.rc_questions[qIndex];
+        const updatedQuestion: Question = {
+          QES_Id: questionSAT.QES_Id,
+          QES_Text: sectionDataForCurrentIndex.questions[qIndex],
+          QES_Number: questionSAT.QES_Number,
+          QES_Section: questionSAT.QES_Section,
+        };
+        const updatedQuestionResponse = await questionStore.updateQuestion(
+          updatedQuestion
+        );
+        if ("error" in updatedQuestionResponse) {
+          return updatedQuestionResponse;
+        }
+      }
+    }
+    return {};
+  };
+
+  const verifyFields = () => {
     if (!audit.trim()) {
       alert("Please fill in the Audit field.");
-      return;
+      return false;
     }
 
     if (!description.trim()) {
       alert("Please fill in the Description field.");
-      return;
+      return false;
     }
 
+    return verifySectionFields();
+  };
+
+  const verifySectionFields = () => {
     for (let key in sectionData) {
       if (!sectionData[key].sectionName.trim()) {
         alert(`Please fill in the Section Name for Section ${key}.`);
-        return;
+        return false;
       }
 
       for (let question of sectionData[key].questions) {
         if (!question.trim()) {
           alert(`Please fill in all questions for Section ${key}.`);
-          return;
+          return false;
         }
       }
     }
 
-    const selfAssessmentData: SelfAssessments = {
-      SAT_Audit: audit.trim(),
-      SAT_Description: description.trim(),
-    };
-
-    const savedSelfAssessment = await selfAssessmentStore.saveSelfAssessment(
-      selfAssessmentData
-    );
-
-    if ("error" in savedSelfAssessment) {
-      alert(
-        "Error al guardar la autoevaluación. Por favor, inténtelo de nuevo."
-      );
-      return;
-    }
-    const selfAssessmentId = savedSelfAssessment.SAT_Id;
-
-    for (let key in sectionData) {
-      const sectionName = sectionData[key].sectionName.trim();
-
-      const sectionDataItem: Section = {
-        SEC_Name: sectionName,
-        SEC_Number: key,
-        SEC_SelfAssessments:
-          selfAssessmentId !== undefined ? selfAssessmentId : null,
-      };
-
-      const savedSection = await sectionStore.saveSection(sectionDataItem);
-
-      if ("error" in savedSection) {
-        alert("Error al guardar la seccion.");
-        return;
-      }
-
-      const sectionQuestions = sectionData[key].questions.map(
-        (questionText, index) => {
-          const questionData: Question = {
-            QES_Number: `${savedSection.SEC_Number}.${index + 1}`,
-            QES_Text: questionText.trim(),
-            QES_Section:
-              savedSection.SEC_Id !== undefined ? savedSection.SEC_Id : null,
-          };
-
-          return questionData;
-        }
-      );
-
-      for (let question of sectionQuestions) {
-        const savedQuestion = await questionStore.saveQuestion(question);
-
-        if ("error" in savedQuestion) {
-          alert("Error al guardar la pregunta.");
-          return;
-        }
-      }
-    }
-
-    alert("Form submitted successfully!");
+    return true;
   };
 
   return (
@@ -167,9 +287,9 @@ const MantSelfAssessment: React.FC = () => {
         }
       />
       <div className="flex flex-wrap justify-between space-x-0 md:space-x-3 rounded-xl bg-gray-700 py-1 px-3 my-4 items-center">
-        <SecondaryButtom onClick={handlePrevPage} className="rounded-xl w-20">
+        <SecondaryButton onClick={handlePrevPage} className="rounded-xl w-20">
           Previous
-        </SecondaryButtom>
+        </SecondaryButton>
         <div className="space-x-3 rounded-xl bg-gray-800 p-1">
           {[1, 2, 3, 4, 5].map((pageNumber) => (
             <PageButton
@@ -181,15 +301,16 @@ const MantSelfAssessment: React.FC = () => {
             />
           ))}
         </div>
-        <SecondaryButtom onClick={handleNextPage} className="rounded-xl w-20">
+        <SecondaryButton onClick={handleNextPage} className="rounded-xl w-20">
           Next
-        </SecondaryButtom>
+        </SecondaryButton>
       </div>
       <div className="flex space-x-40">
         <Button className="rounded-xl w-44 mt-4" onClick={handleSave}>
           Save
         </Button>
       </div>
+      {saving && <LoadingCircle text="Saving..." />}
     </div>
   );
 };
