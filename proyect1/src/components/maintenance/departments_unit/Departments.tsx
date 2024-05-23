@@ -32,6 +32,7 @@ const Departments = ({ unit }: { unit: Unit }) => {
   }, []);
 
   const handleSaveClickDepartment = async () => {
+    console.log(unit);
     if (unit.UND_Id) {
       setDepartment((i) => ({
         DPT_Unit: unit.UND_Id,
