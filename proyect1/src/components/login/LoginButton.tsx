@@ -14,9 +14,9 @@ import jwt from "jsonwebtoken";
 
 const LoginButton = () => {
   const [error, setError] = useState<ErrorResponse>();
-  const { getUser, saveUser } = useUserStore();
+  const { getUser, saveUser} = useUserStore();
   const [user, setUser] = useState<User | ErrorResponse>();
-  const { setCurrentUser } = useAuthStore();
+  const { setCurrentUser , currentUser} = useAuthStore();
   const { instance } = useMsal();
   const router = useRouter();
 
@@ -35,14 +35,22 @@ const LoginButton = () => {
       const token = jwt.sign(payload, secretKey);
 
       console.log(token);
-
+      console.log(currentUser)
       await getUserInfo(userInfo);
-      Cookies.set("auth_token", token, {
-        secure: true,
-        sameSite: "strict",
-        expiresIn: "1h",
-      });
-      router.push("views/dashboard");
+      if(currentUser?.USR_Role !== "none"){
+     
+        Cookies.set("auth_token", token, {
+          secure: true,
+          sameSite: "strict",
+          expiresIn: "1h",
+        });
+        router.push("views/dashboard")
+      } else {
+
+        alert("Your account has been signed up succesfully, please wait to be accept")
+      }
+      
+    
     } catch (error) {
       console.error("Error logging in:", error);
     }
@@ -79,14 +87,9 @@ const LoginButton = () => {
     }
   };
 
-  useEffect(() => {
-    if (user) {
-    }
-  }, [user]);
-
   return (
     <Button onClick={handleLogin} className="rounded-md w-44">
-      <WindowsOutlined /> SIGN IN
+      <WindowsOutlined />  SIGN IN
     </Button>
   );
 };
