@@ -7,15 +7,17 @@ import Spinner from "@/components/skeletons/Spinner";
 import SearchBarDU from "./SearchBarDU";
 import { useDepartmentsStore } from "@/store/departmentStore";
 import { Department, Unit } from "@/app/types/entities";
+import { useUnitContextStore } from "@/store/authStore";
 
 const Departments = ({ unit }: { unit: Unit }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const { departments, getDepartments, saveDepartment, getDepartmentsByName } = useDepartmentsStore();
   const [isLoading, setIsLoading] = useState(false);
+  const {currentUnit} = useUnitContextStore();
   const [department, setDepartment] = useState<Department>({
     DPT_Name: "",
     DPT_Status: "",
-    DPT_Unit: unit.UND_Id,
+    DPT_Unit: currentUnit?.UND_Id,
   });
 
   useEffect(() => {
@@ -32,23 +34,23 @@ const Departments = ({ unit }: { unit: Unit }) => {
   }, []);
 
   const handleSaveClickDepartment = async () => {
-    console.log(unit);
-    if (unit.UND_Id) {
+    console.log(currentUnit);
+    if (currentUnit !== null && currentUnit.UND_Id) {
       setDepartment((i) => ({
-        DPT_Unit: unit.UND_Id,
+        DPT_Unit: currentUnit.UND_Id,
         ...i,
       }));
       console.log(department);
       const savedDepartment = await saveDepartment({
         ...department,
-        DPT_Unit: unit.UND_Id,
+        DPT_Unit: currentUnit.UND_Id,
       });
       console.log(savedDepartment);
       console.log(department);
     } else {
-      console.log("Department not saved");
+      console.log("Department not saved, unit id not specified");
     }
-    //console.log("Department saved successfully");
+    console.log("Department saved successfully");
   };
 
   const handleSearchChangeDepartment = async (query: string) => {

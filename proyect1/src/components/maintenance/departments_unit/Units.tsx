@@ -7,6 +7,7 @@ import Spinner from "@/components/skeletons/Spinner";
 import SearchBarDU from "./SearchBarDU";
 import { useUnitStore } from "@/store/unitStore";
 import { Unit } from "@/app/types/entities";
+import { useUnitContextStore } from "@/store/authStore";
 
 const Units = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,6 +18,7 @@ const Units = () => {
     UND_Email: "",
     UND_Status: "",
   });
+  const{setCurrentUnit} = useUnitContextStore();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +39,7 @@ const Units = () => {
       const savedUnit = await saveUnit(unit);
       console.log(savedUnit);
       setUnit(savedUnit as Unit);
+      setCurrentUnit(savedUnit as Unit);
       console.log(unit);
     } catch (error) {
       console.log(error);
