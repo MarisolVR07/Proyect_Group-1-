@@ -12,7 +12,6 @@ interface ProposedActionData {
 }
 
 interface TableRowData {
-  question: string;
   checkedIndex: number | null;
   textArea1: string;
   textArea2: string;
@@ -21,62 +20,21 @@ interface TableRowData {
 
 interface TableProps {
   id: string;
+  section: string | null | undefined;
+  questions: string[];
   onDataChange: (data: TableRowData[]) => void;
+  initialData: TableRowData[];
 }
 
-const Table: React.FC<TableProps> = ({ id, onDataChange }) => {
-  const initialRowData: TableRowData[] = [
-    {
-      question: "",
-      checkedIndex: null,
-      textArea1: "",
-      textArea2: "",
-      proposedActionData: {
-        responsible: "",
-        justification: "",
-        preview: "",
-        date: null,
-      },
-    },
-    {
-      question: "",
-      checkedIndex: null,
-      textArea1: "",
-      textArea2: "",
-      proposedActionData: {
-        responsible: "",
-        justification: "",
-        preview: "",
-        date: null,
-      },
-    },
-    {
-      question: "",
-      checkedIndex: null,
-      textArea1: "",
-      textArea2: "",
-      proposedActionData: {
-        responsible: "",
-        justification: "",
-        preview: "",
-        date: null,
-      },
-    },
-    {
-      question: "",
-      checkedIndex: null,
-      textArea1: "",
-      textArea2: "",
-      proposedActionData: {
-        responsible: "",
-        justification: "",
-        preview: "",
-        date: null,
-      },
-    },
-  ];
+const Table: React.FC<TableProps> = ({
+  id,
+  onDataChange,
+  section,
+  initialData,
+  questions,
+}) => {
 
-  const [rowData, setRowData] = useState<TableRowData[]>(initialRowData);
+  const [rowData, setRowData] = useState<TableRowData[]>(initialData);
   const [showForm, setShowForm] = useState(false);
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
 
@@ -122,6 +80,7 @@ const Table: React.FC<TableProps> = ({ id, onDataChange }) => {
         }
         key={`${id}.${index + 1}`}
         id={`${id}.${index + 1}`}
+        question={questions[index]}
         initialData={data}
         onDataChange={(newData) =>
           handleRowDataChange(index, newData, data.proposedActionData)
@@ -134,7 +93,7 @@ const Table: React.FC<TableProps> = ({ id, onDataChange }) => {
     <div className="form-control my-1 p-2 w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
       <div className="border-2 border-gray-600 w-full">
         <TableHeader />
-        <TableSection number={id} />
+        <TableSection number={id} section={section} />
         {renderTableRows()}
       </div>
       {showForm && selectedRowIndex !== null && (

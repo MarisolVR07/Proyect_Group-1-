@@ -34,22 +34,10 @@ const MantSelfAssessment: React.FC = () => {
   const [saving, setSaving] = useState<boolean>(false);
 
   useEffect(() => {
-        loadSelfAssessmentData(
-          selfAssessmentStore,
-          setLoadedSelfAssessment,
-          setAudit,
-          setDescription,
-          setSectionData
-        );
+    loadSelfAssessmentData();
   }, []);
 
-  const loadSelfAssessmentData = async (
-    selfAssessmentStore: any,
-    setLoadedSelfAssessment: any,
-    setAudit: any,
-    setDescription: any,
-    setSectionData: any
-  ) => {
+  const loadSelfAssessmentData = async () => {
     try {
       const selfAssessment =
         await selfAssessmentStore.getCompleteSelfAssessment(1);

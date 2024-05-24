@@ -5,13 +5,13 @@ import BoxButton from "./BoxButton";
 
 interface TableRowProps {
   id: string;
+  question: string;
   onDataChange: (data: TableRowData) => void;
   initialData: TableRowData;
   onFormVisibilityChange: (visible: boolean) => void;
 }
 
 interface TableRowData {
-  question: string;
   checkedIndex: number | null;
   textArea1: string;
   textArea2: string;
@@ -22,6 +22,7 @@ const TableRow: React.FC<TableRowProps> = ({
   initialData,
   onDataChange,
   onFormVisibilityChange,
+  question,
 }) => {
   const [rowData, setRowData] = useState<TableRowData>(initialData);
 
@@ -51,7 +52,7 @@ const TableRow: React.FC<TableRowProps> = ({
         <h3 className="w-14">{id}</h3>
       </div>
       <div className="border-e-2 border-gray-600 text-left text-sm px-1 w-96">
-        <h3 className="w-96">Question</h3>
+        <h3 className="w-96">{question}</h3>
       </div>
       <div className="flex border-e-2 border-gray-600">
         <div className="w-12">
