@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Button from "@/components/general/PrimaryButton";
-import InputFormsD from "../../maintenance/departments_unit/InputFormsU";
+import InputFormsU from "../../maintenance/departments_unit/InputFormsU";
 import Spinner from "@/components/skeletons/Spinner";
 import SearchBarDU from "./SearchBarDU";
 import { useUnitStore } from "@/store/unitStore";
 import { Unit } from "@/app/types/entities";
 import { useUnitContextStore } from "@/store/authStore";
-import InputFormsU from "../../maintenance/departments_unit/InputFormsU";
 
 const Units = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { units, getUnits, saveUnit, getUnitsByName } = useUnitStore();
+  const { units, getUnits, saveUnit, updateUnit, getUnitsByName } = useUnitStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [unit, setUnit] = useState<Unit>({
     UND_Name: "",
     UND_Email: "",
@@ -24,6 +24,7 @@ const Units = () => {
       setIsLoading(true);
       try {
         await getUnits();
+        console.log("Units fetched successfully");
       } catch (error) {
         console.error("Failed to fetch units", error);
       }
@@ -34,16 +35,21 @@ const Units = () => {
 
   const handleSaveClickUnit = async () => {
     try {
-      console.log(unit);
-      const savedUnit = await saveUnit(unit);
-      console.log(savedUnit);
-      setUnit(savedUnit as Unit);
-      setCurrentUnit(savedUnit as Unit);
-      console.log(unit);
+      console.log("Unit before save/update:", unit);
+      if (isEditing) {
+        await updateUnit(unit);
+        console.log("Unit updated successfully");
+        setIsEditing(false);
+      } else {
+        const savedUnit = await saveUnit(unit);
+        setUnit(savedUnit as Unit);
+        setCurrentUnit(savedUnit as Unit);
+        console.log("Unit saved successfully");
+      }
+      await getUnits();
     } catch (error) {
-      console.log(error);
+      console.error("Failed to save or update unit", error);
     }
-    console.log("Unit saved successfully");
   };
 
   const handleSearchChangeUnit = async (query: string) => {
@@ -52,8 +58,8 @@ const Units = () => {
     if (!query.trim()) return;
     setIsLoading(true);
     try {
-      const results =
-        query.length > 0 ? await getUnitsByName(query) : await getUnits();
+      const results = query.length > 0 ? await getUnitsByName(query) : await getUnits();
+      console.log("Search results fetched successfully", results);
     } catch (error) {
       console.error("Error searching units", error);
     } finally {
@@ -64,15 +70,18 @@ const Units = () => {
   const handleChangeName = (e: string) => {
     setUnit((i) => ({ ...i, UND_Name: e }));
   };
+
   const handleChangeEmail = (e: string) => {
     setUnit((i) => ({ ...i, UND_Email: e }));
   };
+
   const handleChangeStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUnit((i) => ({ ...i, UND_Status: e.target.checked ? "a" : "i" }));
   };
 
   const handleUnitClick = (clickedUnit: Unit) => {
     setUnit(clickedUnit);
+    setIsEditing(true);
   };
 
   return (
@@ -120,7 +129,7 @@ const Units = () => {
             </label>
           </div>
           <Button onClick={handleSaveClickUnit} className="rounded-xl w-44">
-            Save
+            {isEditing ? "Update" : "Save"}
           </Button>
         </div>
         <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center">

@@ -10,9 +10,10 @@ import { useUnitContextStore } from "@/store/authStore";
 
 const Departments = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { departments, getDepartments, saveDepartment, getDepartmentsByName } = useDepartmentsStore();
+  const { departments, getDepartments, saveDepartment, updateDepartment, getDepartmentsByName } = useDepartmentsStore();
   const [isLoading, setIsLoading] = useState(false);
-  const {currentUnit} = useUnitContextStore();
+  const { currentUnit } = useUnitContextStore();
+  const [isEditing, setIsEditing] = useState(false);
   const [department, setDepartment] = useState<Department>({
     DPT_Name: "",
     DPT_Status: "",
@@ -24,6 +25,7 @@ const Departments = () => {
       setIsLoading(true);
       try {
         await getDepartments();
+        console.log("Departments fetched successfully");
       } catch (error) {
         console.error("Failed to fetch departments", error);
       }
@@ -33,23 +35,32 @@ const Departments = () => {
   }, []);
 
   const handleSaveClickDepartment = async () => {
-    console.log(currentUnit);
+    console.log("Current unit:", currentUnit);
     if (currentUnit !== null && currentUnit.UND_Id) {
       setDepartment((i) => ({
         DPT_Unit: currentUnit.UND_Id,
         ...i,
       }));
-      console.log(department);
-      const savedDepartment = await saveDepartment({
-        ...department,
-        DPT_Unit: currentUnit.UND_Id,
-      });
-      console.log(savedDepartment);
-      console.log(department);
+      console.log("Department before save/update:", department);
+      try {
+        if (isEditing) {
+          await updateDepartment(department);
+          console.log("Department updated successfully");
+          setIsEditing(false);
+        } else {
+          await saveDepartment({
+            ...department,
+            DPT_Unit: currentUnit.UND_Id,
+          });
+          console.log("Department saved successfully");
+        }
+        await getDepartments();
+      } catch (error) {
+        console.error("Failed to save department", error);
+      }
     } else {
       console.log("Department not saved, unit id not specified");
     }
-    console.log("Department saved successfully");
   };
 
   const handleSearchChangeDepartment = async (query: string) => {
@@ -58,8 +69,8 @@ const Departments = () => {
     if (!query.trim()) return;
     setIsLoading(true);
     try {
-      const results =
-        query.length > 0 ? await getDepartmentsByName(query) : await getDepartments();
+      const results = query.length > 0 ? await getDepartmentsByName(query) : await getDepartments();
+      console.log("Search results fetched successfully", results);
     } catch (error) {
       console.error("Error searching departments", error);
     } finally {
@@ -70,11 +81,14 @@ const Departments = () => {
   const handleChangeDName = (e: string) => {
     setDepartment((i) => ({ ...i, DPT_Name: e }));
   };
+
   const handleChangeDStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDepartment((i) => ({ ...i, DPT_Status: e.target.checked ? "a" : "i" }));
   };
+
   const handleRowClick = (selectedDepartment: Department) => {
     setDepartment(selectedDepartment);
+    setIsEditing(true);
   };
 
   return (
@@ -107,7 +121,7 @@ const Departments = () => {
           </label>
         </div>
         <Button onClick={handleSaveClickDepartment} className="rounded-xl w-44">
-          Add
+          {isEditing ? "Update" : "Add"}
         </Button>
       </div>
       <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center">
