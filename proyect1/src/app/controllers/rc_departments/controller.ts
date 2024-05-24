@@ -5,7 +5,7 @@ const API_URL =
   currentUrl.split("/")[0] +
   "//" +
   currentUrl.split("//")[1].split("/")[0] +
-  "/api/v3/";
+  "/api/v4/";
 
 
   export async function getDepartment(

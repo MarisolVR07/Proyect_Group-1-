@@ -18,14 +18,15 @@ const BackOffice = () => {
   const [logoURL, setLogoURL] = useState<string | null>(null);
   const { currentUser } = useAuthStore();
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
-  const { parameters, getParameter, updateParameter,saveParameter } =
+  const { parameters, getParameter, updateParameter, saveParameter } =
     useParameterStore();
   const [isLoading, setIsLoading] = useState(false);
   const filteredUsers = users.filter((user) => user.USR_Role === "none");
   const [email, setEmail] = useState("");
   const [institution, setInstitution] = useState("");
-  const [activationDate, setActivationDate] = useState<Date| null>();
+  const [activationDate, setActivationDate] = useState<Date | null>();
   const [deactivationDate, setDeactivationDate] = useState<Date | null>();
+
   const convertFileToBlob = async (file: File): Promise<Blob> => {
     return new Blob([file], { type: file.type });
   };
@@ -72,8 +73,8 @@ const BackOffice = () => {
     const fetchParameters = async () => {
       setIsLoading(true);
       try {
-        const params = await getParameter(8);  //Colocar el id del parametro que se va a traer aca, revisar el thunder cual está
-        if (!('error' in params)) {
+        const params = await getParameter(1); //Colocar el id del parametro que se va a traer aca, revisar el thunder cual está
+        if (!("error" in params)) {
           setEmail(params.PRM_Email || "");
           setInstitution(params.PRM_Institution || "");
           if (params.PRM_ActivationDate) {
@@ -92,10 +93,9 @@ const BackOffice = () => {
       }
       setIsLoading(false);
     };
-  
+
     fetchParameters();
   }, []);
-  
 
   const handleEmailChange = (newEmail: string) => {
     setEmail(newEmail);
@@ -113,7 +113,6 @@ const BackOffice = () => {
       PRM_ActivationDate: activationDate?.toISOString() ?? null,
       PRM_DeactivationDate: deactivationDate?.toISOString() ?? null,
       PRM_Logo: logoFile ? await convertFileToBlob(logoFile) : null,
-      
     };
     console.log("Parameter to update:", parameterToUpdate);
     try {
@@ -136,7 +135,7 @@ const BackOffice = () => {
             APP ACTIVATION/DEACTIVATION DATE-TIME
           </h2>
           <div className="flex flex-col md:flex-row space-x-0 md:space-x-10 items-center justify-center">
-          <DateTimePicker
+            <DateTimePicker
               text="Select activation date and time:"
               value={activationDate}
               onChange={setActivationDate}
@@ -183,13 +182,13 @@ const BackOffice = () => {
             )}
           </div>
           <div className="save-section">
-      <PrimaryButton
-        onClick={handleSave}
-        className="w-44 rounded-md mt-4 mx-auto"
+            <PrimaryButton
+              onClick={handleSave}
+              className="w-44 rounded-md mt-4 mx-auto"
             >
-        Save
-      </PrimaryButton>
-    </div>
+              Save
+            </PrimaryButton>
+          </div>
         </div>
         <div className="flex-1 bg-gray-700 p-8 rounded-xl border-2 border-white text-white overflow-x-auto">
           <div className="w-full py-1 items-center justify-center text-center">
