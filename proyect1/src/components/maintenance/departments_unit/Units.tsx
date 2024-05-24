@@ -18,6 +18,8 @@ const Units = () => {
     UND_Status: "",
   });
   const { setCurrentUnit } = useUnitContextStore();
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,6 +86,20 @@ const Units = () => {
     setIsEditing(true);
   };
 
+  const handleNextPage = () => {
+    if ((currentPage + 1) * itemsPerPage < units.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const paginatedUnits = units.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+
   return (
     <div className="form-control flex-1 max-w-xl p-5 rounded-md bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl text-center">
       <h1 className="text-2xl mb-3">DEPARTMENTS UNIT</h1>
@@ -147,7 +163,7 @@ const Units = () => {
                 </tr>
               </thead>
               <tbody>
-                {units.map((unit, index) => (
+                {paginatedUnits.map((unit, index) => (
                   <tr key={index} onClick={() => handleUnitClick(unit)} className="cursor-pointer">
                     <td className="px-4 py-2">{unit.UND_Name}</td>
                     <td className="px-4 py-2">
@@ -157,6 +173,10 @@ const Units = () => {
                 ))}
               </tbody>
             </table>
+            <div className="flex justify-between mt-2">
+            <Button className="rounded-xl w-44" onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
+            <Button className="rounded-xl w-44" onClick={handleNextPage} disabled={(currentPage + 1) * itemsPerPage >= units.length}>Next</Button>
+          </div>
           </div>
         )}
       </div>

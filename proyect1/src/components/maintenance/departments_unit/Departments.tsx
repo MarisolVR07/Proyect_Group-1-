@@ -19,6 +19,8 @@ const Departments = () => {
     DPT_Status: "",
     DPT_Unit: currentUnit?.UND_Id,
   });
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,9 +89,29 @@ const Departments = () => {
   };
 
   const handleRowClick = (selectedDepartment: Department) => {
-    setDepartment(selectedDepartment);
+    const temporalDepartment : Department = {
+      DPT_Name : selectedDepartment.DPT_Name,
+      DPT_Status : selectedDepartment.DPT_Status,
+      DPT_Id : selectedDepartment.DPT_Id,
+      DPT_Unit : selectedDepartment.DPT_Unit
+    }
+    setDepartment(temporalDepartment);
     setIsEditing(true);
   };
+
+  const handleNextPage = () => {
+    if ((currentPage + 1) * itemsPerPage < departments.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const paginatedDepartments = departments.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
   return (
     <div className="form-control flex-1 max-w-xl p-5 rounded-md bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl text-center">
@@ -140,7 +162,7 @@ const Departments = () => {
               </tr>
             </thead>
             <tbody>
-              {departments.map((department, index) => (
+              {paginatedDepartments.map((department, index) => (
                 <tr key={index} onClick={() => handleRowClick(department)} className="cursor-pointer">
                   <td className="px-4 py-2">{department.DPT_Name}</td>
                   <td className="px-4 py-2">
@@ -151,6 +173,10 @@ const Departments = () => {
               ))}
             </tbody>
           </table>
+          <div className="flex justify-between mt-2">
+            <Button className="rounded-xl w-44" onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
+            <Button className="rounded-xl w-44" onClick={handleNextPage} disabled={(currentPage + 1) * itemsPerPage >= departments.length}>Next</Button>
+          </div>
         </div>
       )}
     </div>
