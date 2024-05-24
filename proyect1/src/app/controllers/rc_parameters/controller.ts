@@ -7,17 +7,16 @@ const API_URL =
   currentUrl.split("//")[1].split("/")[0] +
   "/api/v3/";
 
-export async function getParameter(id: number): Promise<Parameter | ErrorResponse> {
-  try {
-    const res: Response = await fetch(API_URL + `rc_parameters/${id}`);
-    //validateResponse(res);
-    const parameter: Parameter | ErrorResponse = await res.json();
-
-    return parameter;
-  } catch (error: any) {
-    return error;
+  export async function getParameter(id: number): Promise<Parameter | ErrorResponse> {  
+    try {
+      const res: Response = await fetch(API_URL + `rc_parameters/${id}`);
+      const parameter: Parameter | ErrorResponse = await res.json();
+      return parameter;
+    } catch (error: any) {
+      return error;
+    }
   }
-}
+  
 
 export async function getParametersByName(
   name: string
@@ -75,7 +74,7 @@ export async function getParameters(): Promise<Parameter[] | ErrorResponse> {
     const res: Response = await fetch(API_URL + "rc_parameters");
     //validateResponse(res);
 
-    const parameters: Parameter[] | ErrorResponse = await res.json();
+    const parameters: Parameter[]| ErrorResponse = await res.json();
 
     return parameters;
   } catch (error: any) {
@@ -85,7 +84,7 @@ export async function getParameters(): Promise<Parameter[] | ErrorResponse> {
 
 export async function updateParameter(parameter: Parameter): Promise<Parameter | ErrorResponse> {
   try {
-    const res = await fetch(API_URL + `rc_parameters/${parameter.PRM_Id}`, {
+    const res = await fetch(API_URL + `rc_parameters/1`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -51,12 +51,13 @@ export type Question = {
 
 export type Parameter = {
   PRM_Id?: number | null;
-  PRM_ActivationDate: String | null;
-  PRM_DeactivationDate: String | null;
+  PRM_ActivationDate: string | null;
+  PRM_DeactivationDate: string | null;
   PRM_Logo?: Blob | null;
-  PRM_Email?: String | null;
-  PRM_Institution?: String | null;
+  PRM_Email?: string | null;
+  PRM_Institution?: string | null;
 };
+
 
 export type AppliedSelfAssessment = {
   ASA_Id?: number | null;

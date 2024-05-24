@@ -13,7 +13,7 @@ import { ErrorResponse } from "@/app/types/api";
 interface ParameterState {
     parameters: Parameter[];
     currentUser: Parameter | null;
-    getParameter: (id: number) => Promise<Parameter | ErrorResponse>;
+    getParameter: (id?: number) => Promise<Parameter | ErrorResponse>;
     deleteParameter: (id: number) => Promise<Parameter | ErrorResponse>;
     saveParameter: (parameter: Parameter) => Promise<Parameter | ErrorResponse>;
     getParameters: () => Promise<Parameter[] | ErrorResponse>;
@@ -24,18 +24,18 @@ interface ParameterState {
   export const useParameterStore = create<ParameterState>((set) => ({
     parameters: [],
     currentUser: null,
-    getParameter: async (id: number) => {
-      const parameter = await getParameter(id);
-      if ("error" in parameter) {
-        return parameter;
-      }
-      set((state) => ({
-        ...state,
-        parameters: [...state.parameters, parameter],
-        currentUser: parameter,
-      }));
-      return parameter;
-    },
+getParameter: async (id: number = 8) => {
+  const parameter = await getParameter(id);
+  if ("error" in parameter) {
+    return parameter;
+  }
+  set((state) => ({
+    ...state,
+    parameters: [...state.parameters, parameter],
+    currentUser: parameter,
+  }));
+  return parameter;
+},
     deleteParameter: async (id: number) => {
       const parameter = await deleteParameter(id);
       if ("error" in parameter) {

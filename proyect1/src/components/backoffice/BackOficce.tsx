@@ -18,7 +18,7 @@ const BackOffice = () => {
   const [logoURL, setLogoURL] = useState<string | null>(null);
   const { currentUser } = useAuthStore();
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
-  const { parameters, getParameters, getParametersByName, updateParameter,saveParameter } =
+  const { parameters, getParameter, updateParameter,saveParameter } =
     useParameterStore();
   const [isLoading, setIsLoading] = useState(false);
   const filteredUsers = users.filter((user) => user.USR_Role === "none");
@@ -69,17 +69,33 @@ const BackOffice = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchParameters = async () => {
       setIsLoading(true);
       try {
-        await getParameters();
+        const params = await getParameter(8);  //Colocar el id del parametro que se va a traer aca, revisar el thunder cual está
+        if (!('error' in params)) {
+          setEmail(params.PRM_Email || "");
+          setInstitution(params.PRM_Institution || "");
+          if (params.PRM_ActivationDate) {
+            setActivationDate(new Date(params.PRM_ActivationDate));
+          }
+          if (params.PRM_DeactivationDate) {
+            setDeactivationDate(new Date(params.PRM_DeactivationDate));
+          }
+          if (params.PRM_Logo) {
+            const url = URL.createObjectURL(params.PRM_Logo);
+            setLogoURL(url);
+          }
+        }
       } catch (error) {
-        console.error("Failed to fetch users", error);
+        console.error("Failed to fetch parameters:", error);
       }
       setIsLoading(false);
     };
-    fetchData();
+  
+    fetchParameters();
   }, []);
+  
 
   const handleEmailChange = (newEmail: string) => {
     setEmail(newEmail);
@@ -101,7 +117,7 @@ const BackOffice = () => {
     };
     console.log("Parameter to update:", parameterToUpdate);
     try {
-      const result = await saveParameter(parameterToUpdate);
+      const result = await updateParameter(parameterToUpdate);
       if ("error" in result) {
         console.error("Failed to update parameters:", result.error);
       } else {
