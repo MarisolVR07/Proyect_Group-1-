@@ -1,13 +1,12 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import Button from "@/components/general/PrimaryButton";
-import InputForms from "../../forms/InputForms";
+import InputFormsD from "../../maintenance/departments_unit/InputFormsU";
 import Spinner from "@/components/skeletons/Spinner";
 import SearchBarDU from "./SearchBarDU";
 import { useUnitStore } from "@/store/unitStore";
 import { Unit } from "@/app/types/entities";
 import { useUnitContextStore } from "@/store/authStore";
+import InputFormsU from "../../maintenance/departments_unit/InputFormsU";
 
 const Units = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,7 +17,7 @@ const Units = () => {
     UND_Email: "",
     UND_Status: "",
   });
-  const{setCurrentUnit} = useUnitContextStore();
+  const { setCurrentUnit } = useUnitContextStore();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +52,8 @@ const Units = () => {
     if (!query.trim()) return;
     setIsLoading(true);
     try {
-      const results = query.length > 0 ? await getUnitsByName(query) : await getUnits();
+      const results =
+        query.length > 0 ? await getUnitsByName(query) : await getUnits();
     } catch (error) {
       console.error("Error searching units", error);
     } finally {
@@ -71,6 +71,10 @@ const Units = () => {
     setUnit((i) => ({ ...i, UND_Status: e.target.checked ? "a" : "i" }));
   };
 
+  const handleUnitClick = (clickedUnit: Unit) => {
+    setUnit(clickedUnit);
+  };
+
   return (
     <div className="form-control flex-1 max-w-xl p-5 rounded-md bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl text-center">
       <h1 className="text-2xl mb-3">DEPARTMENTS UNIT</h1>
@@ -79,11 +83,12 @@ const Units = () => {
           <h2 className="text-white text-base">NAME</h2>
         </div>
         <div className="bg-gray-700 w-full px-3 pb-3 mb-1">
-          <InputForms
+          <InputFormsU
             type="text"
             label=""
             placeholder="Unit Name"
             className="w-full rounded-md"
+            value={unit.UND_Name}
             onChange={handleChangeName}
           />
         </div>
@@ -91,11 +96,12 @@ const Units = () => {
           <h2 className="text-white text-base"> EMAIL</h2>
         </div>
         <div className="bg-gray-700 w-full px-3 pb-3 mb-1">
-          <InputForms
+          <InputFormsU
             type="email"
             label=""
             placeholder="Unit Email"
             className="w-full rounded-md"
+            value={unit.UND_Email + ""}
             onChange={handleChangeEmail}
           />
         </div>
@@ -106,10 +112,11 @@ const Units = () => {
               id="stateCheckbox"
               name="stateCheckbox"
               className="ml-2"
+              checked={unit.UND_Status === "a"}
               onChange={handleChangeStatus}
             />
             <label htmlFor="stateCheckbox" className="text-white">
-            Status
+              Status
             </label>
           </div>
           <Button onClick={handleSaveClickUnit} className="rounded-xl w-44">
@@ -132,7 +139,7 @@ const Units = () => {
               </thead>
               <tbody>
                 {units.map((unit, index) => (
-                  <tr key={index}>
+                  <tr key={index} onClick={() => handleUnitClick(unit)} className="cursor-pointer">
                     <td className="px-4 py-2">{unit.UND_Name}</td>
                     <td className="px-4 py-2">
                       {unit.UND_Status === "a" ? "Active" : "Inactive"}

@@ -1,15 +1,14 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Button from "@/components/general/PrimaryButton";
-import InputForms from "../../forms/InputForms";
+import InputFormsD from "../../maintenance/departments_unit/InputFormsD";
 import Spinner from "@/components/skeletons/Spinner";
 import SearchBarDU from "./SearchBarDU";
 import { useDepartmentsStore } from "@/store/departmentStore";
-import { Department, Unit } from "@/app/types/entities";
+import { Department } from "@/app/types/entities";
 import { useUnitContextStore } from "@/store/authStore";
 
-const Departments = ({ unit }: { unit: Unit }) => {
+const Departments = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { departments, getDepartments, saveDepartment, getDepartmentsByName } = useDepartmentsStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -74,6 +73,9 @@ const Departments = ({ unit }: { unit: Unit }) => {
   const handleChangeDStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDepartment((i) => ({ ...i, DPT_Status: e.target.checked ? "a" : "i" }));
   };
+  const handleRowClick = (selectedDepartment: Department) => {
+    setDepartment(selectedDepartment);
+  };
 
   return (
     <div className="form-control flex-1 max-w-xl p-5 rounded-md bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl text-center">
@@ -82,11 +84,12 @@ const Departments = ({ unit }: { unit: Unit }) => {
         <h2 className="text-white text-base">NAME</h2>
       </div>
       <div className="bg-gray-700 w-full px-3 pb-3 mb-1">
-        <InputForms
+        <InputFormsD
           type="text"
           className="w-full rounded-md"
           placeholder="Department Name"
-          onChange={handleChangeDName}
+          value={department.DPT_Name}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeDName(e.target.value)}
         />
       </div>
       <div className="bg-gray-700 w-full px-3 py-3 mb-3 flex items-center justify-between rounded-b-btn">
@@ -96,6 +99,7 @@ const Departments = ({ unit }: { unit: Unit }) => {
             id="stateCheckbox"
             name="stateCheckbox"
             className="ml-2"
+            checked={department.DPT_Status === "a"}
             onChange={handleChangeDStatus}
           />
           <label htmlFor="stateCheckbox" className="text-white">
@@ -122,7 +126,7 @@ const Departments = ({ unit }: { unit: Unit }) => {
             </thead>
             <tbody>
               {departments.map((department, index) => (
-                <tr key={index}>
+                <tr key={index} onClick={() => handleRowClick(department)} className="cursor-pointer">
                   <td className="px-4 py-2">{department.DPT_Name}</td>
                   <td className="px-4 py-2">
                     {department.DPT_Status === "a" ? "Active" : "Inactive"}
