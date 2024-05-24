@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RespCheckBox from "./RespCheckBox";
 import TableTextArea from "./TableTextArea";
 import BoxButton from "./BoxButton";
@@ -26,12 +26,15 @@ const TableRow: React.FC<TableRowProps> = ({
 }) => {
   const [rowData, setRowData] = useState<TableRowData>(initialData);
 
+  useEffect(() => {
+    onDataChange(rowData);
+  }, [rowData]);
+
   const handleCheckBoxChange = (index: number) => {
     setRowData((prevData) => ({
       ...prevData,
       checkedIndex: index === prevData.checkedIndex ? null : index,
     }));
-    onDataChange(rowData);
   };
 
   const handleTextAreaChange = (value: string, textareaIndex: number) => {
@@ -39,7 +42,6 @@ const TableRow: React.FC<TableRowProps> = ({
       ...prevData,
       [`textArea${textareaIndex + 1}`]: value,
     }));
-    onDataChange(rowData);
   };
 
   const handleBoxButtonClick = () => {

@@ -342,6 +342,20 @@ const SelfAssessment: React.FC = () => {
     setAllTableData(updatedAllTableData);
   };
 
+  const handleSave = () => {
+    const allSelected = allTableData.every((tableData) =>
+      tableData.every((row) => row.checkedIndex !== null)
+    );
+
+    if (allSelected) {
+      // Aquí iría la lógica para guardar la autoevaluación
+      console.log("Todos los ítems están seleccionados. Guardando...");
+    } else {
+      alert("Por favor, asegúrese de que todos los ítems estén seleccionados.");
+    }
+    console.log(allTableData);
+  };
+
   const renderTables = () => {
     return allTableData.map((tableData, index) => (
       <div
@@ -398,8 +412,9 @@ const SelfAssessment: React.FC = () => {
             <p>Carried out by: {currentUser?.USR_FullName}</p>
             <p>Date: {currentDate.toLocaleDateString()}</p>
           </div>
-
-          <Button className="rounded-xl w-44 ">Send</Button>
+          <Button onClick={handleSave} className="rounded-xl w-44">
+            Send
+          </Button>
         </div>
       </div>
     </div>
