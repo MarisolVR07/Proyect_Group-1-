@@ -6,8 +6,16 @@ import SecondaryButton from "../general/SecondaryButton";
 import Table from "./Table";
 import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
 import { useParameterStore } from "@/store/parameterStore";
-import { Parameter } from "@/app/types/entities";
-import { SelfAssessments, Section, Question } from "@/app/types/entities";
+import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
+import {
+  SelfAssessments,
+  Section,
+  Question,
+  AppliedSelfAssessment,
+  Answers,
+  ProposedAction,
+  Parameter,
+} from "@/app/types/entities";
 import { useAuthStore } from "@/store/authStore";
 
 interface ProposedActionData {
@@ -27,6 +35,7 @@ interface TableRowData {
 const SelfAssessment: React.FC = () => {
   const currentDate = new Date();
   const selfAssessmentStore = useSelfAssessmentsStore();
+  const appliedSelfAssessmentsStore = useAppliedSelfAssessmentsStore();
   const parameterStore = useParameterStore();
   const { currentUser } = useAuthStore();
 
@@ -348,8 +357,22 @@ const SelfAssessment: React.FC = () => {
     );
 
     if (allSelected) {
-      // Aquí iría la lógica para guardar la autoevaluación
-      console.log("Todos los ítems están seleccionados. Guardando...");
+      const appliedSelfAssessment: AppliedSelfAssessment = {
+        ASA_Date: currentDate.toISOString() ?? null,
+        ASA_ReviewedBy: " ",
+        ASA_MadeBy: currentUser?.USR_FullName,
+        ASA_Assessment: 1,
+        ASA_Department: currentUser?.USR_Department,
+      };
+
+      const respASA = appliedSelfAssessmentsStore.saveAppliedSelfAssessment(
+        appliedSelfAssessment
+      );
+      if ("error" in respASA) {
+        alert("Error saving appliedSelfAssessment");
+        return;
+      }
+      alert("Todos los ítems están seleccionados. Guardados");
     } else {
       alert("Por favor, asegúrese de que todos los ítems estén seleccionados.");
     }
