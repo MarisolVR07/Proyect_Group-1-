@@ -4,10 +4,11 @@ import PrimaryButton from "../general/PrimaryButton";
 import DropdownMenu from "../general/DropdownMenu";
 import DownArrowIcon from "../svg/DownArrowIcon";
 import Link from "next/link";
-
+import { useAuthStore } from "@/store/authStore";
 export default function Header() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
+  const { currentUser } = useAuthStore();
+  const [isAdmin, setIsAdmin] = useState<boolean>(false)
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
   const dropdownLinks = [
@@ -19,6 +20,12 @@ export default function Header() {
     },
     { href: "/views/backoffice/users", text: "Users" },
   ];
+
+  useEffect(() => {
+    if(currentUser?.USR_Role === "admin"){
+      setIsAdmin(true)
+    }
+  }, [currentUser]);
 
   return (
     <header className="w-full bg-transparent text-white py-3 top-0 z-10">
@@ -37,14 +44,15 @@ export default function Header() {
               </PrimaryButton>
             </Link>
             <li className="px-3 rounded-md">
-              <PrimaryButton
+             
+              {isAdmin ? (  <PrimaryButton
                 icon={<DownArrowIcon />}
                 className="rounded-md w-40 no-print"
                 onClick={toggleDropdown}
               >
                 BackOffice
-              </PrimaryButton>
-              <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />
+              </PrimaryButton>) : (<></>)}
+             <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />
             </li>
             <Link href="/views/reports" passHref>
               <PrimaryButton className="rounded-md w-36 no-print">Reports</PrimaryButton>
