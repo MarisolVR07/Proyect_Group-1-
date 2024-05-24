@@ -136,6 +136,7 @@ const Departments = () => {
               <tr className="bg-violet-800 text-white">
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">Status</th>
+                <th className="px-4 py-2">Unit</th>
               </tr>
             </thead>
             <tbody>
@@ -145,6 +146,7 @@ const Departments = () => {
                   <td className="px-4 py-2">
                     {department.DPT_Status === "a" ? "Active" : "Inactive"}
                   </td>
+                  <td className="px-4 py-2">{department.rc_unit?.UND_Name}</td>
                 </tr>
               ))}
             </tbody>

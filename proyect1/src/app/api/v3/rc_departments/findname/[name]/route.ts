@@ -8,7 +8,7 @@ export async function GET(req: NextRequest, { params }: ParameterFullName) {
     const response = await prisma.rc_departments.findMany({
       where: {
         DPT_Name: { contains: fetchedName },
-      },
+      }, include:{rc_unit:true}
     });
 
     if (response) return NextResponse.json(response, { status: 200 });

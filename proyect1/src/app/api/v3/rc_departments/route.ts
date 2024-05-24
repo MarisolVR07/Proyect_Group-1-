@@ -7,7 +7,9 @@ export async function GET(
   res: NextResponse<String | ErrorResponse | null>
 ) {
   try {
-    const departments = await prisma.rc_departments.findMany({});
+    const departments = await prisma.rc_departments.findMany({
+      include:{rc_unit:true}
+    });
     return NextResponse.json(departments, { status: 200 });
   } catch (error) {
     return NextResponse.json(error, { status: 500 });
