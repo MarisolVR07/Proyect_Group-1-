@@ -1,4 +1,4 @@
-"use cliente"
+"use client"
 import jwt, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 import Cookies from "js-cookie";
 import { verifyToken, DecodedToken } from "@/app/utils/verifyToken";
