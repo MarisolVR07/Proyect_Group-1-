@@ -7,6 +7,7 @@ import SearchBarDU from "./SearchBarDU";
 import { useDepartmentsStore } from "@/store/departmentStore";
 import { Department } from "@/app/types/entities";
 import { useUnitContextStore } from "@/store/authStore";
+import toast from 'react-hot-toast';
 
 const Departments = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,8 +28,9 @@ const Departments = () => {
       setIsLoading(true);
       try {
         await getDepartments();
-        console.log("Departments fetched successfully");
+        toast.success("Departments fetched successfully");
       } catch (error) {
+        toast.error("Failed to fetch departments");
         console.error("Failed to fetch departments", error);
       }
       setIsLoading(false);
@@ -47,20 +49,22 @@ const Departments = () => {
       try {
         if (isEditing) {
           await updateDepartment(department);
-          console.log("Department updated successfully");
+          toast.success("Department updated successfully");
           setIsEditing(false);
         } else {
           await saveDepartment({
             ...department,
             DPT_Unit: currentUnit.UND_Id,
           });
-          console.log("Department saved successfully");
+          toast.success("Department saved successfully");
         }
         await getDepartments();
       } catch (error) {
+        toast.error("Failed to save department");
         console.error("Failed to save department", error);
       }
     } else {
+      toast.error("Department not saved, unit id not specified");
       console.log("Department not saved, unit id not specified");
     }
   };
@@ -72,8 +76,10 @@ const Departments = () => {
     setIsLoading(true);
     try {
       const results = query.length > 0 ? await getDepartmentsByName(query) : await getDepartments();
+      toast.success("Search results fetched successfully");
       console.log("Search results fetched successfully", results);
     } catch (error) {
+      toast.error("Error searching departments");
       console.error("Error searching departments", error);
     } finally {
       setIsLoading(false);

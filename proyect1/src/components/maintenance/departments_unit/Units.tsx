@@ -6,6 +6,7 @@ import SearchBarDU from "./SearchBarDU";
 import { useUnitStore } from "@/store/unitStore";
 import { Unit } from "@/app/types/entities";
 import { useUnitContextStore } from "@/store/authStore";
+import toast from 'react-hot-toast';
 
 const Units = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,8 +27,9 @@ const Units = () => {
       setIsLoading(true);
       try {
         await getUnits();
-        console.log("Units fetched successfully");
+        toast.success("Units fetched successfully");
       } catch (error) {
+        toast.error("Failed to fetch units");
         console.error("Failed to fetch units", error);
       }
       setIsLoading(false);
@@ -40,16 +42,17 @@ const Units = () => {
       console.log("Unit before save/update:", unit);
       if (isEditing) {
         await updateUnit(unit);
-        console.log("Unit updated successfully");
+        toast.success("Unit updated successfully");
         setIsEditing(false);
       } else {
         const savedUnit = await saveUnit(unit);
         setUnit(savedUnit as Unit);
         setCurrentUnit(savedUnit as Unit);
-        console.log("Unit saved successfully");
+        toast.success("Unit saved successfully");
       }
       await getUnits();
     } catch (error) {
+      toast.error("Failed to save or update unit");
       console.error("Failed to save or update unit", error);
     }
   };
@@ -61,8 +64,10 @@ const Units = () => {
     setIsLoading(true);
     try {
       const results = query.length > 0 ? await getUnitsByName(query) : await getUnits();
+      toast.success("Search results fetched successfully");
       console.log("Search results fetched successfully", results);
     } catch (error) {
+      toast.error("Error searching units");
       console.error("Error searching units", error);
     } finally {
       setIsLoading(false);
