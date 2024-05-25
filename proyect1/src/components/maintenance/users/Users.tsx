@@ -25,6 +25,8 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
   const { currentUser } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 20;
   const handlePrintClick = () => {
     window.print();
   };
@@ -93,6 +95,17 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       onDebugMessage({ content: "Error searching users", type: "Error" });
     } finally {
       setIsLoading(false);
+    }
+  };
+  const handleNextPage = () => {
+    if ((currentPage + 1) * itemsPerPage < users.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
     }
   };
 
@@ -172,6 +185,10 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
               ))}
             </tbody>
           </table>
+          <div className="flex justify-between mt-2">
+            <Button className="rounded-xl w-44" onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
+            <Button className="rounded-xl w-44" onClick={handleNextPage} disabled={(currentPage + 1) * itemsPerPage >= users.length}>Next</Button>
+          </div>
         </div>
       )}
       <div className="flex flex-col md:flex-row justify-between mt-4 items-center"></div>

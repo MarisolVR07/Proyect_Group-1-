@@ -11,6 +11,7 @@ import { useUserStore } from "@/store/userStore";
 import Spinner from "@/components/skeletons/Spinner";
 import { useParameterStore } from "@/store/parameterStore";
 import { Parameter } from "@/app/types/entities";
+import Button from "@/components/general/PrimaryButton";
 
 const BackOffice = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,6 +27,8 @@ const BackOffice = () => {
   const [institution, setInstitution] = useState("");
   const [activationDate, setActivationDate] = useState<Date | null>();
   const [deactivationDate, setDeactivationDate] = useState<Date | null>();
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 20;
 
   const convertFileToBlob = async (file: File): Promise<Blob> => {
     return new Blob([file], { type: file.type });
@@ -45,7 +48,17 @@ const BackOffice = () => {
       setIsLoading(false);
     }
   };
+  const handleNextPage = () => {
+    if ((currentPage + 1) * itemsPerPage < users.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -104,6 +117,7 @@ const BackOffice = () => {
   const handleInstitutionChange = (newInstitution: string) => {
     setInstitution(newInstitution);
   };
+
 
   const handleSave = async () => {
     console.log("Save button clicked");
@@ -221,6 +235,10 @@ const BackOffice = () => {
               </table>
             </div>
           )}
+              <div className="flex justify-between mt-2">
+            <Button className="rounded-xl w-44" onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
+            <Button className="rounded-xl w-44" onClick={handleNextPage} disabled={(currentPage + 1) * itemsPerPage >= users.length}>Next</Button>
+          </div>
         </div>
       </div>
     </div>
