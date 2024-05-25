@@ -6,6 +6,8 @@ import SecondaryButton from "../general/SecondaryButton";
 import Table from "./Table";
 import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
 import { useParameterStore } from "@/store/parameterStore";
+import { useAnswersStore } from "@/store/answerStore";
+import { useProposedActionsStore } from "@/store/proposedactionStore";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
 import {
   SelfAssessments,
@@ -17,6 +19,7 @@ import {
   Parameter,
 } from "@/app/types/entities";
 import { useAuthStore } from "@/store/authStore";
+import LoadingCircle from "../skeletons/LoadingCircle";
 
 interface ProposedActionData {
   responsible: string;
@@ -37,6 +40,8 @@ const SelfAssessment: React.FC = () => {
   const selfAssessmentStore = useSelfAssessmentsStore();
   const appliedSelfAssessmentsStore = useAppliedSelfAssessmentsStore();
   const parameterStore = useParameterStore();
+  const proposedActionStore = useProposedActionsStore();
+  const answerStore = useAnswersStore();
   const { currentUser } = useAuthStore();
 
   const initialQuestions = Array.from({ length: 5 }, () => {
@@ -51,7 +56,7 @@ const SelfAssessment: React.FC = () => {
   const [loadedParameter, setLoadedParameter] = useState<Parameter | null>(
     null
   );
-
+  const [saving, setSaving] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [allTableData, setAllTableData] = useState<TableRowData[][]>([
     [
@@ -351,12 +356,13 @@ const SelfAssessment: React.FC = () => {
     setAllTableData(updatedAllTableData);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const allSelected = allTableData.every((tableData) =>
       tableData.every((row) => row.checkedIndex !== null)
     );
 
     if (allSelected) {
+      setSaving(true);
       const appliedSelfAssessment: AppliedSelfAssessment = {
         ASA_Date: currentDate.toISOString() ?? null,
         ASA_ReviewedBy: " ",
@@ -365,18 +371,61 @@ const SelfAssessment: React.FC = () => {
         ASA_Department: currentUser?.USR_Department,
       };
 
-      const respASA = appliedSelfAssessmentsStore.saveAppliedSelfAssessment(
-        appliedSelfAssessment
-      );
+      const respASA =
+        await appliedSelfAssessmentsStore.saveAppliedSelfAssessment(
+          appliedSelfAssessment
+        );
       if ("error" in respASA) {
         alert("Error saving appliedSelfAssessment");
+        setSaving(false);
         return;
       }
-      alert("Todos los ítems están seleccionados. Guardados");
+      for (const [sectionIndex, tableData] of allTableData.entries()) {
+        for (const [questionIndex, rowData] of tableData.entries()) {
+          const answer: Answers = {
+            ANS_Selection: rowData.checkedIndex === 0 ? "y" : "n",
+            ANS_Question: parseInt(
+              `${sectionIndex + 1}${questionIndex + 1}`,
+              10
+            ),
+            ANS_SelfAssessment: respASA.ASA_Id,
+            ANS_WorkDocument: rowData.textArea1,
+            ANS_Observations: rowData.textArea2,
+          };
+
+          const respAnswer = await answerStore.saveAnswer(answer);
+
+          if ("error" in respAnswer) {
+            alert("Error saving answer");
+            setSaving(false);
+            return;
+          }
+          if (rowData.proposedActionData && rowData.proposedActionData.date) {
+            const proposedAction: ProposedAction = {
+              PAC_Responsible: rowData.proposedActionData.responsible,
+              PAC_Justification: rowData.proposedActionData.justification,
+              PAC_Preview: rowData.proposedActionData.preview,
+              PAC_Date: rowData.proposedActionData.date.toISOString(),
+              PAC_Answer: respAnswer.ANS_Id,
+              PAC_Status: "A",
+            };
+
+            const respProposedAction =
+              await proposedActionStore.saveProposedAction(proposedAction);
+
+            if ("error" in respProposedAction) {
+              alert("Error saving proposed action");
+              setSaving(false);
+              return;
+            }
+          }
+        }
+      }
+      setSaving(false);
+      alert("Self-assessment sent");
     } else {
-      alert("Por favor, asegúrese de que todos los ítems estén seleccionados.");
+      alert("Please make sure all items are selected.");
     }
-    console.log(allTableData);
   };
 
   const renderTables = () => {
@@ -440,6 +489,7 @@ const SelfAssessment: React.FC = () => {
           </Button>
         </div>
       </div>
+      {saving && <LoadingCircle text="Sending..." />}
     </div>
   );
 };

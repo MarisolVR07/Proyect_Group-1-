@@ -3,8 +3,11 @@ import { ParameterId } from "@/app/types/api";
 import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest, { params }: ParameterId) {
   try {
+    const fetchedId = parseInt(params.id);
+
     const appliedselfassessment =
-      await prisma.rc_appliedselfassessment.findMany({
+      await prisma.rc_appliedselfassessment.findUnique({
+        where: { ASA_Id: fetchedId },
         include: {
           rc_answers: {
             include: {
@@ -23,21 +26,19 @@ export async function DELETE(req: NextRequest, { params }: ParameterId) {
   try {
     const fetchedId = parseInt(params.id);
 
-    await prisma.rc_questions.deleteMany({
-      where: {
-        QES_Section: {
-          in: (
-            await prisma.rc_sections.findMany({
-              where: { SEC_SelfAssessments: fetchedId },
-              select: { SEC_Id: true },
-            })
-          ).map((section) => section.SEC_Id),
-        },
-      },
+    const answers = await prisma.rc_answers.findMany({
+      where: { ANS_SelfAssessment: fetchedId },
+      include: { rc_proposedaction: true },
     });
 
-    await prisma.rc_sections.deleteMany({
-      where: { SEC_SelfAssessments: fetchedId },
+    for (const answer of answers) {
+      await prisma.rc_proposedaction.deleteMany({
+        where: { PAC_Answer: answer.ANS_Id },
+      });
+    }
+
+    await prisma.rc_answers.deleteMany({
+      where: { ANS_SelfAssessment: fetchedId },
     });
 
     const response = await prisma.rc_appliedselfassessment.delete({
@@ -48,12 +49,14 @@ export async function DELETE(req: NextRequest, { params }: ParameterId) {
 
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
     );
   }
 }
+
 
 export async function PUT(req: NextRequest, { params }: ParameterId) {
   try {

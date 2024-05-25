@@ -26,6 +26,7 @@ const ProposedAction: React.FC<ProposedActionProps> = ({
   const [responsible, setResponsible] = useState<string>("");
   const [justification, setJustification] = useState<string>("");
   const [preview, setPreview] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     if (initialData) {
@@ -37,6 +38,11 @@ const ProposedAction: React.FC<ProposedActionProps> = ({
   }, [initialData]);
 
   const handleAccept = () => {
+    if (!responsible || !justification || !preview || !date) {
+      setError("Please fill out all fields.");
+      return;
+    }
+
     const proposedActionData: ProposedActionData = {
       responsible,
       justification,
@@ -90,6 +96,7 @@ const ProposedAction: React.FC<ProposedActionProps> = ({
           />
         </div>
       </div>
+      {error && <div className="text-red-500 text-center mt-2">{error}</div>}
       <SecondaryButton className="rounded-md px-3 my-4" onClick={handleAccept}>
         Accept
       </SecondaryButton>
