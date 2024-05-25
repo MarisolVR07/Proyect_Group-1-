@@ -24,7 +24,7 @@ export default function Page() {
     } else {
       router.push("/");
     }
-  }, [token]);
+  }, [token,router]);
 
   return (
     <>
