@@ -8,6 +8,7 @@ import DepartmentDropdown from "./DepartmentDropdown";
 import RolDropdown from "./RolDropdowm";
 import StateCheckbox from "./StateCheckbox";
 import { User } from "@/app/types/entities";
+import toast from 'react-hot-toast';
 
 interface DebugMessage {
   content: string;
@@ -64,6 +65,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       USR_Status: isChecked ? "a" : "i",
     };
     updateUser(updatedUser);
+    toast.success("Status updated successfully");
   };
 
   const handleDepartmentChange = (user: User, newDeptId: number) => {
@@ -75,11 +77,13 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       USR_Department: newDeptId !== undefined ? newDeptId : null,
     };
     updateUser(updatedUser);
+    toast.success("Department updated successfully");
   };
 
   const handleRolChange = (user: User, newRol: string) => {
     const updatedUser: User = { ...user, USR_Role: newRol };
     updateUser(updatedUser);
+    toast.success("Rol updated successfully");
 };
 
   const handleSearchChange = async (query: string) => {

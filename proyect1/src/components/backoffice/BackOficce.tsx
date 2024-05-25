@@ -12,7 +12,7 @@ import Spinner from "@/components/skeletons/Spinner";
 import { useParameterStore } from "@/store/parameterStore";
 import { Parameter } from "@/app/types/entities";
 import Button from "@/components/general/PrimaryButton";
-
+import toast from 'react-hot-toast';
 const BackOffice = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -64,6 +64,7 @@ const BackOffice = () => {
       setIsLoading(true);
       try {
         await getUsers();
+        
       } catch (error) {
         console.error("Failed to fetch users", error);
       }
@@ -131,10 +132,13 @@ const BackOffice = () => {
     console.log("Parameter to update:", parameterToUpdate);
     try {
       const result = await updateParameter(parameterToUpdate);
+      toast.success("Parameters updated successfully");
       if ("error" in result) {
         console.error("Failed to update parameters:", result.error);
+        toast.error("Failed saving parameters, please try again");
       } else {
         console.log("Parameters updated successfully:", result);
+        toast.success("Parameters updated successfully");
       }
     } catch (error) {
       console.error("Error updating parameters:", error);
@@ -143,8 +147,8 @@ const BackOffice = () => {
   return (
     <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
       <CardsSection />
-      <div className="flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-4 mx-4">
-        <div className="flex-1 bg-gray-700 p-3 text-center border-2 border-white rounded-xl overflow-hidden">
+      <div className="flex flex-col lg:flex-row items-start justify-center space-y-4 lg:space-y-0 lg:space-x-4 mx-4">
+        <div className="flex-1 bg-gray-700 p-3 text-center border-2 border-white rounded-xl overflow-hidden min-h-[500px]">
           <h2 className="text-xl text-white mb-3 font-semibold">
             APP ACTIVATION/DEACTIVATION DATE-TIME
           </h2>
@@ -204,7 +208,7 @@ const BackOffice = () => {
             </PrimaryButton>
           </div>
         </div>
-        <div className="flex-1 bg-gray-700 p-8 rounded-xl border-2 border-white text-white overflow-x-auto">
+        <div className="flex-1 bg-gray-700 p-8 rounded-xl border-2 border-white text-white overflow-x-auto min-h-[500px]">
           <div className="w-full py-1 items-center justify-center text-center">
             <h2 className="text-xl text-white font-semibold">NEW USERS</h2>
           </div>
@@ -212,6 +216,7 @@ const BackOffice = () => {
           {isLoading ? (
             <Spinner />
           ) : (
+            
             <div className="overflow-x-auto mt-4 rounded-md">
               <table className="table-auto w-full text-color">
                 <thead className="bg-violet-800 text-white">
@@ -235,8 +240,8 @@ const BackOffice = () => {
               </table>
             </div>
           )}
-              <div className="flex justify-between mt-2">
-            <Button className="rounded-xl w-44" onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
+              <div className=" flex justify-between mt-2">
+            <Button className="rounded-xl w-44 " onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
             <Button className="rounded-xl w-44" onClick={handleNextPage} disabled={(currentPage + 1) * itemsPerPage >= users.length}>Next</Button>
           </div>
         </div>

@@ -8,7 +8,7 @@ import DebugModeToggle from "@/components/debug_mode/DebugModeToggle";
 import Header from "@/components/header/Header";
 import MantSelfAssessment from "@/components/maintenance/self_assessment/MantSelfAssessment";
 
-
+import { Toaster } from 'react-hot-toast';
 
 export default function Page() {
   const [token, setToken] = useState<string | null>(
@@ -28,6 +28,7 @@ export default function Page() {
     <>
       <DebugModeToggle>
         <Header />
+        <Toaster position="top-right"/>
         <MantSelfAssessment />
       </DebugModeToggle>
     </>

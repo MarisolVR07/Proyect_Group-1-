@@ -6,6 +6,7 @@ import jwt, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 import Cookies from "js-cookie";
 import { verifyToken, DecodedToken } from "@/app/utils/verifyToken";
 import { useRouter } from "next/navigation";
+import { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from "react";
 export default function Page() {
   const [token, setToken] = useState<string | null>(
@@ -25,6 +26,7 @@ export default function Page() {
     <>
       <DebugModeToggle>
         <Header/>
+        <Toaster position="top-right"/>
         <PageUD/>
       </DebugModeToggle>
     </>

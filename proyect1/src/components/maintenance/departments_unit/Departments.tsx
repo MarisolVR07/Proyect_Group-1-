@@ -28,9 +28,9 @@ const Departments = () => {
       setIsLoading(true);
       try {
         await getDepartments();
-        toast.success("Departments fetched successfully");
+       
       } catch (error) {
-        toast.error("Failed to fetch departments");
+       
         console.error("Failed to fetch departments", error);
       }
       setIsLoading(false);
@@ -152,8 +152,14 @@ const Departments = () => {
           {isEditing ? "Update" : "Add"}
         </Button>
       </div>
-      <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center">
+      <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center mb-3">
+       
+       </div>
+      <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center mb-5">
         <SearchBarDU onSearch={handleSearchChangeDepartment} />
+      </div>
+      <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center mb-5">
+       
       </div>
       {isLoading ? (
         <Spinner />
