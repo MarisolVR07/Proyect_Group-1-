@@ -2,8 +2,9 @@ import React from "react";
 import Link from "next/link";
 
 interface CardButtonProps {
-  href: string;
-  icon: any;
+  href?: string;
+  onClick?: () => void;
+  icon: React.ReactNode;
   title: string;
   description: string;
   className?: string;
@@ -11,13 +12,24 @@ interface CardButtonProps {
 
 const CardComponent: React.FC<CardButtonProps> = ({
   href,
+  onClick,
   icon,
   title,
   description,
   className,
-}) => (
-  <Link href={href} passHref>
+}) => {
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    }
+    if (href) {
+      window.location.href = href;
+    }
+  };
+
+  return (
     <div
+      onClick={handleClick}
       className={`cursor-pointer border-2 border-white px-4 py-6 rounded-lg hover:border-violet-700 hover:text-violet-400 ${className}`}
     >
       {icon}
@@ -28,7 +40,7 @@ const CardComponent: React.FC<CardButtonProps> = ({
         {description}
       </p>
     </div>
-  </Link>
-);
+  );
+};
 
 export default CardComponent;

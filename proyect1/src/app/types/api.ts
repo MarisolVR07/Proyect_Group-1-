@@ -9,3 +9,10 @@ export type ParameterId = {
 export type ParameterFullName = {
   params: { fullname: string };
 };
+
+export type ParameterDepartmentStatus = {
+  params: {
+    department: string;
+    status: string;
+  };
+};

@@ -58,12 +58,12 @@ export type Parameter = {
   PRM_Institution?: string | null;
 };
 
-
 export type AppliedSelfAssessment = {
   ASA_Id?: number | null;
   ASA_Date: String | null;
   ASA_ReviewedBy: String | null;
   ASA_MadeBy?: String | null;
+  ASA_Status?: string;
   ASA_Assessment?: number | null;
   ASA_Department?: number | null;
   rc_answers?: Answers[] | null;

@@ -6,7 +6,7 @@ const API_URL =
   currentUrl.split("/")[0] +
   "//" +
   currentUrl.split("//")[1].split("/")[0] +
-  "/api/v4/";
+  "/api/v5/";
 
 export async function getAnswer(id: number): Promise<Answers | ErrorResponse> {
   try {

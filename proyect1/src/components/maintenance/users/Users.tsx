@@ -24,7 +24,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [editUserId, setEditUserId] = useState<number | null>(null);
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
-  const { currentUser } = useAuthStore();
+  const { setCurrentUser, currentUser } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 20;
@@ -68,7 +68,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     toast.success("Status updated successfully");
   };
 
-  const handleDepartmentChange = (user: User, newDeptId: number) => {
+  const handleDepartmentChange = async (user: User, newDeptId: number) => {
     console.log(
       `Usuario ${user.USR_Id} intenta cambiar de departamento a: ${newDeptId}`
     );
@@ -76,7 +76,14 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       ...user,
       USR_Department: newDeptId !== undefined ? newDeptId : null,
     };
-    updateUser(updatedUser);
+    const resp = await updateUser(updatedUser);
+    if ("error" in resp) {
+      console.error("Error updating department", resp.error);
+      return;
+    }
+    if (resp.USR_Id === currentUser?.USR_Id) {
+      setCurrentUser(resp);
+    }
     toast.success("Department updated successfully");
   };
 

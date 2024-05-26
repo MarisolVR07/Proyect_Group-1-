@@ -6,7 +6,7 @@ const API_URL =
   currentUrl.split("/")[0] +
   "//" +
   currentUrl.split("//")[1].split("/")[0] +
-  "/api/v4/";
+  "/api/v5/";
 
 export async function getAppliedSelfassessment(
   id: number
@@ -25,16 +25,18 @@ export async function getAppliedSelfassessment(
   }
 }
 
-export async function getAppliedSelfassessmentsByName(
-  name: string
+export async function getAppliedSelfAssessmentByDepartmentAndStatus(
+  department: number,
+  status: string
 ): Promise<AppliedSelfAssessment[] | ErrorResponse> {
   try {
     const res: Response = await fetch(
-      API_URL + `rc_appliedselfassessment/findname/${name}`
+      API_URL +
+        `rc_appliedselfassessment/finddeparmentandstatus/${department}/${status}`
     );
-    const appliedselfassessments: AppliedSelfAssessment[] | ErrorResponse =
+    const appliedSelfAssessments: AppliedSelfAssessment[] | ErrorResponse =
       await res.json();
-    return appliedselfassessments;
+    return appliedSelfAssessments;
   } catch (error: any) {
     return error;
   }

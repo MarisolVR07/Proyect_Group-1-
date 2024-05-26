@@ -366,6 +366,7 @@ const SelfAssessment: React.FC = () => {
       const appliedSelfAssessment: AppliedSelfAssessment = {
         ASA_Date: currentDate.toISOString() ?? null,
         ASA_ReviewedBy: " ",
+        ASA_Status: "A",
         ASA_MadeBy: currentUser?.USR_FullName,
         ASA_Assessment: 1,
         ASA_Department: currentUser?.USR_Department,

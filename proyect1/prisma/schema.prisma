@@ -110,6 +110,7 @@ model rc_appliedselfassessment {
   ASA_MadeBy         String             @db.VarChar(30)
   ASA_Assessment     Int
   ASA_Department     Int
+  ASA_Status         String?            @db.VarChar(1)
   rc_answers         rc_answers[]
   rc_departments     rc_departments     @relation(fields: [ASA_Department], references: [DPT_Id], onUpdate: Restrict, map: "Department by evaluation carried out")
   rc_selfassessments rc_selfassessments @relation(fields: [ASA_Assessment], references: [SAT_Id], onUpdate: Restrict, map: "SelfAssessment")
