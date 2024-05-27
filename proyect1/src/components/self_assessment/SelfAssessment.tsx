@@ -20,6 +20,7 @@ import {
 import {
   useUserContextStore,
   useParametersContextStore,
+  useSelfAssessmentContextStore,
 } from "@/store/authStore";
 import LoadingCircle from "../skeletons/LoadingCircle";
 
@@ -38,6 +39,7 @@ interface TableRowData {
 }
 
 const SelfAssessment: React.FC = () => {
+  const { currentSelfAssessment } = useSelfAssessmentContextStore();
   const currentDate = new Date();
   const selfAssessmentStore = useSelfAssessmentsStore();
   const appliedSelfAssessmentsStore = useAppliedSelfAssessmentsStore();
@@ -295,15 +297,11 @@ const SelfAssessment: React.FC = () => {
 
   const loadSelfAssessmentData = async () => {
     try {
-      const selfAssessment =
-        await selfAssessmentStore.getCompleteSelfAssessment(
-          currentParameters?.PRM_CurrentSelfAssessment ?? 1
-        );
-      if (!("error" in selfAssessment)) {
-        setLoadedSelfAssessment(selfAssessment);
+      if (currentSelfAssessment) {
+        setLoadedSelfAssessment(currentSelfAssessment);
 
         const loadedQuestions: string[][] =
-          selfAssessment.rc_sections?.map(
+          currentSelfAssessment.rc_sections?.map(
             (section: Section) =>
               section.rc_questions?.map(
                 (question: Question) => question.QES_Text
@@ -311,11 +309,6 @@ const SelfAssessment: React.FC = () => {
           ) ?? [];
 
         setQuestions(loadedQuestions);
-      } else {
-        console.error(
-          "Error al cargar la autoevaluación:",
-          selfAssessment.error
-        );
       }
     } catch (error) {
       console.error("Error fetching self-assessment data:", error);

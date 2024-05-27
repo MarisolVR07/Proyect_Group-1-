@@ -17,13 +17,17 @@ import {
   Parameter,
 } from "@/app/types/entities";
 import LoadingCircle from "@/components/skeletons/LoadingCircle";
-import { useParametersContextStore } from "@/store/authStore";
+import {
+  useParametersContextStore,
+  useSelfAssessmentContextStore,
+} from "@/store/authStore";
 import { useParameterStore } from "@/store/parameterStore";
 
 const MantSelfAssessment: React.FC = () => {
   const { updateParameter } = useParameterStore();
-  const { currentParameters, setCurrentParameters } =
-    useParametersContextStore();
+  const { setCurrentParameters } = useParametersContextStore();
+  const { setCurrentSelfAssessment, currentSelfAssessment } =
+    useSelfAssessmentContextStore();
   const selfAssessmentStore = useSelfAssessmentsStore();
   const sectionStore = useSectionStore();
   const questionStore = useQuestionStore();
@@ -47,19 +51,13 @@ const MantSelfAssessment: React.FC = () => {
     loadSelfAssessmentData();
   }, []);
 
-  const loadSelfAssessmentData = async () => {
+  const loadSelfAssessmentData = () => {
     try {
-      const selfAssessment =
-        await selfAssessmentStore.getCompleteSelfAssessment(
-          currentParameters?.PRM_CurrentSelfAssessment || 1
-        );
-      if (selfAssessment && !("error" in selfAssessment)) {
-        setLoadedSelfAssessment(selfAssessment);
-        setAudit(selfAssessment.SAT_Audit);
-        setDescription(selfAssessment.SAT_Description);
-        loadSectionData(selfAssessment, setSectionData);
-      } else {
-        console.error("Error loading self-assessment:", selfAssessment.error);
+      if (currentSelfAssessment) {
+        setLoadedSelfAssessment(currentSelfAssessment);
+        setAudit(currentSelfAssessment.SAT_Audit);
+        setDescription(currentSelfAssessment.SAT_Description);
+        loadSectionData(currentSelfAssessment, setSectionData);
       }
     } catch (error) {
       console.error("Error fetching self-assessment data:", error);
@@ -116,8 +114,8 @@ const MantSelfAssessment: React.FC = () => {
       const updatedSelfAssessment = await updateSelfAssessmentData();
       if ("error" in updatedSelfAssessment) {
         alert("Error updating the self-assessment");
-        return;
         setSaving(false);
+        return;
       }
       if (updatedSelfAssessment && updatedSelfAssessment.SAT_Id) {
         for (let index = 0; index < 5; index++) {
@@ -131,8 +129,8 @@ const MantSelfAssessment: React.FC = () => {
           );
           if ("error" in updatedSectionResponse) {
             alert("Error updating section: " + (index + 1));
-            return;
             setSaving(false);
+            return;
           }
           if (updatedSectionResponse && updatedSectionResponse.SEC_Id) {
             const updatedQuestionsResponse = await updateQuestionsData(
@@ -141,19 +139,35 @@ const MantSelfAssessment: React.FC = () => {
             );
             if ("error" in updatedQuestionsResponse) {
               alert("Error updating section questions: " + index);
-              return;
               setSaving(false);
+              return;
             }
           }
         }
         updateParameterData(updatedSelfAssessment.SAT_Id);
         deactivatePrevSelfAssessment();
         setLoadedSelfAssessment(updatedSelfAssessment);
+        upSelfAssessmentContext(updatedSelfAssessment.SAT_Id);
       }
       setSaving(false);
       alert("Form submitted successfully!");
     } catch (error) {
       console.error("Error updating the self-assessment:", error);
+    }
+  };
+
+  const upSelfAssessmentContext = async (currentSelfAssessment: number) => {
+    try {
+      const selfAssessment =
+        await selfAssessmentStore.getCompleteSelfAssessment(
+          currentSelfAssessment
+        );
+      if ("error" in selfAssessment) {
+        return;
+      }
+      setCurrentSelfAssessment(selfAssessment);
+    } catch (error) {
+      console.error("Error fetching self-assessment data:", error);
     }
   };
 
@@ -184,9 +198,6 @@ const MantSelfAssessment: React.FC = () => {
       return await selfAssessmentStore.updateSelfAssessment(
         updatePrevSelfAssessment
       );
-      if ("error" in updatePrevSelfAssessment) {
-        console.error("Error deactivating previous self-assessment.");
-      }
     }
   };
 

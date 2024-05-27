@@ -3,28 +3,53 @@ import React, { useEffect, useState } from "react";
 import LoginForm from "./LoginForm";
 import UserIcon from "../svg/UserIcon";
 import { useParameterStore } from "@/store/parameterStore";
-import { useParametersContextStore } from "@/store/authStore";
+import {
+  useParametersContextStore,
+  useSelfAssessmentContextStore,
+} from "@/store/authStore";
 import { Parameter } from "@/app/types/entities";
-import { Container } from "postcss";
+import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
+
 const Login = () => {
   const { getParameter } = useParameterStore();
   const { setCurrentParameters } = useParametersContextStore();
+  const { setCurrentSelfAssessment } = useSelfAssessmentContextStore();
   const [parameter, setParameter] = useState<Parameter | null>(null);
+  const selfAssessmentStore = useSelfAssessmentsStore();
 
-  const fetchParameters = async () => {
+  const loadParameters = async () => {
     try {
       const params = await getParameter(1);
-      if (!("error" in params)) {
-        setParameter(params);
-        setCurrentParameters(params);
+      if ("error" in params) {
+        return;
+      }
+      setParameter(params);
+      setCurrentParameters(params);
+      if (params.PRM_CurrentSelfAssessment) {
+        loadSelfAssessmentData(params.PRM_CurrentSelfAssessment);
       }
     } catch (error) {
       console.error("Failed to fetch parameters:", error);
     }
   };
 
+  const loadSelfAssessmentData = async (currentSelfAssessment: number) => {
+    try {
+      const selfAssessment =
+        await selfAssessmentStore.getCompleteSelfAssessment(
+          currentSelfAssessment
+        );
+      if ("error" in selfAssessment) {
+        return;
+      }
+      setCurrentSelfAssessment(selfAssessment);
+    } catch (error) {
+      console.error("Error fetching self-assessment data:", error);
+    }
+  };
+
   useEffect(() => {
-    fetchParameters();
+    loadParameters();
   }, []);
 
   return (
