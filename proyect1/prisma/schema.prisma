@@ -37,12 +37,13 @@ model rc_departments {
 }
 
 model rc_parameters {
-  PRM_Id               Int      @id @unique(map: "ATC_Id") @default(autoincrement())
-  PRM_ActivationDate   DateTime @db.Timestamp(0)
-  PRM_DeactivationDate DateTime @db.Timestamp(0)
-  PRM_Logo             Bytes?   @db.Blob
-  PRM_Email            String   @db.VarChar(100)
-  PRM_Institution      String   @db.VarChar(100)
+  PRM_Id                    Int      @id @unique(map: "ATC_Id") @default(autoincrement())
+  PRM_ActivationDate        DateTime @db.Timestamp(0)
+  PRM_DeactivationDate      DateTime @db.Timestamp(0)
+  PRM_Logo                  Bytes?   @db.Blob
+  PRM_Email                 String   @db.VarChar(100)
+  PRM_Institution           String   @db.VarChar(100)
+  PRM_CurrentSelfAssessment Int?
 }
 
 model rc_questions {

@@ -1,23 +1,9 @@
-"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParameterStore } from "@/store/parameterStore";
-import { Parameter } from "@/app/types/entities";
+import { useParametersContextStore } from "@/store/authStore";
 
 const Footer: React.FC = () => {
-  const { getParameter } = useParameterStore();
-  const [parameter, setParameter] = useState<Parameter | null>();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const para = await getParameter(1);
-        setParameter(para as Parameter);
-      } catch (error) {
-        console.log("Parameters not found");
-      }
-    };
-    fetchData();
-  }, []);
-
+    const { currentParameters } = useParametersContextStore();
   return (
     <footer className="text-white bg-black bg-opacity-30 body-font mt-auto">
       <div className="container px-5 py-3 mx-auto flex items-center sm:flex-row flex-col">
@@ -36,9 +22,10 @@ const Footer: React.FC = () => {
           </svg>
           <span className="ml-3 text-xl">ISC</span>
         </a>
-        {parameter ? (
+        {currentParameters ? (
           <p className="text-md text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">
-            © 2024 {parameter.PRM_Institution} — {parameter.PRM_Email}
+            © 2024 {currentParameters.PRM_Institution} —{" "}
+            {currentParameters.PRM_Email}
           </p>
         ) : (
           <p className="text-md text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">

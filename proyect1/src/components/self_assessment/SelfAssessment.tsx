@@ -5,7 +5,6 @@ import PageButton from "../general/PageButton";
 import SecondaryButton from "../general/SecondaryButton";
 import Table from "./Table";
 import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
-import { useParameterStore } from "@/store/parameterStore";
 import { useAnswersStore } from "@/store/answerStore";
 import { useProposedActionsStore } from "@/store/proposedactionStore";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
@@ -18,7 +17,7 @@ import {
   ProposedAction,
   Parameter,
 } from "@/app/types/entities";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore, useParametersContextStore } from "@/store/authStore";
 import LoadingCircle from "../skeletons/LoadingCircle";
 
 interface ProposedActionData {
@@ -39,10 +38,10 @@ const SelfAssessment: React.FC = () => {
   const currentDate = new Date();
   const selfAssessmentStore = useSelfAssessmentsStore();
   const appliedSelfAssessmentsStore = useAppliedSelfAssessmentsStore();
-  const parameterStore = useParameterStore();
   const proposedActionStore = useProposedActionsStore();
   const answerStore = useAnswersStore();
   const { currentUser } = useAuthStore();
+  const { currentParameters } = useParametersContextStore();
 
   const initialQuestions = Array.from({ length: 5 }, () => {
     return Array.from({ length: 4 }, () => "");
@@ -52,10 +51,6 @@ const SelfAssessment: React.FC = () => {
 
   const [loadedSelfAssessment, setLoadedSelfAssessment] =
     useState<SelfAssessments | null>(null);
-
-  const [loadedParameter, setLoadedParameter] = useState<Parameter | null>(
-    null
-  );
   const [saving, setSaving] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [allTableData, setAllTableData] = useState<TableRowData[][]>([
@@ -292,25 +287,15 @@ const SelfAssessment: React.FC = () => {
   ]);
 
   useEffect(() => {
-    loadParameterData();
     loadSelfAssessmentData();
   }, []);
-
-  const loadParameterData = async () => {
-    try {
-      const params = await parameterStore.getParameter(1);
-      if (!("error" in params)) {
-        setLoadedParameter(params);
-      }
-    } catch (error) {
-      console.error("Failed to fetch parameters:", error);
-    }
-  };
 
   const loadSelfAssessmentData = async () => {
     try {
       const selfAssessment =
-        await selfAssessmentStore.getCompleteSelfAssessment(1);
+        await selfAssessmentStore.getCompleteSelfAssessment(
+          currentParameters?.PRM_CurrentSelfAssessment ?? 1
+        );
       if (!("error" in selfAssessment)) {
         setLoadedSelfAssessment(selfAssessment);
 
@@ -368,7 +353,7 @@ const SelfAssessment: React.FC = () => {
         ASA_ReviewedBy: " ",
         ASA_Status: "A",
         ASA_MadeBy: currentUser?.USR_FullName,
-        ASA_Assessment: 1,
+        ASA_Assessment: currentParameters?.PRM_CurrentSelfAssessment,
         ASA_Department: currentUser?.USR_Department,
       };
 
@@ -452,7 +437,7 @@ const SelfAssessment: React.FC = () => {
     <div className="form-control my-3 mx-8 py-5 px-10 w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
       <div className=" bg-gray-700 w-full py-3 px-3 items-center justify-center text-center rounded-xl">
         <h1 className="text-2xl text-white mb-2">
-          {loadedParameter?.PRM_Institution}
+          {currentParameters?.PRM_Institution}
         </h1>
         <h2 className="text-white text-xl mb-1">
           {loadedSelfAssessment?.SAT_Audit}

@@ -1,6 +1,6 @@
 export type Department = {
   DPT_Id?: number | null;
-  DPT_Name: string;
+  DPT_Name?: string;
   DPT_Status?: string;
   DPT_Unit?: number | null | Unit;
   rc_unit?: Unit | null;
@@ -9,9 +9,9 @@ export type Department = {
 
 export type User = {
   USR_Id?: number | null;
-  USR_Email: string;
-  USR_FullName: string;
-  USR_Role: string;
+  USR_Email?: string;
+  USR_FullName?: string;
+  USR_Role?: string;
   USR_Department?: number | null;
   USR_Status?: string;
 };
@@ -26,53 +26,54 @@ export type SelfAssessments = {
 
 export type Unit = {
   UND_Id?: number | null;
-  UND_Name: string;
-  UND_Email: String;
+  UND_Name?: string;
+  UND_Email?: String;
   UND_Status?: String;
   rc_answers?: Department[] | null;
 };
 
 export type Section = {
   SEC_Id?: number | null;
-  SEC_Name: string;
-  SEC_Number: string;
-  SEC_SelfAssessments: number | null;
+  SEC_Name?: string;
+  SEC_Number?: string;
+  SEC_SelfAssessments?: number | null;
   rc_selfassessments?: SelfAssessments | null;
   rc_questions?: Question[] | null;
 };
 
 export type Question = {
   QES_Id?: number | null;
-  QES_Text: string;
-  QES_Number: string;
-  QES_Section: number | null;
+  QES_Text?: string;
+  QES_Number?: string;
+  QES_Section?: number | null;
   rc_sections?: Section | null;
 };
 
 export type Parameter = {
   PRM_Id?: number | null;
-  PRM_ActivationDate: string | null;
-  PRM_DeactivationDate: string | null;
+  PRM_ActivationDate?: string | null;
+  PRM_DeactivationDate?: string | null;
   PRM_Logo?: Blob | null;
   PRM_Email?: string | null;
   PRM_Institution?: string | null;
+  PRM_CurrentSelfAssessment?: number | null;
 };
 
 export type AppliedSelfAssessment = {
   ASA_Id?: number | null;
   ASA_Date: String | null;
   ASA_ReviewedBy: String | null;
-  ASA_MadeBy?: String | null;
+  ASA_MadeBy: String | null;
   ASA_Status?: string;
-  ASA_Assessment?: number | null;
-  ASA_Department?: number | null;
+  ASA_Assessment: number | null;
+  ASA_Department: number | null;
   rc_answers?: Answers[] | null;
 };
 
 export type Answers = {
   ANS_Id?: number | null;
-  ANS_Selection: String | null;
-  ANS_Observations: String | null;
+  ANS_Selection?: String | null;
+  ANS_Observations?: String | null;
   ANS_WorkDocument?: String | null;
   ANS_Question?: number | null;
   ANS_SelfAssessment?: number | null;
@@ -81,8 +82,8 @@ export type Answers = {
 
 export type ProposedAction = {
   PAC_Id?: number | null;
-  PAC_Date: String | null;
-  PAC_Status: String | null;
+  PAC_Date?: String | null;
+  PAC_Status?: String | null;
   PAC_Responsible?: String | null;
   PAC_Justification?: String | null;
   PAC_Preview?: String | null;

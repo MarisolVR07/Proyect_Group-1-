@@ -12,7 +12,7 @@ import Spinner from "@/components/skeletons/Spinner";
 import { useParameterStore } from "@/store/parameterStore";
 import { Parameter } from "@/app/types/entities";
 import Button from "@/components/general/PrimaryButton";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 const BackOffice = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -64,7 +64,6 @@ const BackOffice = () => {
       setIsLoading(true);
       try {
         await getUsers();
-        
       } catch (error) {
         console.error("Failed to fetch users", error);
       }
@@ -87,7 +86,7 @@ const BackOffice = () => {
     const fetchParameters = async () => {
       setIsLoading(true);
       try {
-        const params = await getParameter(1); //Colocar el id del parametro que se va a traer aca, revisar el thunder cual está
+        const params = await getParameter(1);
         if (!("error" in params)) {
           setEmail(params.PRM_Email || "");
           setInstitution(params.PRM_Institution || "");
@@ -118,7 +117,6 @@ const BackOffice = () => {
   const handleInstitutionChange = (newInstitution: string) => {
     setInstitution(newInstitution);
   };
-
 
   const handleSave = async () => {
     console.log("Save button clicked");
@@ -216,7 +214,6 @@ const BackOffice = () => {
           {isLoading ? (
             <Spinner />
           ) : (
-            
             <div className="overflow-x-auto mt-4 rounded-md">
               <table className="table-auto w-full text-color">
                 <thead className="bg-violet-800 text-white">
@@ -240,9 +237,21 @@ const BackOffice = () => {
               </table>
             </div>
           )}
-              <div className=" flex justify-between mt-2">
-            <Button className="rounded-xl w-44 " onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
-            <Button className="rounded-xl w-44" onClick={handleNextPage} disabled={(currentPage + 1) * itemsPerPage >= users.length}>Next</Button>
+          <div className=" flex justify-between mt-2">
+            <Button
+              className="rounded-xl w-44 "
+              onClick={handlePreviousPage}
+              disabled={currentPage === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              className="rounded-xl w-44"
+              onClick={handleNextPage}
+              disabled={(currentPage + 1) * itemsPerPage >= users.length}
+            >
+              Next
+            </Button>
           </div>
         </div>
       </div>

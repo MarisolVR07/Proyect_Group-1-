@@ -10,10 +10,20 @@ import SecondaryButton from "../../general/SecondaryButton";
 import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
 import { useSectionStore } from "@/store/sectionStore";
 import { useQuestionStore } from "@/store/questionStore";
-import { SelfAssessments, Section, Question } from "@/app/types/entities";
+import {
+  SelfAssessments,
+  Section,
+  Question,
+  Parameter,
+} from "@/app/types/entities";
 import LoadingCircle from "@/components/skeletons/LoadingCircle";
+import { useParametersContextStore } from "@/store/authStore";
+import { useParameterStore } from "@/store/parameterStore";
 
 const MantSelfAssessment: React.FC = () => {
+  const { updateParameter } = useParameterStore();
+  const { currentParameters, setCurrentParameters } =
+    useParametersContextStore();
   const selfAssessmentStore = useSelfAssessmentsStore();
   const sectionStore = useSectionStore();
   const questionStore = useQuestionStore();
@@ -40,17 +50,16 @@ const MantSelfAssessment: React.FC = () => {
   const loadSelfAssessmentData = async () => {
     try {
       const selfAssessment =
-        await selfAssessmentStore.getCompleteSelfAssessment(1);
-      if (!("error" in selfAssessment)) {
+        await selfAssessmentStore.getCompleteSelfAssessment(
+          currentParameters?.PRM_CurrentSelfAssessment || 1
+        );
+      if (selfAssessment && !("error" in selfAssessment)) {
         setLoadedSelfAssessment(selfAssessment);
         setAudit(selfAssessment.SAT_Audit);
         setDescription(selfAssessment.SAT_Description);
         loadSectionData(selfAssessment, setSectionData);
       } else {
-        console.error(
-          "Error al cargar la autoevaluación:",
-          selfAssessment.error
-        );
+        console.error("Error loading self-assessment:", selfAssessment.error);
       }
     } catch (error) {
       console.error("Error fetching self-assessment data:", error);
@@ -74,7 +83,7 @@ const MantSelfAssessment: React.FC = () => {
       });
       setSectionData(updatedSectionData);
     } else {
-      console.warn("La autoevaluación no tiene secciones definidas.");
+      console.warn("The self-assessment does not have defined sections.");
     }
   };
 
@@ -99,108 +108,123 @@ const MantSelfAssessment: React.FC = () => {
       return;
     }
     setSaving(true);
-    updateSelfAssessment();
+    saveSelfAssessment();
   };
 
-  const updateSelfAssessment = async () => {
+  const saveSelfAssessment = async () => {
     try {
-      if (loadedSelfAssessment && loadedSelfAssessment.rc_sections) {
-        const updatedSelfAssessment = await updateSelfAssessmentData();
-        if (updatedSelfAssessment && "error" in updatedSelfAssessment) {
-          setSaving(false);
-          alert("Error updating the self-assessment");
-          return;
-        }
-
-        for (
-          let index = 0;
-          index < loadedSelfAssessment.rc_sections.length;
-          index++
-        ) {
-          const sectionSAT = loadedSelfAssessment.rc_sections[index];
+      const updatedSelfAssessment = await updateSelfAssessmentData();
+      if ("error" in updatedSelfAssessment) {
+        alert("Error updating the self-assessment");
+        return;
+        setSaving(false);
+      }
+      if (updatedSelfAssessment && updatedSelfAssessment.SAT_Id) {
+        for (let index = 0; index < 5; index++) {
           const sectionDataForCurrentIndex =
             sectionData[(index + 1).toString()];
 
           const updatedSectionResponse = await updateSectionData(
-            sectionSAT,
-            sectionDataForCurrentIndex,
-            index
+            (index + 1).toString(),
+            sectionDataForCurrentIndex.sectionName,
+            updatedSelfAssessment.SAT_Id
           );
           if ("error" in updatedSectionResponse) {
-            setSaving(false);
-            alert("Error updating section: " + index);
+            alert("Error updating section: " + (index + 1));
             return;
+            setSaving(false);
           }
-
-          if (sectionSAT.rc_questions && sectionSAT.rc_questions.length > 0) {
+          if (updatedSectionResponse && updatedSectionResponse.SEC_Id) {
             const updatedQuestionsResponse = await updateQuestionsData(
-              sectionSAT,
-              sectionDataForCurrentIndex
+              updatedSectionResponse.SEC_Id,
+              sectionDataForCurrentIndex.questions
             );
             if ("error" in updatedQuestionsResponse) {
-              setSaving(false);
               alert("Error updating section questions: " + index);
               return;
+              setSaving(false);
             }
           }
         }
-        setSaving(false);
-        alert("Form submitted successfully!");
+        updateParameterData(updatedSelfAssessment.SAT_Id);
+        deactivatePrevSelfAssessment();
+        setLoadedSelfAssessment(updatedSelfAssessment);
       }
-    } catch (error) {
       setSaving(false);
+      alert("Form submitted successfully!");
+    } catch (error) {
       console.error("Error updating the self-assessment:", error);
     }
   };
 
-  const updateSelfAssessmentData = async () => {
-    if (!loadedSelfAssessment) {
-      return null;
+  const updateParameterData = async (selfAssessment: number) => {
+    const parameterToUpdate: Parameter = {
+      PRM_CurrentSelfAssessment: selfAssessment,
+    };
+    try {
+      const result = await updateParameter(parameterToUpdate);
+      if ("error" in result) {
+        console.error("Failed to update parameters:", result.error);
+        return;
+      }
+      setCurrentParameters(result);
+    } catch (error) {
+      console.error("Error updating parameters:", error);
     }
+  };
 
+  const deactivatePrevSelfAssessment = async () => {
+    if (loadedSelfAssessment) {
+      const updatePrevSelfAssessment: SelfAssessments = {
+        SAT_Id: loadedSelfAssessment.SAT_Id,
+        SAT_Audit: loadedSelfAssessment.SAT_Audit,
+        SAT_Description: loadedSelfAssessment.SAT_Description,
+        SAT_Status: "I",
+      };
+      return await selfAssessmentStore.updateSelfAssessment(
+        updatePrevSelfAssessment
+      );
+      if ("error" in updatePrevSelfAssessment) {
+        console.error("Error deactivating previous self-assessment.");
+      }
+    }
+  };
+
+  const updateSelfAssessmentData = async () => {
     const updatedSelfAssessment: SelfAssessments = {
-      SAT_Id: loadedSelfAssessment.SAT_Id,
       SAT_Audit: audit,
       SAT_Description: description,
+      SAT_Status: "A",
     };
-    return await selfAssessmentStore.updateSelfAssessment(
-      updatedSelfAssessment
-    );
+    return await selfAssessmentStore.saveSelfAssessment(updatedSelfAssessment);
   };
 
   const updateSectionData = async (
-    sectionSAT: Section,
-    sectionDataForCurrentIndex: { sectionName: string; questions: string[] },
-    index: number
+    number: string,
+    name: string,
+    selfAssessment: number
   ) => {
     const updatedSection: Section = {
-      SEC_Id: sectionSAT.SEC_Id,
-      SEC_Name: sectionDataForCurrentIndex.sectionName,
-      SEC_Number: sectionSAT.SEC_Number,
-      SEC_SelfAssessments: sectionSAT.SEC_SelfAssessments,
+      SEC_Name: name,
+      SEC_Number: number,
+      SEC_SelfAssessments: selfAssessment,
     };
-    return await sectionStore.updateSection(updatedSection);
+    return await sectionStore.saveSection(updatedSection);
   };
 
-  const updateQuestionsData = async (
-    sectionSAT: Section,
-    sectionDataForCurrentIndex: { sectionName: string; questions: string[] }
-  ) => {
-    if (sectionSAT.rc_questions) {
-      for (let qIndex = 0; qIndex < sectionSAT.rc_questions.length; qIndex++) {
-        const questionSAT = sectionSAT.rc_questions[qIndex];
-        const updatedQuestion: Question = {
-          QES_Id: questionSAT.QES_Id,
-          QES_Text: sectionDataForCurrentIndex.questions[qIndex],
-          QES_Number: questionSAT.QES_Number,
-          QES_Section: questionSAT.QES_Section,
-        };
-        const updatedQuestionResponse = await questionStore.updateQuestion(
-          updatedQuestion
-        );
-        if ("error" in updatedQuestionResponse) {
-          return updatedQuestionResponse;
-        }
+  const updateQuestionsData = async (section: number, questions: string[]) => {
+    for (let index = 0; index < questions.length; index++) {
+      const question = questions[index];
+      const updatedQuestion: Question = {
+        QES_Text: question,
+        QES_Number: `${section}.${index + 1}`,
+        QES_Section: section,
+      };
+      const updatedQuestionResponse = await questionStore.saveQuestion(
+        updatedQuestion
+      );
+      if ("error" in updatedQuestionResponse) {
+        return updatedQuestionResponse;
       }
     }
     return {};
