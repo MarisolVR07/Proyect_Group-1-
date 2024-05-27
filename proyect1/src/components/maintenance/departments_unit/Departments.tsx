@@ -7,11 +7,11 @@ import SearchBarDU from "./SearchBarDU";
 import { useDepartmentsStore } from "@/store/departmentStore";
 import { Department } from "@/app/types/entities";
 import { useUnitContextStore } from "@/store/authStore";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 const Departments = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { departments, getDepartments, saveDepartment, updateDepartment, getDepartmentsByName } = useDepartmentsStore();
+  const {departments,getDepartments,saveDepartment,updateDepartment,getDepartmentsByName} = useDepartmentsStore();
   const [isLoading, setIsLoading] = useState(false);
   const { currentUnit } = useUnitContextStore();
   const [isEditing, setIsEditing] = useState(false);
@@ -28,9 +28,7 @@ const Departments = () => {
       setIsLoading(true);
       try {
         await getDepartments();
-       
       } catch (error) {
-       
         console.error("Failed to fetch departments", error);
       }
       setIsLoading(false);
@@ -68,14 +66,16 @@ const Departments = () => {
       console.log("Department not saved, unit id not specified");
     }
   };
-
   const handleSearchChangeDepartment = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
     if (!query.trim()) return;
     setIsLoading(true);
     try {
-      const results = query.length > 0 ? await getDepartmentsByName(query) : await getDepartments();
+      const results =
+        query.length > 0
+          ? await getDepartmentsByName(query)
+          : await getDepartments();
       toast.success("Search results fetched successfully");
       console.log("Search results fetched successfully", results);
     } catch (error) {
@@ -85,39 +85,36 @@ const Departments = () => {
       setIsLoading(false);
     }
   };
-
   const handleChangeDName = (e: string) => {
     setDepartment((i) => ({ ...i, DPT_Name: e }));
   };
-
   const handleChangeDStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDepartment((i) => ({ ...i, DPT_Status: e.target.checked ? "a" : "i" }));
   };
-
   const handleRowClick = (selectedDepartment: Department) => {
-    const temporalDepartment : Department = {
-      DPT_Name : selectedDepartment.DPT_Name,
-      DPT_Status : selectedDepartment.DPT_Status,
-      DPT_Id : selectedDepartment.DPT_Id,
-      DPT_Unit : selectedDepartment.DPT_Unit
-    }
+    const temporalDepartment: Department = {
+      DPT_Name: selectedDepartment.DPT_Name,
+      DPT_Status: selectedDepartment.DPT_Status,
+      DPT_Id: selectedDepartment.DPT_Id,
+      DPT_Unit: selectedDepartment.DPT_Unit,
+    };
     setDepartment(temporalDepartment);
     setIsEditing(true);
   };
-
   const handleNextPage = () => {
     if ((currentPage + 1) * itemsPerPage < departments.length) {
       setCurrentPage(currentPage + 1);
     }
   };
-
   const handlePreviousPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
   };
-
-  const paginatedDepartments = departments.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+  const paginatedDepartments = departments.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
 
   return (
     <div className="form-control flex-1 max-w-xl p-5 rounded-md bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl text-center">
@@ -131,7 +128,9 @@ const Departments = () => {
           className="w-full rounded-md"
           placeholder="Department Name"
           value={department.DPT_Name}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeDName(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            handleChangeDName(e.target.value)
+          }
         />
       </div>
       <div className="bg-gray-700 w-full px-3 py-3 mb-3 flex items-center justify-between rounded-b-btn">
@@ -152,15 +151,11 @@ const Departments = () => {
           {isEditing ? "Update" : "Add"}
         </Button>
       </div>
-      <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center mb-3">
-       
-       </div>
+      <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center mb-3"></div>
       <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center mb-5">
         <SearchBarDU onSearch={handleSearchChangeDepartment} />
       </div>
-      <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center mb-5">
-       
-      </div>
+      <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center mb-5"></div>
       {isLoading ? (
         <Spinner />
       ) : (
@@ -175,7 +170,11 @@ const Departments = () => {
             </thead>
             <tbody>
               {paginatedDepartments.map((department, index) => (
-                <tr key={index} onClick={() => handleRowClick(department)} className="cursor-pointer">
+                <tr
+                  key={index}
+                  onClick={() => handleRowClick(department)}
+                  className="cursor-pointer"
+                >
                   <td className="px-4 py-2">{department.DPT_Name}</td>
                   <td className="px-4 py-2">
                     {department.DPT_Status === "a" ? "Active" : "Inactive"}
@@ -186,8 +185,20 @@ const Departments = () => {
             </tbody>
           </table>
           <div className="flex justify-between mt-2">
-            <Button className="rounded-xl w-44" onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
-            <Button className="rounded-xl w-44" onClick={handleNextPage} disabled={(currentPage + 1) * itemsPerPage >= departments.length}>Next</Button>
+            <Button
+              className="rounded-xl w-44"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              className="rounded-xl w-44"
+              onClick={handleNextPage}
+              disabled={(currentPage + 1) * itemsPerPage >= departments.length}
+            >
+              Next
+            </Button>
           </div>
         </div>
       )}

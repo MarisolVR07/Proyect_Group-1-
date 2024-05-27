@@ -6,11 +6,12 @@ import SearchBarDU from "./SearchBarDU";
 import { useUnitStore } from "@/store/unitStore";
 import { Unit } from "@/app/types/entities";
 import { useUnitContextStore } from "@/store/authStore";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 const Units = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { units, getUnits, saveUnit, updateUnit, getUnitsByName } = useUnitStore();
+  const { units, getUnits, saveUnit, updateUnit, getUnitsByName } =
+    useUnitStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [unit, setUnit] = useState<Unit>({
@@ -56,54 +57,48 @@ const Units = () => {
       console.error("Failed to save or update unit", error);
     }
   };
-
   const handleSearchChangeUnit = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
     if (!query.trim()) return;
     setIsLoading(true);
     try {
-      const results = query.length > 0 ? await getUnitsByName(query) : await getUnits();
-      toast.success("Search results fetched successfully");
+      const results =
+        query.length > 0 ? await getUnitsByName(query) : await getUnits();
       console.log("Search results fetched successfully", results);
     } catch (error) {
-      toast.error("Error searching units");
       console.error("Error searching units", error);
     } finally {
       setIsLoading(false);
     }
   };
-
   const handleChangeName = (e: string) => {
     setUnit((i) => ({ ...i, UND_Name: e }));
   };
-
   const handleChangeEmail = (e: string) => {
     setUnit((i) => ({ ...i, UND_Email: e }));
   };
-
   const handleChangeStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUnit((i) => ({ ...i, UND_Status: e.target.checked ? "a" : "i" }));
   };
-
   const handleUnitClick = (clickedUnit: Unit) => {
     setUnit(clickedUnit);
     setIsEditing(true);
   };
-
   const handleNextPage = () => {
     if ((currentPage + 1) * itemsPerPage < units.length) {
       setCurrentPage(currentPage + 1);
     }
   };
-
   const handlePreviousPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
   };
-
-  const paginatedUnits = units.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+  const paginatedUnits = units.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
 
   return (
     <div className="form-control flex-1 max-w-xl p-5 rounded-md bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl text-center">
@@ -169,7 +164,11 @@ const Units = () => {
               </thead>
               <tbody>
                 {paginatedUnits.map((unit, index) => (
-                  <tr key={index} onClick={() => handleUnitClick(unit)} className="cursor-pointer">
+                  <tr
+                    key={index}
+                    onClick={() => handleUnitClick(unit)}
+                    className="cursor-pointer"
+                  >
                     <td className="px-4 py-2">{unit.UND_Name}</td>
                     <td className="px-4 py-2">
                       {unit.UND_Status === "a" ? "Active" : "Inactive"}
@@ -179,9 +178,21 @@ const Units = () => {
               </tbody>
             </table>
             <div className="flex justify-between mt-2">
-            <Button className="rounded-xl w-44" onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
-            <Button className="rounded-xl w-44" onClick={handleNextPage} disabled={(currentPage + 1) * itemsPerPage >= units.length}>Next</Button>
-          </div>
+              <Button
+                className="rounded-xl w-44"
+                onClick={handlePreviousPage}
+                disabled={currentPage === 0}
+              >
+                Previous
+              </Button>
+              <Button
+                className="rounded-xl w-44"
+                onClick={handleNextPage}
+                disabled={(currentPage + 1) * itemsPerPage >= units.length}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         )}
       </div>
