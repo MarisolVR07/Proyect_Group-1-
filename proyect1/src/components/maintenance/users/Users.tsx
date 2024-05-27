@@ -99,8 +99,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     if (!query.trim()) return;
     setIsLoading(true);
     try {
-      const results =
-        query.length > 0 ? await getUsersByName(query) : await getUsers();
+      const results = query.length > 0 ? await getUsersByName(query) : await getUsers();
     } catch (error) {
       console.error("Error searching users", error);
       onDebugMessage({ content: "Error searching users", type: "Error" });
@@ -108,6 +107,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       setIsLoading(false);
     }
   };
+
   const handleNextPage = () => {
     if ((currentPage + 1) * itemsPerPage < users.length) {
       setCurrentPage(currentPage + 1);

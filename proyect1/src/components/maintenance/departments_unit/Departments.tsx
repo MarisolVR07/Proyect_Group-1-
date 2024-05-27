@@ -77,7 +77,7 @@ const Departments = () => {
     try {
       const results = query.length > 0 ? await getDepartmentsByName(query) : await getDepartments();
       toast.success("Search results fetched successfully");
-      console.log("Search results fetched successfully", results);
+
     } catch (error) {
       toast.error("Error searching departments");
       console.error("Error searching departments", error);
