@@ -36,7 +36,7 @@ const LoginButton = () => {
 
       const user = await getUserInfo(userInfo);
 
-      if (user && user.USR_Role !== "none") {
+      if (user && user.USR_Role !== "none" && user.USR_Status === "a") {
         Cookies.set("auth_token", token, {
           secure: true,
           sameSite: "strict",

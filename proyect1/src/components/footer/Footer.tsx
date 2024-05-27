@@ -1,4 +1,4 @@
-
+"use client"
 import React, { useEffect, useState } from "react";
 import { useParametersContextStore } from "@/store/authStore";
 
@@ -24,8 +24,8 @@ const Footer: React.FC = () => {
         </a>
         {currentParameters ? (
           <p className="text-md text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">
-            © 2024 {currentParameters.PRM_Institution} —{" "}
-            {currentParameters.PRM_Email}
+            © 2024 {currentParameters?.PRM_Institution} —{" "}
+            {currentParameters?.PRM_Email}
           </p>
         ) : (
           <p className="text-md text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">
