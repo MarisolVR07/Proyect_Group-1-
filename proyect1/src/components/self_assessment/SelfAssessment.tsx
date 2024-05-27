@@ -17,7 +17,10 @@ import {
   ProposedAction,
   Parameter,
 } from "@/app/types/entities";
-import { useAuthStore, useParametersContextStore } from "@/store/authStore";
+import {
+  useUserContextStore,
+  useParametersContextStore,
+} from "@/store/authStore";
 import LoadingCircle from "../skeletons/LoadingCircle";
 
 interface ProposedActionData {
@@ -40,7 +43,7 @@ const SelfAssessment: React.FC = () => {
   const appliedSelfAssessmentsStore = useAppliedSelfAssessmentsStore();
   const proposedActionStore = useProposedActionsStore();
   const answerStore = useAnswersStore();
-  const { currentUser } = useAuthStore();
+  const { currentUser } = useUserContextStore();
   const { currentParameters } = useParametersContextStore();
 
   const initialQuestions = Array.from({ length: 5 }, () => {

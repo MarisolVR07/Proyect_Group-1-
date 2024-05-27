@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 import { AccountInfo } from "@azure/msal-browser";
 import { useUserStore } from "@/store/userStore";
 import { ErrorResponse } from "@/app/types/api";
-import { useAuthStore } from "@/store/authStore";
+import { useUserContextStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
@@ -16,7 +16,7 @@ const LoginButton = () => {
   const [error, setError] = useState<ErrorResponse>();
   const { getUser, saveUser } = useUserStore();
   const [user, setUser] = useState<User | undefined>(undefined);
-  const { setCurrentUser, currentUser } = useAuthStore();
+  const { setCurrentUser, currentUser } = useUserContextStore();
   const { instance } = useMsal();
   const router = useRouter();
 

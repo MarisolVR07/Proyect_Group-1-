@@ -4,10 +4,10 @@ import PrimaryButton from "../general/PrimaryButton";
 import DropdownMenu from "../general/DropdownMenu";
 import DownArrowIcon from "../svg/DownArrowIcon";
 import Link from "next/link";
-import { useAuthStore } from "@/store/authStore";
+import { useUserContextStore } from "@/store/authStore";
 export default function Header() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const { currentUser } = useAuthStore();
+  const { currentUser } = useUserContextStore();
   const [isAdmin, setIsAdmin] = useState<boolean>(false)
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 

@@ -4,11 +4,11 @@ import Icon from "../general/CardIcon";
 import ListIcon from "../svg/ListIcon";
 import FileExportIcon from "../svg/FileExportIcon";
 import GearIcon from "../svg/GearIcon";
-import { useAuthStore } from "@/store/authStore";
+import { useUserContextStore } from "@/store/authStore";
 import { getAppliedSelfAssessmentByDepartmentAndStatus } from "@/app/controllers/rc_appliedselfassessment/controller";
 
 const CardsSection = () => {
-  const { currentUser } = useAuthStore();
+  const { currentUser } = useUserContextStore();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   useEffect(() => {
     if (currentUser?.USR_Role === "admin") {

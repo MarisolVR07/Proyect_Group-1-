@@ -2,7 +2,7 @@ import Button from "@/components/general/PrimaryButton";
 import React, { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
 import { useUserStore } from "@/store/userStore";
-import { useAuthStore } from "@/store/authStore";
+import { useUserContextStore } from "@/store/authStore";
 import Spinner from "@/components/skeletons/Spinner";
 import DepartmentDropdown from "./DepartmentDropdown";
 import RolDropdown from "./RolDropdowm";
@@ -24,7 +24,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [editUserId, setEditUserId] = useState<number | null>(null);
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
-  const { setCurrentUser, currentUser } = useAuthStore();
+  const { setCurrentUser, currentUser } = useUserContextStore();
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 20;

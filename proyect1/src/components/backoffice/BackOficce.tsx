@@ -6,7 +6,7 @@ import SearchBar from "../maintenance/users/SearchBar";
 import Image from "next/image";
 import InputField from "../general/InputField";
 import PrimaryButton from "../general/PrimaryButton";
-import { useAuthStore } from "@/store/authStore";
+import { useUserContextStore } from "@/store/authStore";
 import { useUserStore } from "@/store/userStore";
 import Spinner from "@/components/skeletons/Spinner";
 import { useParameterStore } from "@/store/parameterStore";
@@ -17,7 +17,7 @@ const BackOffice = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoURL, setLogoURL] = useState<string | null>(null);
-  const { currentUser } = useAuthStore();
+  const { currentUser } = useUserContextStore();
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
   const { parameters, getParameter, updateParameter, saveParameter } =
     useParameterStore();
