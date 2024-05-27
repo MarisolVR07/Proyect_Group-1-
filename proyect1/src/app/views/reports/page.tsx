@@ -28,7 +28,6 @@ export default function Page() {
       <DebugModeToggle>
         <Header />
         <Reports />
-        
         <Toaster position="top-right"/>
         <Footer />
       </DebugModeToggle>

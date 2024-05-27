@@ -22,12 +22,9 @@ const CardComponent: React.FC<CardButtonProps> = ({
     if (onClick) {
       onClick();
     }
-    if (href) {
-      window.location.href = href;
-    }
   };
 
-  return (
+  const content = (
     <div
       onClick={handleClick}
       className={`cursor-pointer border-2 border-white px-4 py-6 rounded-lg hover:border-violet-700 hover:text-violet-400 ${className}`}
@@ -41,6 +38,16 @@ const CardComponent: React.FC<CardButtonProps> = ({
       </p>
     </div>
   );
+
+  if (href) {
+    return (
+      <Link href={href}>
+        {content}
+      </Link>
+    );
+  }
+
+  return content;
 };
 
 export default CardComponent;
