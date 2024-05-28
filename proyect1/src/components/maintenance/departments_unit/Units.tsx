@@ -60,11 +60,14 @@ const Units = () => {
   const handleSearchChangeUnit = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
-    if (!query.trim()) return;
+    console.log(!query.trim())
+    if (!query.trim()) {
+      return await getUnits();
+    }
     setIsLoading(true);
     try {
       const results =
-        query.length > 0 ? await getUnitsByName(query) : await getUnits();
+        query ? await getUnitsByName(query) : await getUnits();
       console.log("Search results fetched successfully", results);
     } catch (error) {
       console.error("Error searching units", error);

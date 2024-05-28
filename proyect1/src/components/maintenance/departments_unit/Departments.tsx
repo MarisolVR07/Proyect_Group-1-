@@ -69,17 +69,16 @@ const Departments = () => {
   const handleSearchChangeDepartment = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
-    if (!query.trim()) return;
+    console.log(!query.trim())
+    if (!query.trim()) {
+      return await getDepartments();
+    }
     setIsLoading(true);
     try {
       const results =
-        query.length > 0
-          ? await getDepartmentsByName(query)
-          : await getDepartments();
-      toast.success("Search results fetched successfully");
-
+        query ? await getDepartmentsByName(query) : await getDepartments();
+        console.log("Search results fetched successfully", results);
     } catch (error) {
-      toast.error("Error searching departments");
       console.error("Error searching departments", error);
     } finally {
       setIsLoading(false);

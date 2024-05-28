@@ -7,7 +7,7 @@ export type ParameterId = {
 };
 
 export type ParameterFullName = {
-  params: { fullname: string };
+  params: { name: string };
 };
 
 export type ParameterDepartmentStatus = {

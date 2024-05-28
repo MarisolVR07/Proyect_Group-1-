@@ -14,12 +14,8 @@ const SearchBarDU: React.FC<SearchBarProps> = ({ onSearch }) => {
   );
 
   useEffect(() => {
-    if (inputValue) {
-      debouncedSearch(inputValue);
-    }
-    return () => {
-      debouncedSearch.cancel();
-    };
+    debouncedSearch(inputValue);
+    debouncedSearch(inputValue);
   }, [inputValue, debouncedSearch]);
 
   return (

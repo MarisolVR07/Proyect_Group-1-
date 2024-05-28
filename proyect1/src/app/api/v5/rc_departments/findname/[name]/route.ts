@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, { params }: ParameterFullName) {
   try {
-    const fetchedName = params.fullname;
+    const fetchedName = params.name;
     const response = await prisma.rc_departments.findMany({
       where: {
         DPT_Name: { contains: fetchedName },
