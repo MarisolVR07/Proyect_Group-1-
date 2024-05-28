@@ -28,9 +28,7 @@ const Units = () => {
       setIsLoading(true);
       try {
         await getUnits();
-        toast.success("Units fetched successfully");
       } catch (error) {
-        toast.error("Failed to fetch units");
         console.error("Failed to fetch units", error);
       }
       setIsLoading(false);
