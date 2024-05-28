@@ -4,10 +4,8 @@ import debounce from 'lodash.debounce';
 interface SearchBarProps {
   onSearch: (query: string) => void;
 }
-
 const SearchBarDU: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [inputValue, setInputValue] = useState('');
-
   const debouncedSearch = useCallback(
     debounce((query: string) => { 
       onSearch(query);
@@ -16,11 +14,9 @@ const SearchBarDU: React.FC<SearchBarProps> = ({ onSearch }) => {
   );
 
   useEffect(() => {
-
     if (inputValue) {
       debouncedSearch(inputValue);
     }
-
     return () => {
       debouncedSearch.cancel();
     };
