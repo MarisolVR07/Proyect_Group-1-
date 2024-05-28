@@ -171,7 +171,6 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
                 <tr key={index}>
                   <td className="px-4 py-2">{userMap.USR_Email}</td>
                   <td className="px-4 py-2">{userMap.USR_FullName}</td>
-
                   <td className="no-print">
                     <DepartmentDropdown
                       selectedDepartment={userMap.USR_Department}
@@ -197,8 +196,8 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
             </tbody>
           </table>
           <div className="flex justify-between mt-2">
-            <Button className="rounded-xl w-44" onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
-            <Button className="rounded-xl w-44" onClick={handleNextPage} disabled={(currentPage + 1) * itemsPerPage >= users.length}>Next</Button>
+            <Button className="rounded-xl w-44 no-print" onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
+            <Button className="rounded-xl w-44 no-print" onClick={handleNextPage} disabled={(currentPage + 1) * itemsPerPage >= users.length}>Next</Button>
           </div>
         </div>
       )}
