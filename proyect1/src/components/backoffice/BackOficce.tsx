@@ -14,6 +14,7 @@ import { Parameter } from "@/app/types/entities";
 import Button from "@/components/general/PrimaryButton";
 import toast from "react-hot-toast";
 import { useParametersContextStore } from "@/store/authStore";
+import SkeletonLoader from "./SkeletonLoader";
 
 const BackOffice = () => {
   const { setCurrentParameters,currentParameters } = useParametersContextStore();
@@ -221,16 +222,20 @@ const BackOffice = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredUsers.map((userMap, index) => (
-                    <tr key={index}>
-                      <td className="px-4 py-2">{userMap.USR_Email}</td>
-                      <td className="px-4 py-2">{userMap.USR_FullName}</td>
-                      <td className="px-4 py-2">{userMap.USR_Role}</td>
-                      <td className="px-4 py-2">{userMap.USR_Status}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+      {isLoading ? (
+        Array.from(new Array(5)).map((_, index) => <SkeletonLoader key={index} />)
+      ) : (
+        filteredUsers.map((userMap, index) => (
+          <tr key={index}>
+            <td className="px-4 py-2">{userMap.USR_Email}</td>
+            <td className="px-4 py-2">{userMap.USR_FullName}</td>
+            <td className="px-4 py-2">{userMap.USR_Role}</td>
+            <td className="px-4 py-2">{userMap.USR_Status}</td>
+          </tr>
+        ))
+      )}
+    </tbody>
+  </table>
             </div>
           )}
           <div className=" flex justify-between mt-2">
