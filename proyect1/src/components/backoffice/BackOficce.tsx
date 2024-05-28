@@ -13,7 +13,10 @@ import { useParameterStore } from "@/store/parameterStore";
 import { Parameter } from "@/app/types/entities";
 import Button from "@/components/general/PrimaryButton";
 import toast from "react-hot-toast";
+import { useParametersContextStore } from "@/store/authStore";
+
 const BackOffice = () => {
+  const { setCurrentParameters,currentParameters } = useParametersContextStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoURL, setLogoURL] = useState<string | null>(null);
@@ -33,7 +36,7 @@ const BackOffice = () => {
   const convertFileToBlob = async (file: File): Promise<Blob> => {
     return new Blob([file], { type: file.type });
   };
-  console.log(currentUser);
+
   const handleSearchChange = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
@@ -59,20 +62,41 @@ const BackOffice = () => {
       setCurrentPage(currentPage - 1);
     }
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        await getUsers();
-      } catch (error) {
-        console.error("Failed to fetch users", error);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      await getUsers();
+    } catch (error) {
+      console.error("Failed to fetch users", error);
+    }
+    setIsLoading(false);
+  };
+
+  const fetchParameters = () => {
+    setIsLoading(true);
+    try {
+      if (currentParameters) {
+        setEmail(currentParameters.PRM_Email || "");
+        setInstitution(currentParameters.PRM_Institution || "");
+        if (currentParameters.PRM_ActivationDate) {
+          setActivationDate(new Date(currentParameters.PRM_ActivationDate));
+        }
+        if (currentParameters.PRM_DeactivationDate) {
+          setDeactivationDate(new Date(currentParameters.PRM_DeactivationDate));
+        }
       }
-      setIsLoading(false);
-    };
+    } catch (error) {
+      console.error("Failed to fetch parameters:", error);
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
     fetchData();
+    fetchParameters();
   }, []);
 
-  //Parameters
   const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
     if (file) {
@@ -81,34 +105,6 @@ const BackOffice = () => {
       setLogoURL(url);
     }
   };
-
-  useEffect(() => {
-    const fetchParameters = async () => {
-      setIsLoading(true);
-      try {
-        const params = await getParameter(1);
-        if (!("error" in params)) {
-          setEmail(params.PRM_Email || "");
-          setInstitution(params.PRM_Institution || "");
-          if (params.PRM_ActivationDate) {
-            setActivationDate(new Date(params.PRM_ActivationDate));
-          }
-          if (params.PRM_DeactivationDate) {
-            setDeactivationDate(new Date(params.PRM_DeactivationDate));
-          }
-          if (params.PRM_Logo) {
-            const url = URL.createObjectURL(params.PRM_Logo);
-            setLogoURL(url);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to fetch parameters:", error);
-      }
-      setIsLoading(false);
-    };
-
-    fetchParameters();
-  }, []);
 
   const handleEmailChange = (newEmail: string) => {
     setEmail(newEmail);
@@ -127,7 +123,6 @@ const BackOffice = () => {
       PRM_DeactivationDate: deactivationDate?.toISOString() ?? null,
       PRM_Logo: logoFile ? await convertFileToBlob(logoFile) : null,
     };
-    console.log("Parameter to update:", parameterToUpdate);
     try {
       const result = await updateParameter(parameterToUpdate);
       toast.success("Parameters updated successfully");
@@ -137,6 +132,7 @@ const BackOffice = () => {
       } else {
         console.log("Parameters updated successfully:", result);
         toast.success("Parameters updated successfully");
+        setCurrentParameters(result);
       }
     } catch (error) {
       console.error("Error updating parameters:", error);
