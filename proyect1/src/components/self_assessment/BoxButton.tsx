@@ -19,7 +19,7 @@ const BoxButton: React.FC<BoxButtonProps> = ({
       onClick={onClick}
     >
       {children}
-      {icon && <span className="mr-1">{icon}</span>}
+      {icon && <span className="mr-1 w-full h-full">{icon}</span>}
     </div>
   );
 };

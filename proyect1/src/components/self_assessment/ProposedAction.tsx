@@ -54,7 +54,7 @@ const ProposedAction: React.FC<ProposedActionProps> = ({
 
   return (
     <div className="absolute top-0 left-0 w-full h-full bg-gray-800 bg-opacity-90">
-      <h1 className="mt-4 text-white text-center text-2xl font-poppins font-semibold">
+      <h1 className="my-4 text-white text-center text-2xl font-poppins font-semibold">
         {id} Proposed Action
       </h1>
       <div className="flex space-x-5 px-4">
@@ -74,14 +74,13 @@ const ProposedAction: React.FC<ProposedActionProps> = ({
             onChange={(newValue: string) => setResponsible(newValue)}
           />
         </div>
-        <input type="checkbox" />
       </div>
-      <div className="flex space-x-5 items-center justify-center px-4">
+      <div className="flex space-x-5 px-4">
         <div className="w-full">
           <h2>Justification</h2>
           <TableTextArea
             id={`Jus.${id}`}
-            className="bg-white w-full h-20 rounded-lg"
+            className="bg-white w-full h-full rounded-lg"
             value={justification}
             onChange={(newValue: string) => setJustification(newValue)}
           />
@@ -90,7 +89,7 @@ const ProposedAction: React.FC<ProposedActionProps> = ({
           <h2>Preview</h2>
           <TableTextArea
             id={`Pre.${id}`}
-            className="bg-white w-full h-20 rounded-lg"
+            className="bg-white w-full h-full rounded-lg"
             value={preview}
             onChange={(newValue: string) => setPreview(newValue)}
           />

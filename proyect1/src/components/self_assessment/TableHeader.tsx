@@ -4,11 +4,11 @@ const TableHeader: React.FC = () => {
   return (
     <div className="flex w-full border-b-2 border-gray-600">
       <div className="border-e-2 border-gray-600">
-        <h3 className="w-14">Num.</h3>
+        <h3 className="w-10">Num.</h3>
       </div>
 
-      <div className="border-e-2 border-gray-600 w-96">
-        <h3 className="w-96">Questionnaire</h3>
+      <div className="border-e-2 border-gray-600 w-full">
+        <h3 className="">Questionnaire</h3>
       </div>
 
       <div className="border-e-2 border-gray-600">
@@ -31,8 +31,8 @@ const TableHeader: React.FC = () => {
         <h3 className="w-80">Observations</h3>
       </div>
 
-      <div className="w-full">
-        <h3 className="w-full">Proposed Action</h3>
+      <div className="w-48">
+        <h3 className="">Proposed Action</h3>
       </div>
     </div>
   );
