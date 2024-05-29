@@ -5,20 +5,16 @@ import { useUserStore } from "@/store/userStore";
 import { useUserContextStore } from "@/store/authStore";
 import Spinner from "@/components/skeletons/Spinner";
 import DepartmentDropdown from "./DepartmentDropdown";
-import RolDropdown from "./RolDropdowm";
-import StateCheckbox from "./StateCheckbox";
+import RolDropdown from "@/components/general/RolDropdowm";
+import StateCheckbox from "@/components/general/StateCheckbox";
 import { User } from "@/app/types/entities";
 import toast from 'react-hot-toast';
-
 interface DebugMessage {
   content: string;
   type: "Error" | "Info" | "Warning" | "Success";
-}
-
-interface UsersProps {
+}interface UsersProps {
   onDebugMessage: (message: DebugMessage) => void;
 }
-
 const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   useEffect(() => {});
   const [searchQuery, setSearchQuery] = useState("");

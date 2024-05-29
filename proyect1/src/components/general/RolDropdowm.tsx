@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useUserStore } from "@/store/userStore";
 
 interface RolDropdownProps {
   selectedRol: string;

@@ -14,15 +14,20 @@ import { Parameter } from "@/app/types/entities";
 import Button from "@/components/general/PrimaryButton";
 import toast from "react-hot-toast";
 import { useParametersContextStore } from "@/store/authStore";
+import { User } from "@/app/types/entities";
 import SkeletonLoader from "./SkeletonLoader";
-
+import RolDropdown from "../general/RolDropdowm";
+import StateCheckbox from "../general/StateCheckbox";
+import DepartmentDropdown from "@/components/maintenance/users/DepartmentDropdown";
 const BackOffice = () => {
-  const { setCurrentParameters,currentParameters } = useParametersContextStore();
+  const { setCurrentParameters, currentParameters } =
+    useParametersContextStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoURL, setLogoURL] = useState<string | null>(null);
-  const { currentUser } = useUserContextStore();
+  const { setCurrentUser, currentUser } = useUserContextStore();
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
+
   const { parameters, getParameter, updateParameter, saveParameter } =
     useParameterStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -37,12 +42,53 @@ const BackOffice = () => {
   const convertFileToBlob = async (file: File): Promise<Blob> => {
     return new Blob([file], { type: file.type });
   };
+  const handleStatusChange = (
+    user: User,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const isChecked = event.target.checked;
+    console.log(
+      `Checkbox para usuario ${user.USR_Id} intenta cambiar a: ${
+        isChecked ? "Active" : "Inactive"
+      }`
+    );
+    const updatedUser = {
+      ...user,
+      USR_Status: isChecked ? "a" : "i",
+    };
+    updateUser(updatedUser);
+    toast.success("Status updated successfully");
+  };
+
+  const handleDepartmentChange = async (user: User, newDeptId: number) => {
+    console.log(
+      `Usuario ${user.USR_Id} intenta cambiar de departamento a: ${newDeptId}`
+    );
+    const updatedUser: User = {
+      ...user,
+      USR_Department: newDeptId !== undefined ? newDeptId : null,
+    };
+    const resp = await updateUser(updatedUser);
+    if ("error" in resp) {
+      console.error("Error updating department", resp.error);
+      return;
+    }
+    if (resp.USR_Id === currentUser?.USR_Id) {
+      setCurrentUser(resp);
+    }
+    toast.success("Department updated successfully");
+  };
+  const handleRolChange = (user: User, newRol: string) => {
+    const updatedUser: User = { ...user, USR_Role: newRol };
+    updateUser(updatedUser);
+    toast.success("Rol updated successfully");
+};
 
   const handleSearchChange = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
-    if (!query.trim()) return;
     setIsLoading(true);
+    if (!query.trim()) return;
     try {
       const results =
         query.length > 0 ? await getUsersByName(query) : await getUsers();
@@ -139,6 +185,43 @@ const BackOffice = () => {
       console.error("Error updating parameters:", error);
     }
   };
+  const renderTableContent = () => {
+    if (isLoading) {
+      return Array.from(new Array(5)).map((_, index) => (
+        <SkeletonLoader key={index} />
+      ));
+    } else {
+      return filteredUsers
+        .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+        .map((user, index) => (
+          <tr key={index}>
+            <td className="px-4 py-2">{user.USR_Email}</td>
+            <td className="px-4 py-2">{user.USR_FullName}</td>
+            <td className="no-print">
+                    <DepartmentDropdown
+                      selectedDepartment={user.USR_Department}
+                      onChange={(newDeptId) =>
+                        handleDepartmentChange(user, newDeptId)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <RolDropdown
+                      selectedRol={user.USR_Role}
+                      onChange={(newRol) => handleRolChange(user, newRol)}
+                    />
+                  </td>
+                  <td className="no-print">
+                    <StateCheckbox
+                      isChecked={user.USR_Status === "a"}
+                      onChange={(e) => handleStatusChange(user, e)}
+                    />
+                  </td>
+          </tr>
+        ));
+    }
+  };
+
   return (
     <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
       <CardsSection />
@@ -217,25 +300,13 @@ const BackOffice = () => {
                   <tr>
                     <th className="px-4 py-2">Email</th>
                     <th className="px-4 py-2">FullName</th>
-                    <th className="px-4 py-2">Role</th>
+                     <th className="px-4 py-2">Department</th>
+                     <th className="px-4 py-2">Role</th>
                     <th className="px-4 py-2">Status</th>
                   </tr>
                 </thead>
-                <tbody>
-      {isLoading ? (
-        Array.from(new Array(5)).map((_, index) => <SkeletonLoader key={index} />)
-      ) : (
-        filteredUsers.map((userMap, index) => (
-          <tr key={index}>
-            <td className="px-4 py-2">{userMap.USR_Email}</td>
-            <td className="px-4 py-2">{userMap.USR_FullName}</td>
-            <td className="px-4 py-2">{userMap.USR_Role}</td>
-            <td className="px-4 py-2">{userMap.USR_Status}</td>
-          </tr>
-        ))
-      )}
-    </tbody>
-  </table>
+                <tbody>{renderTableContent()}</tbody>
+              </table>
             </div>
           )}
           <div className=" flex justify-between mt-2">
