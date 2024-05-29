@@ -51,28 +51,21 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const isChecked = event.target.checked;
-    console.log(
-      `Checkbox para usuario ${user.USR_Id} intenta cambiar a: ${
-        isChecked ? "Active" : "Inactive"
-      }`
-    );
     const updatedUser = {
       ...user,
       USR_Status: isChecked ? "a" : "i",
     };
-    updateUser(updatedUser);
     toast.success("Status updated successfully");
+    updateUser(updatedUser);
   };
 
   const handleDepartmentChange = async (user: User, newDeptId: number) => {
-    console.log(
-      `Usuario ${user.USR_Id} intenta cambiar de departamento a: ${newDeptId}`
-    );
     const updatedUser: User = {
       ...user,
       USR_Department: newDeptId !== undefined ? newDeptId : null,
     };
     const resp = await updateUser(updatedUser);
+    toast.success("Department updated successfully");
     if ("error" in resp) {
       console.error("Error updating department", resp.error);
       return;
@@ -80,13 +73,17 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     if (resp.USR_Id === currentUser?.USR_Id) {
       setCurrentUser(resp);
     }
-    toast.success("Department updated successfully");
+    //toast.success("Department updated successfully");
   };
 
+
+
+  
   const handleRolChange = (user: User, newRol: string) => {
     const updatedUser: User = { ...user, USR_Role: newRol };
-    updateUser(updatedUser);
     toast.success("Rol updated successfully");
+    updateUser(updatedUser);
+   
 };
 
   const handleSearchChange = async (query: string) => {

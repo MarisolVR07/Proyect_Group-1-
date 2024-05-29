@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { verifyToken, DecodedToken } from "@/app/utils/verifyToken";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import { Toaster } from 'react-hot-toast';
 
 interface DebugMessage {
   content: string;
@@ -40,6 +40,7 @@ export default function Page() {
         <Header />
         <div className="items-center justify-center px-20 py-4">
           <Users onDebugMessage={handleDebugMessage} />
+          <Toaster position="top-right"/>
         </div>
       </DebugModeToggle>
     </>
