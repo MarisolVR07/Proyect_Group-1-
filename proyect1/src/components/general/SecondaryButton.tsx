@@ -13,7 +13,7 @@ const SecondaryButtom: React.FC<SecondaryButtomProps> = ({
   className,
   id,
 }) => {
-  const buttonClasses = `bg-white text-sm text-violet-700 ring-2 ring-violet-700 h-6 hover:bg-violet-700 hover:text-white hover:ring-white ${className}`;
+  const buttonClasses = `bg-white text-sm text-violet-700 ring-2 ring-violet-700  hover:bg-violet-700 hover:text-white hover:ring-white ${className}`;
 
   return (
     <button id={id} className={buttonClasses} onClick={onClick}>

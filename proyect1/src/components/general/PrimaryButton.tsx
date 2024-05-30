@@ -15,7 +15,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   icon,
   disabled
 }) => {
-  const buttonClasses = `text-white bg-violet-800 hover:bg-violet-700 h-8 flex items-center justify-center ${className}`;
+  const buttonClasses = `text-white bg-violet-800 hover:bg-violet-700 flex items-center justify-center ${className}`;
 
   return (
     <button className={buttonClasses} onClick={onClick}>

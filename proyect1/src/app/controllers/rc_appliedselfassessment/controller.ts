@@ -91,7 +91,7 @@ export async function getAppliedSelfassessments(): Promise<
 > {
   try {
     console.log(process.env.API_DIRECTION);
-    const res: Response = await fetch(API_URL + "rc_AppliedSelfAssessment");
+    const res: Response = await fetch(API_URL + "rc_appliedselfassessment");
     //validateResponse(res);
 
     const appliedselfassessments: AppliedSelfAssessment[] | ErrorResponse =
@@ -121,6 +121,27 @@ export async function updateAppliedSelfassessment(
     const newAppliedSelfassessment: AppliedSelfAssessment | ErrorResponse =
       await res.json();
     return newAppliedSelfassessment;
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
+export async function getCompleteAppliedSelfassessments(): Promise<
+  AppliedSelfAssessment[] | ErrorResponse
+> {
+  try {
+    const res: Response = await fetch(
+      API_URL + "rc_appliedselfassessment/complete"
+    );
+
+    if (!res.ok) {
+      throw new Error(`Error ${res.status}: ${res.statusText}`);
+    }
+
+    const appliedSelfassessments: AppliedSelfAssessment[] | ErrorResponse =
+      await res.json();
+
+    return appliedSelfassessments;
   } catch (error: any) {
     return { error: error.message };
   }

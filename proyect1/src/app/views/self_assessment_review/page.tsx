@@ -1,5 +1,5 @@
 "use client"
-import Reports from "@/components/reports/Reports";
+import Reviews from "@/components/reviews/Reviews";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
 import DebugModeToggle from "@/components/debug_mode/DebugModeToggle";
@@ -9,6 +9,7 @@ import { verifyToken, DecodedToken } from "@/app/utils/verifyToken";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Toaster } from 'react-hot-toast';
+
 export default function Page() {
   const [token, setToken] = useState<string | null>(
     Cookies.get("auth_token") || null
@@ -27,8 +28,8 @@ export default function Page() {
     <>
       <DebugModeToggle>
         <Header />
-        <Reports />
-        <Toaster position="top-right"/>
+        <Reviews />
+        <Toaster position="top-right" />
         <Footer />
       </DebugModeToggle>
     </>

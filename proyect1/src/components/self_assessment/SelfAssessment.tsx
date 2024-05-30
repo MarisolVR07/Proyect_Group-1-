@@ -346,7 +346,7 @@ const SelfAssessment: React.FC = () => {
       setSaving(true);
       const appliedSelfAssessment: AppliedSelfAssessment = {
         ASA_Date: currentDate.toISOString() ?? null,
-        ASA_ReviewedBy: " ",
+        ASA_ReviewedBy: "N/A",
         ASA_Status: "A",
         ASA_MadeBy: currentUser?.USR_FullName,
         ASA_Assessment: currentParameters?.PRM_CurrentSelfAssessment,

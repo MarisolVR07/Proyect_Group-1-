@@ -3,7 +3,7 @@ import { loginRequest } from "../../app/msalConfig";
 import Button from "../general/PrimaryButton";
 import { WindowsOutlined } from "@ant-design/icons";
 import { User } from "@/app/types/entities";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { AccountInfo } from "@azure/msal-browser";
 import { useUserStore } from "@/store/userStore";
 import { ErrorResponse } from "@/app/types/api";
@@ -94,7 +94,7 @@ const LoginButton = () => {
   };
 
   return (
-    <Button onClick={handleLogin} className="rounded-md w-44">
+    <Button onClick={handleLogin} className="rounded-md w-44 h-8">
       <WindowsOutlined /> SIGN IN
     </Button>
   );

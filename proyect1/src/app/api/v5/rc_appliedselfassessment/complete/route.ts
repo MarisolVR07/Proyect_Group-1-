@@ -17,6 +17,39 @@ interface ProposedAction {
   PAC_Preview: string;
 }
 
+export async function GET(req: NextRequest) {
+  try {
+    const assessments = await prisma.rc_appliedselfassessment.findMany({
+      include: {
+        rc_departments: true,
+        rc_selfassessments: {
+          include: {
+            rc_sections: {
+              include: {
+                rc_questions: true,
+              },
+            },
+          },
+        },
+        rc_answers: {
+          include: {
+            rc_proposedaction: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(assessments, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();

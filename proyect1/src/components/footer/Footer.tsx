@@ -1,9 +1,8 @@
-"use client"
 import React from "react";
 import { useParametersContextStore } from "@/store/authStore";
 
 const Footer: React.FC = () => {
-    const { currentParameters } = useParametersContextStore();
+  const { currentParameters } = useParametersContextStore();
   return (
     <footer className="text-white bg-black bg-opacity-30 body-font mt-auto">
       <div className="container px-5 py-3 mx-auto flex items-center sm:flex-row flex-col">
@@ -22,16 +21,10 @@ const Footer: React.FC = () => {
           </svg>
           <span className="ml-3 text-xl">ISC</span>
         </a>
-        {currentParameters ? (
-          <p className="text-md text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">
-            © 2024 {currentParameters?.PRM_Institution} —{" "}
-            {currentParameters?.PRM_Email}
-          </p>
-        ) : (
-          <p className="text-md text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">
-            © 2024 Institution — Email
-          </p>
-        )}
+        <p className="text-md text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">
+          © 2024 {currentParameters?.PRM_Institution} —{" "}
+          {currentParameters?.PRM_Email}
+        </p>
       </div>
     </footer>
   );

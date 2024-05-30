@@ -47,13 +47,13 @@ const CardsSection = () => (
           className="w-96 bg-gray-700 text-center"
         />
         <CardButton
-          href="/views/reports"
+          href="/views/self_assessment_review"
           icon={
             <Icon>
               <FileExportIcon />
             </Icon>
           }
-          title="Reports"
+          title="Reviews"
           description=""
           className="w-96 bg-gray-700 text-center"
         />

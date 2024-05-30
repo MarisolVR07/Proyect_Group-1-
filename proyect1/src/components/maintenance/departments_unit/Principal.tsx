@@ -1,4 +1,4 @@
-"use client";
+
 
 import React, { useState } from "react";
 import Units from "./Units";

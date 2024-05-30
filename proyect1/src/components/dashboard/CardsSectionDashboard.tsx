@@ -68,13 +68,13 @@ const CardsSection = () => {
             className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2"
           />
           <CardButton
-            href="/views/reports"
+            href="/views/self_assessment_review"
             icon={
               <Icon>
                 <FileExportIcon />
               </Icon>
             }
-            title="Reports"
+            title={`Reviews`}
             description=""
             className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2"
           />

@@ -44,18 +44,23 @@ export default function Header() {
               </PrimaryButton>
             </Link>
             <li className="px-3 rounded-md">
-             
-              {isAdmin ? (  <PrimaryButton
-                icon={<DownArrowIcon />}
-                className="rounded-md w-40 no-print"
-                onClick={toggleDropdown}
-              >
-                BackOffice
-              </PrimaryButton>) : (<></>)}
-             <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />
+              {isAdmin ? (
+                <PrimaryButton
+                  icon={<DownArrowIcon />}
+                  className="rounded-md w-40 no-print"
+                  onClick={toggleDropdown}
+                >
+                  BackOffice
+                </PrimaryButton>
+              ) : (
+                <></>
+              )}
+              <DropdownMenu isOpen={isDropdownOpen} links={dropdownLinks} />
             </li>
-            <Link href="/views/reports" passHref>
-              <PrimaryButton className="rounded-md w-36 no-print">Reports</PrimaryButton>
+            <Link href="/views/self_assessment_review" passHref>
+              <PrimaryButton className="rounded-md w-36 no-print">
+                Reviews
+              </PrimaryButton>
             </Link>
           </ul>
         </nav>

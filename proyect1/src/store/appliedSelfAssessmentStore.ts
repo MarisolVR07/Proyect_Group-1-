@@ -6,6 +6,7 @@ import {
   getAppliedSelfassessments,
   updateAppliedSelfassessment,
   getAppliedSelfAssessmentByDepartmentAndStatus,
+  getCompleteAppliedSelfassessments,
 } from "@/app/controllers/rc_appliedselfassessment/controller";
 import { AppliedSelfAssessment } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
@@ -32,10 +33,13 @@ interface AppliedSelfAssessmentState {
     department: number,
     status: string
   ) => Promise<AppliedSelfAssessment[] | ErrorResponse>;
+  getCompleteAppliedSelfassessments: () => Promise<
+    AppliedSelfAssessment[] | ErrorResponse
+  >;
 }
 
-export const useAppliedSelfAssessmentsStore =
-  create<AppliedSelfAssessmentState>((set) => ({
+export const useAppliedSelfAssessmentsStore = create<AppliedSelfAssessmentState>(
+  (set) => ({
     appliedselfassessments: [],
     currentAppliedSelfAssessment: null,
     getAppliedSelfAssessment: async (id: number) => {
@@ -127,4 +131,21 @@ export const useAppliedSelfAssessmentsStore =
         return { error: error.message };
       }
     },
-  }));
+    getCompleteAppliedSelfassessments: async () => {
+      try {
+        const completeSelfAssessments =
+          await getCompleteAppliedSelfassessments();
+        if ("error" in completeSelfAssessments) {
+          return completeSelfAssessments;
+        }
+        set((state) => ({
+          ...state,
+          appliedselfassessments: completeSelfAssessments,
+        }));
+        return completeSelfAssessments;
+      } catch (error: any) {
+        return { error: error.message };
+      }
+    },
+  })
+);

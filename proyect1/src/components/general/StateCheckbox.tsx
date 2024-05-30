@@ -2,7 +2,7 @@ import React from 'react';
 
 interface StateCheckboxProps {
   isChecked: boolean;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;  // Typing the onChange handler
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const StateCheckbox: React.FC<StateCheckboxProps> = ({ isChecked, onChange }) => {
