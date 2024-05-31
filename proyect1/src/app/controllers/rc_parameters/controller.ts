@@ -1,28 +1,27 @@
 import { Parameter } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
-const currentUrl = window.location.href;
-const API_URL =
-  currentUrl.split("/")[0] +
-  "//" +
-  currentUrl.split("//")[1].split("/")[0] +
-  "/api/v5/";
+//const currentUrl = window.location.href;
+const API_URL = "/api/v6/";
 
-  export async function getParameter(id: number): Promise<Parameter | ErrorResponse> {  
-    try {
-      const res: Response = await fetch(API_URL + `rc_parameters/${id}`);
-      const parameter: Parameter | ErrorResponse = await res.json();
-      return parameter;
-    } catch (error: any) {
-      return error;
-    }
+export async function getParameter(
+  id: number
+): Promise<Parameter | ErrorResponse> {
+  try {
+    const res: Response = await fetch(API_URL + `rc_parameters/${id}`);
+    const parameter: Parameter | ErrorResponse = await res.json();
+    return parameter;
+  } catch (error: any) {
+    return error;
   }
-  
+}
 
 export async function getParametersByName(
   name: string
 ): Promise<Parameter[] | ErrorResponse> {
   try {
-    const res: Response = await fetch(API_URL + `rc_parameters/findname/${name}`);
+    const res: Response = await fetch(
+      API_URL + `rc_parameters/findname/${name}`
+    );
     const parameters: Parameter[] | ErrorResponse = await res.json();
     return parameters;
   } catch (error: any) {
@@ -30,8 +29,7 @@ export async function getParametersByName(
   }
 }
 
-
- export async function deleteParameter(
+export async function deleteParameter(
   id: number
 ): Promise<Parameter | ErrorResponse> {
   try {
@@ -48,7 +46,9 @@ export async function getParametersByName(
   }
 }
 
-export async function saveParameter(parameter: Parameter): Promise<Parameter | ErrorResponse> {
+export async function saveParameter(
+  parameter: Parameter
+): Promise<Parameter | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + "rc_parameters", {
       method: "POST",
@@ -74,7 +74,7 @@ export async function getParameters(): Promise<Parameter[] | ErrorResponse> {
     const res: Response = await fetch(API_URL + "rc_parameters");
     //validateResponse(res);
 
-    const parameters: Parameter[]| ErrorResponse = await res.json();
+    const parameters: Parameter[] | ErrorResponse = await res.json();
 
     return parameters;
   } catch (error: any) {
@@ -82,7 +82,9 @@ export async function getParameters(): Promise<Parameter[] | ErrorResponse> {
   }
 }
 
-export async function updateParameter(parameter: Parameter): Promise<Parameter | ErrorResponse> {
+export async function updateParameter(
+  parameter: Parameter
+): Promise<Parameter | ErrorResponse> {
   try {
     const res = await fetch(API_URL + `rc_parameters/1`, {
       method: "PUT",

@@ -1,12 +1,8 @@
 import { ProposedAction } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
 
-const currentUrl = window.location.href;
-const API_URL =
-  currentUrl.split("/")[0] +
-  "//" +
-  currentUrl.split("//")[1].split("/")[0] +
-  "/api/v5/";
+//const currentUrl = window.location.href;
+const API_URL = "/api/v6/";
 
 export async function getProposedAction(
   id: number

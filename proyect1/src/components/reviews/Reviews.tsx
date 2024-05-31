@@ -5,9 +5,11 @@ import SearchBar from "./SearchBar";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
 import { AppliedSelfAssessment } from "@/app/types/entities";
 import SelfAssessment from "./applied_self_assessment/SelfAssessmentReview";
+import { useExportStore } from "@/store/excelStore";
 
 const Reviews: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const exportStore = useExportStore();
   const [appliedSelfAssessments, setAppliedSelfAssessments] = useState<
     AppliedSelfAssessment[]
   >([]);
@@ -33,13 +35,18 @@ const Reviews: React.FC = () => {
         );
       }
     };
-
     fetchAppliedSelfAssessments();
   }, []);
 
   const handleRowClick = (selfAssessment: AppliedSelfAssessment) => {
     setSelectedSelfAssessment(selfAssessment);
   };
+
+  const handleExport = async (ASA_Id) => {
+    const result = await exportStore.exportAppliedSelfAssessment(ASA_Id);
+    console.log("Self-assessment exported successfully!");
+  };
+
 
   const handleRowDoubleClick = (selfAssessment: AppliedSelfAssessment) => {
     setSelectedSelfAssessment(selfAssessment);
@@ -92,7 +99,12 @@ const Reviews: React.FC = () => {
                   >
                     View
                   </Button>
-                  <Button className="rounded-xl w-16">Export</Button>
+                  <Button
+                    onClick={() => handleExport(selfAssessment.ASA_Id)}
+                    className="rounded-xl w-16"
+                  >
+                    Export
+                  </Button>
                 </td>
               </tr>
             ))}

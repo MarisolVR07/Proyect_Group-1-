@@ -6,6 +6,7 @@ import SecondaryButton from "../../general/SecondaryButton";
 import Table from "./TableReview";
 import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
+import { useExportStore } from "@/store/excelStore";
 import {
   SelfAssessments,
   Section,
@@ -34,7 +35,7 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({
   });
 
   const appliedSelfAssessmentsStore = useAppliedSelfAssessmentsStore();
-  const selfAssessmentStore = useSelfAssessmentsStore();
+  const exportStore = useExportStore();
   const { currentUser } = useUserContextStore();
   const [questions, setQuestions] = useState<string[][]>(initialQuestions);
   const [loadedSelfAssessment, setLoadedSelfAssessment] =
@@ -47,6 +48,12 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({
   useEffect(() => {
     loadSelfAssessmentData();
   }, []);
+
+  const handleExport = async () => {
+    const { ASA_Id } = appliedSelfAssessment;
+    const result = await exportStore.exportAppliedSelfAssessment(ASA_Id);
+    console.log("Self-assessment exported successfully!");
+  };
 
   const loadSelfAssessmentData = () => {
     try {
@@ -203,7 +210,9 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({
               Reviewed
             </SecondaryButton>
           )}
-          <Button className="rounded-xl w-44">Export</Button>
+          <Button onClick={handleExport} className="rounded-xl w-44">
+            Export
+          </Button>
         </div>
       </div>
       {saving && <LoadingCircle text="Sending..." />}

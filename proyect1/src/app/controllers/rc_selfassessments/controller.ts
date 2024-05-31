@@ -1,12 +1,9 @@
 import { SelfAssessments } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
 //import { getError, validateObject, validateResponse } from "@/utils/utils";*/
-const currentUrl = window.location.href;
+//const currentUrl = window.location.href;
 const API_URL =
-  currentUrl.split("/")[0] +
-  "//" +
-  currentUrl.split("//")[1].split("/")[0] +
-  "/api/v5/";
+  "/api/v6/";
 
 export async function getSelfAssessment(
   id: number

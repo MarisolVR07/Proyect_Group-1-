@@ -1,14 +1,12 @@
 import { Question } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
 
-const currentUrl = window.location.href;
-const API_URL =
-  currentUrl.split("/")[0] +
-  "//" +
-  currentUrl.split("//")[1].split("/")[0] +
-  "/api/v5/";
+//const currentUrl = window.location.href;
+const API_URL = "/api/v6/";
 
-export async function getQuestion(id: number): Promise<Question | ErrorResponse> {
+export async function getQuestion(
+  id: number
+): Promise<Question | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + `rc_questions/${id}`);
     const question: Question | ErrorResponse = await res.json();
@@ -19,7 +17,9 @@ export async function getQuestion(id: number): Promise<Question | ErrorResponse>
   }
 }
 
-export async function deleteQuestion(id: number): Promise<Question | ErrorResponse> {
+export async function deleteQuestion(
+  id: number
+): Promise<Question | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + `rc_questions/${id}`, {
       method: "DELETE",

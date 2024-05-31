@@ -1,16 +1,10 @@
 import { Unit } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
 //import { getError, validateObject, validateResponse } from "@/utils/utils";*/
-const currentUrl = window.location.href;
-const API_URL =
-  currentUrl.split("/")[0] +
-  "//" +
-  currentUrl.split("//")[1].split("/")[0] +
-  "/api/v5/";
+//const currentUrl = window.location.href;
+const API_URL = "/api/v6/";
 
-export async function getUnit(
-  id: number
-): Promise<Unit | ErrorResponse> {
+export async function getUnit(id: number): Promise<Unit | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + `rc_unit/${id}`);
     //validateResponse(res);
@@ -22,9 +16,7 @@ export async function getUnit(
   }
 }
 
-export async function deleteUnit(
-  id: number
-): Promise<Unit | ErrorResponse> {
+export async function deleteUnit(id: number): Promise<Unit | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + `rc_unit/${id}`, {
       method: "DELETE",
@@ -39,9 +31,7 @@ export async function deleteUnit(
   }
 }
 
-export async function saveUnit(
-  unit: Unit
-): Promise<Unit | ErrorResponse> {
+export async function saveUnit(unit: Unit): Promise<Unit | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + "rc_unit", {
       method: "POST",
@@ -61,11 +51,8 @@ export async function saveUnit(
   }
 }
 
-export async function getUnits(): Promise<
-  Unit[] | ErrorResponse
-> {
+export async function getUnits(): Promise<Unit[] | ErrorResponse> {
   try {
-    console.log(process.env.API_DIRECTION);
     const res: Response = await fetch(API_URL + "rc_unit");
     //validateResponse(res);
 
@@ -77,20 +64,15 @@ export async function getUnits(): Promise<
   }
 }
 
-export async function updateUnit(
-  unit: Unit
-): Promise<Unit | ErrorResponse> {
+export async function updateUnit(unit: Unit): Promise<Unit | ErrorResponse> {
   try {
-    const res = await fetch(
-      API_URL + `rc_unit/${unit.UND_Id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(unit),
-      }
-    );
+    const res = await fetch(API_URL + `rc_unit/${unit.UND_Id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(unit),
+    });
 
     const newUnit: Unit | ErrorResponse = await res.json();
     return newUnit;
