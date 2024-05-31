@@ -130,6 +130,7 @@ const MantSelfAssessment: React.FC = () => {
           if (updatedSectionResponse && updatedSectionResponse.SEC_Id) {
             const updatedQuestionsResponse = await updateQuestionsData(
               updatedSectionResponse.SEC_Id,
+              updatedSectionResponse.SEC_Number,
               sectionDataForCurrentIndex.questions
             );
             if ("error" in updatedQuestionsResponse) {
@@ -218,12 +219,16 @@ const MantSelfAssessment: React.FC = () => {
     return await sectionStore.saveSection(updatedSection);
   };
 
-  const updateQuestionsData = async (section: number, questions: string[]) => {
+  const updateQuestionsData = async (
+    section: number,
+    sectionNumber: string,
+    questions: string[]
+  ) => {
     for (let index = 0; index < questions.length; index++) {
       const question = questions[index];
       const updatedQuestion: Question = {
         QES_Text: question,
-        QES_Number: `${section}.${index + 1}`,
+        QES_Number: `${sectionNumber}.${index + 1}`,
         QES_Section: section,
       };
       const updatedQuestionResponse = await questionStore.saveQuestion(

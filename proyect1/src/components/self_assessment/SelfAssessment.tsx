@@ -123,10 +123,7 @@ const SelfAssessment: React.FC = () => {
         for (const [questionIndex, rowData] of tableData.entries()) {
           const answer: Answers = {
             ANS_Selection: rowData.checkedIndex === 0 ? "y" : "n",
-            ANS_Question: parseInt(
-              `${sectionIndex + 1}${questionIndex + 1}`,
-              10
-            ),
+            ANS_Question: loadedSelfAssessment?.rc_sections?.[sectionIndex]?.rc_questions?.[questionIndex]?.QES_Id,
             ANS_SelfAssessment: respASA.ASA_Id,
             ANS_WorkDocument: rowData.textArea1,
             ANS_Observations: rowData.textArea2,

@@ -31,7 +31,7 @@ const BackOffice = () => {
   const { parameters, getParameter, updateParameter, saveParameter } =
     useParameterStore();
   const [isLoading, setIsLoading] = useState(false);
-  const filteredUsers = users.filter((user) => user.USR_Role === "none");
+  const filteredUsers = users.filter((user) => user.USR_Role === "none" || user.USR_Role === "");
   const [email, setEmail] = useState("");
   const [institution, setInstitution] = useState("");
   const [activationDate, setActivationDate] = useState<Date | null>();
