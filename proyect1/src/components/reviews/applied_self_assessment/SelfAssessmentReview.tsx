@@ -12,24 +12,13 @@ import {
   Question,
   AppliedSelfAssessment,
   Answers,
-  ProposedAction,
 } from "@/app/types/entities";
 import { useUserContextStore } from "@/store/authStore";
 import LoadingCircle from "../../skeletons/LoadingCircle";
-
-interface ProposedActionData {
-  responsible: string;
-  justification: string;
-  preview: string;
-  date: string;
-}
-
-interface TableRowData {
-  answer: string;
-  reference: string;
-  observation: string;
-  ProposedActionData: ProposedActionData;
-}
+import {
+  TableRowDataReview,
+  ProposedActionDataReview,
+} from "@/app/types/selfAssessmentData";
 
 interface SelfAssessmentProps {
   appliedSelfAssessment: AppliedSelfAssessment;
@@ -53,7 +42,7 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({
   const [saving, setSaving] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const [tableData, setTableData] = useState<TableRowData[][]>([]);
+  const [tableData, setTableData] = useState<TableRowDataReview[][]>([]);
 
   useEffect(() => {
     loadSelfAssessmentData();
@@ -84,12 +73,15 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({
   const loadTableData = () => {
     if (!appliedSelfAssessment.rc_answers) return;
 
-    const newTableData: TableRowData[][] = Array.from({ length: 5 }, () => []);
+    const newTableData: TableRowDataReview[][] = Array.from(
+      { length: 5 },
+      () => []
+    );
 
     appliedSelfAssessment.rc_answers.forEach((answer: Answers, index) => {
       const tableIndex = Math.floor(index / 4);
       const rowIndex = index % 4;
-      let proposedActionData: ProposedActionData = {
+      let proposedActionData: ProposedActionDataReview = {
         responsible: "",
         justification: "",
         preview: "",
@@ -105,11 +97,11 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({
         };
       }
 
-      const tableRowData: TableRowData = {
+      const tableRowData: TableRowDataReview = {
         answer: answer.ANS_Selection === "n" ? "No" : "Yes",
         reference: answer.ANS_WorkDocument ?? "",
         observation: answer.ANS_Observations ?? "",
-        ProposedActionData: proposedActionData,
+        ProposedActionDataReview: proposedActionData,
       };
 
       newTableData[tableIndex][rowIndex] = tableRowData;

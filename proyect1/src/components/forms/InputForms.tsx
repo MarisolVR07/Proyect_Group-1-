@@ -1,6 +1,7 @@
 import React from "react";
 
 type InputType = "text" | "password" | "email";
+
 interface InputFormsProps {
   label?: string;
   type: InputType;

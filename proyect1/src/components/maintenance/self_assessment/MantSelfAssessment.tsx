@@ -22,6 +22,7 @@ import {
   useSelfAssessmentContextStore,
 } from "@/store/authStore";
 import { useParameterStore } from "@/store/parameterStore";
+import { initialSectionsData } from "@/app/types/selfAssessmentData";
 
 const MantSelfAssessment: React.FC = () => {
   const { updateParameter } = useParameterStore();
@@ -38,13 +39,7 @@ const MantSelfAssessment: React.FC = () => {
     useState<SelfAssessments | null>(null);
   const [sectionData, setSectionData] = useState<{
     [key: string]: { sectionName: string; questions: string[] };
-  }>({
-    "1": { sectionName: "", questions: Array.from({ length: 4 }, () => "") },
-    "2": { sectionName: "", questions: Array.from({ length: 4 }, () => "") },
-    "3": { sectionName: "", questions: Array.from({ length: 4 }, () => "") },
-    "4": { sectionName: "", questions: Array.from({ length: 4 }, () => "") },
-    "5": { sectionName: "", questions: Array.from({ length: 4 }, () => "") },
-  });
+  }>(initialSectionsData);
   const [saving, setSaving] = useState<boolean>(false);
 
   useEffect(() => {

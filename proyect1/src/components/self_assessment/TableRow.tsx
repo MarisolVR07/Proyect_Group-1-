@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import RespCheckBox from "./RespCheckBox";
 import TableTextArea from "./TableTextArea";
 import BoxButton from "./BoxButton";
+import {
+  TableRowData,
+} from "@/app/types/selfAssessmentData";
 
 interface TableRowProps {
   id: string;
@@ -9,12 +12,6 @@ interface TableRowProps {
   onDataChange: (data: TableRowData) => void;
   initialData: TableRowData;
   onFormVisibilityChange: (visible: boolean) => void;
-}
-
-interface TableRowData {
-  checkedIndex: number | null;
-  textArea1: string;
-  textArea2: string;
 }
 
 const TableRow: React.FC<TableRowProps> = ({

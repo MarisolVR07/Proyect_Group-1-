@@ -2,11 +2,9 @@
 import { ReactNode, useEffect, useState } from "react";
 import Alert from "@/components/alerts/Alert";
 import { useUserContextStore } from "@/store/authStore";
-
-interface DebugMessage {
-  content: string;
-  type: "Error" | "Info" | "Warning" | "Success";
-}
+import {
+DebugMessage
+} from "@/app/types/debugData";
 
 interface DebugModeToggleProps {
   children: ReactNode;

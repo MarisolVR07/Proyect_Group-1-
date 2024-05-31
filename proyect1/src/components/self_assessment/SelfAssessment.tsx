@@ -4,7 +4,6 @@ import Button from "../general/PrimaryButton";
 import PageButton from "../general/PageButton";
 import SecondaryButton from "../general/SecondaryButton";
 import Table from "./Table";
-import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
 import { useAnswersStore } from "@/store/answerStore";
 import { useProposedActionsStore } from "@/store/proposedactionStore";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
@@ -15,7 +14,6 @@ import {
   AppliedSelfAssessment,
   Answers,
   ProposedAction,
-  Parameter,
 } from "@/app/types/entities";
 import {
   useUserContextStore,
@@ -23,25 +21,14 @@ import {
   useSelfAssessmentContextStore,
 } from "@/store/authStore";
 import LoadingCircle from "../skeletons/LoadingCircle";
-
-interface ProposedActionData {
-  responsible: string;
-  justification: string;
-  preview: string;
-  date: Date | null;
-}
-
-interface TableRowData {
-  checkedIndex: number | null;
-  textArea1: string;
-  textArea2: string;
-  proposedActionData?: ProposedActionData;
-}
+import {
+  TableRowData,
+  initialTableData
+} from "@/app/types/selfAssessmentData";
 
 const SelfAssessment: React.FC = () => {
   const { currentSelfAssessment } = useSelfAssessmentContextStore();
   const currentDate = new Date();
-  const selfAssessmentStore = useSelfAssessmentsStore();
   const appliedSelfAssessmentsStore = useAppliedSelfAssessmentsStore();
   const proposedActionStore = useProposedActionsStore();
   const answerStore = useAnswersStore();
@@ -58,238 +45,8 @@ const SelfAssessment: React.FC = () => {
     useState<SelfAssessments | null>(null);
   const [saving, setSaving] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [allTableData, setAllTableData] = useState<TableRowData[][]>([
-    [
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-    ],
-    [
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-    ],
-    [
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-    ],
-    [
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-    ],
-    [
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-      {
-        checkedIndex: null,
-        textArea1: "",
-        textArea2: "",
-        proposedActionData: {
-          responsible: "",
-          justification: "",
-          preview: "",
-          date: null,
-        },
-      },
-    ],
-  ]);
+  const [allTableData, setAllTableData] =
+    useState<TableRowData[][]>(initialTableData);
 
   useEffect(() => {
     loadSelfAssessmentData();

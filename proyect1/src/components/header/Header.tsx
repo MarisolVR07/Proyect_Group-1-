@@ -5,6 +5,7 @@ import DropdownMenu from "../general/DropdownMenu";
 import DownArrowIcon from "../svg/DownArrowIcon";
 import Link from "next/link";
 import { useUserContextStore } from "@/store/authStore";
+
 export default function Header() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const { currentUser } = useUserContextStore();

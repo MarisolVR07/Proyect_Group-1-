@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { verifyToken, DecodedToken } from "@/app/utils/verifyToken";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { DebugMessage } from "@/app/types/debugData";
 
 
 export default function Page() {

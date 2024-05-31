@@ -8,11 +8,7 @@ import { verifyToken, DecodedToken } from "@/app/utils/verifyToken";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Toaster } from 'react-hot-toast';
-
-interface DebugMessage {
-  content: string;
-  type: "Error" | "Info" | "Warning" | "Success";
-}
+import { DebugMessage } from "@/app/types/debugData";
 
 export default function Page() {
   const [token, setToken] = useState<string | null>(

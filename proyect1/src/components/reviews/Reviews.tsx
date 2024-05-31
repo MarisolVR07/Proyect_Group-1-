@@ -5,7 +5,6 @@ import SearchBar from "./SearchBar";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
 import { AppliedSelfAssessment } from "@/app/types/entities";
 import SelfAssessment from "./applied_self_assessment/SelfAssessmentReview";
-import SecondaryButtom from "../general/SecondaryButton";
 
 const Reviews: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");

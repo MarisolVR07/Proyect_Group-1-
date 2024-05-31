@@ -3,20 +3,10 @@ import TableHeader from "./TableHeader";
 import TableSection from "./TableSection";
 import TableRow from "./TableRow";
 import ProposedAction from "./ProposedAction";
-
-interface ProposedActionData {
-  responsible: string;
-  justification: string;
-  preview: string;
-  date: Date | null;
-}
-
-interface TableRowData {
-  checkedIndex: number | null;
-  textArea1: string;
-  textArea2: string;
-  proposedActionData?: ProposedActionData;
-}
+import {
+  ProposedActionData,
+  TableRowData,
+} from "@/app/types/selfAssessmentData";
 
 interface TableProps {
   id: string;

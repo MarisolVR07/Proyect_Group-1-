@@ -4,12 +4,9 @@ import TableTextArea from "./TableTextArea";
 import InputField from "../general/InputField";
 import DateTimePicker from "../general/DateTimePicker";
 
-interface ProposedActionData {
-  responsible: string;
-  justification: string;
-  preview: string;
-  date: Date | null;
-}
+import {
+  ProposedActionData,
+} from "@/app/types/selfAssessmentData";
 
 interface ProposedActionProps {
   id?: string;

@@ -8,6 +8,8 @@ import { verifyToken, DecodedToken } from "@/app/utils/verifyToken";
 import { useRouter } from "next/navigation";
 import { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from "react";
+import { DebugMessage } from "@/app/types/debugData";
+
 export default function Page() {
   const [token, setToken] = useState<string | null>(
     Cookies.get("auth_token") || null

@@ -8,11 +8,12 @@ import DepartmentDropdown from "./DepartmentDropdown";
 import RolDropdown from "@/components/general/RolDropdowm";
 import StateCheckbox from "@/components/general/StateCheckbox";
 import { User } from "@/app/types/entities";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 interface DebugMessage {
   content: string;
   type: "Error" | "Info" | "Warning" | "Success";
-}interface UsersProps {
+}
+interface UsersProps {
   onDebugMessage: (message: DebugMessage) => void;
 }
 const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
@@ -76,15 +77,11 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     //toast.success("Department updated successfully");
   };
 
-
-
-  
   const handleRolChange = (user: User, newRol: string) => {
     const updatedUser: User = { ...user, USR_Role: newRol };
     toast.success("Rol updated successfully");
     updateUser(updatedUser);
-   
-};
+  };
 
   const handleSearchChange = async (query: string) => {
     if (searchQuery === query) return;
@@ -92,7 +89,8 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     if (!query.trim()) return;
     setIsLoading(true);
     try {
-      const results = query.length > 0 ? await getUsersByName(query) : await getUsers();
+      const results =
+        query.length > 0 ? await getUsersByName(query) : await getUsers();
     } catch (error) {
       console.error("Error searching users", error);
       onDebugMessage({ content: "Error searching users", type: "Error" });
@@ -189,8 +187,20 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
             </tbody>
           </table>
           <div className="flex justify-between mt-2">
-            <Button className="rounded-xl w-44 no-print" onClick={handlePreviousPage} disabled={currentPage === 0}>Previous</Button>
-            <Button className="rounded-xl w-44 no-print" onClick={handleNextPage} disabled={(currentPage + 1) * itemsPerPage >= users.length}>Next</Button>
+            <Button
+              className="rounded-xl w-44 no-print"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              className="rounded-xl w-44 no-print"
+              onClick={handleNextPage}
+              disabled={(currentPage + 1) * itemsPerPage >= users.length}
+            >
+              Next
+            </Button>
           </div>
         </div>
       )}

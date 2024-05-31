@@ -3,26 +3,13 @@ import TableHeader from "./TableHeaderReview";
 import TableSection from "./TableSectionReview";
 import TableRow from "./TableRowReview";
 import ProposedAction from "./ProposedActionReview";
-
-interface ProposedActionData {
-  responsible: string;
-  justification: string;
-  preview: string;
-  date: string;
-}
-
-interface TableRowData {
-  answer: string;
-  reference: string;
-  observation: string;
-  ProposedActionData: ProposedActionData;
-}
+import { TableRowDataReview } from "@/app/types/selfAssessmentData";
 
 interface TableProps {
   id: string;
   questions: string[];
   section: string | null | undefined;
-  data: TableRowData[];
+  data: TableRowDataReview[];
 }
 
 const Table: React.FC<TableProps> = ({ id, section, data, questions }) => {
@@ -65,12 +52,14 @@ const Table: React.FC<TableProps> = ({ id, section, data, questions }) => {
         <ProposedAction
           onAccept={handleCloseForm}
           id={`${id}.${selectedRowIndex + 1}`}
-          responsible={data[selectedRowIndex].ProposedActionData.responsible}
-          justification={
-            data[selectedRowIndex].ProposedActionData.justification
+          responsible={
+            data[selectedRowIndex].ProposedActionDataReview.responsible
           }
-          preview={data[selectedRowIndex].ProposedActionData.preview}
-          date={data[selectedRowIndex].ProposedActionData.date}
+          justification={
+            data[selectedRowIndex].ProposedActionDataReview.justification
+          }
+          preview={data[selectedRowIndex].ProposedActionDataReview.preview}
+          date={data[selectedRowIndex].ProposedActionDataReview.date}
         />
       )}
     </div>
