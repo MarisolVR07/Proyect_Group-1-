@@ -75,7 +75,7 @@ const ProposedAction: React.FC<ProposedActionProps> = ({
           />
         </div>
       </div>
-      <div className="flex space-x-5 px-4">
+      <div className="flex space-x-5 px-4 mb-9">
         <div className="w-full">
           <h2>Justification</h2>
           <TableTextArea
@@ -96,7 +96,7 @@ const ProposedAction: React.FC<ProposedActionProps> = ({
         </div>
       </div>
       {error && <div className="text-red-500 text-center mt-2">{error}</div>}
-      <SecondaryButton className="rounded-md px-3 my-4" onClick={handleAccept}>
+      <SecondaryButton className="rounded-md px-3" onClick={handleAccept}>
         Accept
       </SecondaryButton>
     </div>
