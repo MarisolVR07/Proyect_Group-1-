@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import PrimaryButton from "../general/PrimaryButton";
-import DropdownMenu from "../general/DropdownMenu";
+import DropdownMenu from "../general/DropDownMenu";
 import DownArrowIcon from "../svg/DownArrowIcon";
 import Link from "next/link";
 import { useUserContextStore } from "@/store/authStore";

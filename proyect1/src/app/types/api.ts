@@ -15,4 +15,10 @@ export type ParameterDepartmentStatus = {
     department: string;
     status: string;
   };
+}
+export type ParameterStatus = {
+    params: {
+      status: string;
+    };
+  
 };

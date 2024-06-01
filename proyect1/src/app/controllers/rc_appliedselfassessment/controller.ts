@@ -38,6 +38,32 @@ export async function getAppliedSelfAssessmentByDepartmentAndStatus(
     return error;
   }
 }
+export async function getAppliedSelfAssessmentsByDepartment(
+  department: number
+): Promise<AppliedSelfAssessment[] | ErrorResponse> {
+    try {
+        const response: Response = await fetch(
+          API_URL+ `rc_appliedselfassessment/findByDepartment/${department}`);
+        const data: AppliedSelfAssessment[] | ErrorResponse = await response.json();
+        return data;
+    } catch (error: any) {
+        return { error: error.message };
+    }
+}
+
+export async function getAppliedSelfAssessmentsByStatus(
+  status: string
+): Promise<AppliedSelfAssessment[] | ErrorResponse> {
+    try {
+        const response = await fetch( 
+          API_URL+ `rc_appliedselfassessment/findByStatus/${status}`);
+        const data: AppliedSelfAssessment[] | ErrorResponse = await response.json();
+        return data;
+    } catch (error: any) {
+        return { error: error.message };
+    }
+}
+
 
 export async function deleteAppliedSelfassessment(
   id: number

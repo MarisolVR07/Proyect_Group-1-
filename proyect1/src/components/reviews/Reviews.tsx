@@ -1,16 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Button from "../general/PrimaryButton";
-import SearchBar from "./SearchBar";
+import SearchBar from "@/components/general/SearchBar";
+import RolDropDown from "@/components/general/RolDropdowm";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
 import { AppliedSelfAssessment } from "@/app/types/entities";
 import SelfAssessment from "./applied_self_assessment/SelfAssessmentReview";
 import { useExportStore } from "@/store/excelStore";
+import DropdownMenu from "@/components/reviews/DropDownMenuSearch";
 
 const Reviews: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const exportStore = useExportStore();
-  const [appliedSelfAssessments, setAppliedSelfAssessments] = useState<
+  const [appliedSelfAssessments, setAppliedSelfAssessments2] = useState<
     AppliedSelfAssessment[]
   >([]);
   const [selectedSelfAssessment, setSelectedSelfAssessment] =
@@ -27,7 +29,7 @@ const Reviews: React.FC = () => {
       const allAppliedSelfAssessments =
         await appliedSelfAssessmentStore.getCompleteAppliedSelfassessments();
       if (!("error" in allAppliedSelfAssessments)) {
-        setAppliedSelfAssessments(allAppliedSelfAssessments);
+        setAppliedSelfAssessments2(allAppliedSelfAssessments);
       } else {
         console.error(
           "Error fetching AppliedSelfAssessments:",
@@ -46,6 +48,14 @@ const Reviews: React.FC = () => {
     const result = await exportStore.exportAppliedSelfAssessment(ASA_Id);
     console.log("Self-assessment exported successfully!");
   };
+  const handleDepartmentSearch = async (departmentId) => {
+  const filteredSelfAssessments = await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByDepartment(departmentId);
+  if (!("error" in filteredSelfAssessments)) {
+    setAppliedSelfAssessments2(filteredSelfAssessments);  
+  } else {
+    console.error("Error fetching filtered assessments:", filteredSelfAssessments.error);
+  }
+};
 
 
   const handleRowDoubleClick = (selfAssessment: AppliedSelfAssessment) => {
@@ -63,6 +73,7 @@ const Reviews: React.FC = () => {
         Self-Assessments Reviews
       </h4>
       <SearchBar onSearch={handleSearchChange} />
+      <DropdownMenu onSearch={handleDepartmentSearch} />
       <div className="overflow-x-auto mt-4 rounded-md">
         <table className="table-auto w-full">
           <thead className="bg-violet-800 text-white">

@@ -7,6 +7,8 @@ import {
   updateAppliedSelfassessment,
   getAppliedSelfAssessmentByDepartmentAndStatus,
   getCompleteAppliedSelfassessments,
+  getAppliedSelfAssessmentsByStatus, 
+  getAppliedSelfAssessmentsByDepartment
 } from "@/app/controllers/rc_appliedselfassessment/controller";
 import { AppliedSelfAssessment } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
@@ -29,13 +31,24 @@ interface AppliedSelfAssessmentState {
   updateAppliedSelfAssessment: (
     appliedselfassessment: AppliedSelfAssessment
   ) => Promise<AppliedSelfAssessment | ErrorResponse>;
+
+  getAppliedSelfAssessmentsByStatus:  (
+    status: string
+  ) => Promise<AppliedSelfAssessment[] | ErrorResponse>;
+
   getAppliedSelfAssessmentByDepartmentAndStatus: (
     department: number,
     status: string
   ) => Promise<AppliedSelfAssessment[] | ErrorResponse>;
+
+  getAppliedSelfAssessmentsByDepartment: (
+    department: number,
+  ) => Promise<AppliedSelfAssessment[] | ErrorResponse>;
+
   getCompleteAppliedSelfassessments: () => Promise<
     AppliedSelfAssessment[] | ErrorResponse
   >;
+  setAppliedSelfAssessments: (selfAssessments: AppliedSelfAssessment[]) => void;
 }
 
 export const useAppliedSelfAssessmentsStore = create<AppliedSelfAssessmentState>(
@@ -131,6 +144,37 @@ export const useAppliedSelfAssessmentsStore = create<AppliedSelfAssessmentState>
         return { error: error.message };
       }
     },
+    getAppliedSelfAssessmentsByStatus: async (status: string) => {
+      try {
+        const appliedselfassessments = await getAppliedSelfAssessmentsByStatus(
+          status
+        );
+        if ("error" in appliedselfassessments) {
+          return appliedselfassessments;
+        }
+        set((state) => ({ ...state, appliedselfassessments }));
+        return appliedselfassessments;
+      } catch (error: any) {
+        return { error: error.message };
+      }
+    }, getAppliedSelfAssessmentsByDepartment: async (department: number) => {
+      try {
+        const appliedselfassessments = await getAppliedSelfAssessmentsByDepartment(
+          department
+        );
+        if ("error" in appliedselfassessments) {
+          return appliedselfassessments;
+        }
+        set((state) => ({ ...state, appliedselfassessments }));
+        return appliedselfassessments;
+      } catch (error: any) {
+        return { error: error.message };
+      }
+    },
+    setAppliedSelfAssessments: (filteredSelfAssessments) => {
+      set({ appliedselfassessments: filteredSelfAssessments });
+  },
+
     getCompleteAppliedSelfassessments: async () => {
       try {
         const completeSelfAssessments =

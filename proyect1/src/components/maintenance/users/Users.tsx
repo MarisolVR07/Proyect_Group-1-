@@ -1,6 +1,6 @@
 import Button from "@/components/general/PrimaryButton";
 import React, { useEffect, useState } from "react";
-import SearchBar from "./SearchBar";
+import SearchBar from "@/components/general/SearchBar";
 import { useUserStore } from "@/store/userStore";
 import { useUserContextStore } from "@/store/authStore";
 import Spinner from "@/components/skeletons/Spinner";
