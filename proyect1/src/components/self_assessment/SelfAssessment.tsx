@@ -7,6 +7,7 @@ import Table from "./Table";
 import { useAnswersStore } from "@/store/answerStore";
 import { useProposedActionsStore } from "@/store/proposedactionStore";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
+import { getAppliedSelfAssessmentByDepartmentAndStatus } from "@/app/controllers/rc_appliedselfassessment/controller";
 import {
   SelfAssessments,
   Section,
@@ -21,10 +22,7 @@ import {
   useSelfAssessmentContextStore,
 } from "@/store/authStore";
 import LoadingCircle from "../skeletons/LoadingCircle";
-import {
-  TableRowData,
-  initialTableData
-} from "@/app/types/selfAssessmentData";
+import { TableRowData, initialTableData } from "@/app/types/selfAssessmentData";
 
 const SelfAssessment: React.FC = () => {
   const { currentSelfAssessment } = useSelfAssessmentContextStore();
@@ -52,7 +50,7 @@ const SelfAssessment: React.FC = () => {
     loadSelfAssessmentData();
   }, []);
 
-  const loadSelfAssessmentData = async () => {
+  const loadSelfAssessmentData = () => {
     try {
       if (currentSelfAssessment) {
         setLoadedSelfAssessment(currentSelfAssessment);
@@ -94,74 +92,97 @@ const SelfAssessment: React.FC = () => {
     setAllTableData(updatedAllTableData);
   };
 
+  const checkSelfAssessmentStatus = async () => {
+    if (currentUser) {
+      const department = currentUser.USR_Department || 0;
+      const status = "A";
+      const selfAssessment =
+        await getAppliedSelfAssessmentByDepartmentAndStatus(department, status);
+      if ("error" in selfAssessment) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  };
+
   const handleSave = async () => {
+    if (await checkSelfAssessmentStatus() === true) {
+      alert(
+        "The self-assessment has already been carried out by your department."
+      );
+      return;
+    }
+
     const allSelected = allTableData.every((tableData) =>
       tableData.every((row) => row.checkedIndex !== null)
     );
+    if (!allSelected) {
+      alert("Please make sure all items are selected.");
+      return;
+    }
 
-    if (allSelected) {
-      setSaving(true);
-      const appliedSelfAssessment: AppliedSelfAssessment = {
-        ASA_Date: currentDate.toISOString() ?? null,
-        ASA_ReviewedBy: "N/A",
-        ASA_Status: "A",
-        ASA_MadeBy: currentUser?.USR_FullName,
-        ASA_Assessment: currentParameters?.PRM_CurrentSelfAssessment,
-        ASA_Department: currentUser?.USR_Department,
-      };
+    setSaving(true);
+    const appliedSelfAssessment: AppliedSelfAssessment = {
+      ASA_Date: currentDate.toISOString() ?? null,
+      ASA_ReviewedBy: "N/A",
+      ASA_Status: "A",
+      ASA_MadeBy: currentUser?.USR_FullName,
+      ASA_Assessment: currentParameters?.PRM_CurrentSelfAssessment,
+      ASA_Department: currentUser?.USR_Department,
+    };
 
-      const respASA =
-        await appliedSelfAssessmentsStore.saveAppliedSelfAssessment(
-          appliedSelfAssessment
-        );
-      if ("error" in respASA) {
-        alert("Error saving appliedSelfAssessment");
-        setSaving(false);
-        return;
-      }
-      for (const [sectionIndex, tableData] of allTableData.entries()) {
-        for (const [questionIndex, rowData] of tableData.entries()) {
-          const answer: Answers = {
-            ANS_Selection: rowData.checkedIndex === 0 ? "y" : "n",
-            ANS_Question: loadedSelfAssessment?.rc_sections?.[sectionIndex]?.rc_questions?.[questionIndex]?.QES_Id,
-            ANS_SelfAssessment: respASA.ASA_Id,
-            ANS_WorkDocument: rowData.textArea1,
-            ANS_Observations: rowData.textArea2,
+    const respASA = await appliedSelfAssessmentsStore.saveAppliedSelfAssessment(
+      appliedSelfAssessment
+    );
+    if ("error" in respASA) {
+      alert("Error saving appliedSelfAssessment");
+      setSaving(false);
+      return;
+    }
+    for (const [sectionIndex, tableData] of allTableData.entries()) {
+      for (const [questionIndex, rowData] of tableData.entries()) {
+        const answer: Answers = {
+          ANS_Selection: rowData.checkedIndex === 0 ? "y" : "n",
+          ANS_Question:
+            loadedSelfAssessment?.rc_sections?.[sectionIndex]?.rc_questions?.[
+              questionIndex
+            ]?.QES_Id,
+          ANS_SelfAssessment: respASA.ASA_Id,
+          ANS_WorkDocument: rowData.textArea1,
+          ANS_Observations: rowData.textArea2,
+        };
+
+        const respAnswer = await answerStore.saveAnswer(answer);
+
+        if ("error" in respAnswer) {
+          alert("Error saving answer");
+          setSaving(false);
+          return;
+        }
+        if (rowData.proposedActionData && rowData.proposedActionData.date) {
+          const proposedAction: ProposedAction = {
+            PAC_Responsible: rowData.proposedActionData.responsible,
+            PAC_Justification: rowData.proposedActionData.justification,
+            PAC_Preview: rowData.proposedActionData.preview,
+            PAC_Date: rowData.proposedActionData.date.toISOString(),
+            PAC_Answer: respAnswer.ANS_Id,
+            PAC_Status: "A",
           };
 
-          const respAnswer = await answerStore.saveAnswer(answer);
+          const respProposedAction =
+            await proposedActionStore.saveProposedAction(proposedAction);
 
-          if ("error" in respAnswer) {
-            alert("Error saving answer");
+          if ("error" in respProposedAction) {
+            alert("Error saving proposed action");
             setSaving(false);
             return;
           }
-          if (rowData.proposedActionData && rowData.proposedActionData.date) {
-            const proposedAction: ProposedAction = {
-              PAC_Responsible: rowData.proposedActionData.responsible,
-              PAC_Justification: rowData.proposedActionData.justification,
-              PAC_Preview: rowData.proposedActionData.preview,
-              PAC_Date: rowData.proposedActionData.date.toISOString(),
-              PAC_Answer: respAnswer.ANS_Id,
-              PAC_Status: "A",
-            };
-
-            const respProposedAction =
-              await proposedActionStore.saveProposedAction(proposedAction);
-
-            if ("error" in respProposedAction) {
-              alert("Error saving proposed action");
-              setSaving(false);
-              return;
-            }
-          }
         }
       }
-      setSaving(false);
-      alert("Self-assessment sent");
-    } else {
-      alert("Please make sure all items are selected.");
     }
+    setSaving(false);
+    alert("Self-assessment sent");
   };
 
   const renderTables = () => {
