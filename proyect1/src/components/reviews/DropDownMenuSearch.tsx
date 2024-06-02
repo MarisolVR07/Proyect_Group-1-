@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useDepartmentsStore } from "@/store/departmentStore";  
 import { useOutsideClick } from "@/components/general/OutClick";
 
-const DropdownMenu = ({ onSearch }) => {
+const DropdownMenuDepartment = ({ onSearch }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState('');
     const dropdownRef = useRef(null);
@@ -26,16 +26,16 @@ const DropdownMenu = ({ onSearch }) => {
 
     return (
         <div ref={dropdownRef} className="relative">
-            <button onClick={() => setIsOpen(!isOpen)} className="px-4 py-2 bg-blue-500 text-white rounded-md">
+            <button onClick={() => setIsOpen(!isOpen)} className="px-4 py-2 bg-violet-500 text-white rounded-md">
                 {selected || "Select Department"}
             </button>
             {isOpen && (
-                <ul className="absolute left-0 right-0 mt-2 bg-white shadow-md rounded-md z-10">
+                <ul className="absolute text-center w-40 bg-white text-violet-700 py-2 rounded-md mt-1 z-10 max-h-60 overflow-y-auto  overflow-x-hidden">
                     {departments.map((department) => (
                         <li
                             key={department.DPT_Id}  
                             onClick={() => handleSelect(department)}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                            className="px-3 py-2 hover:bg-violet-700 hover:text-white cursor-pointer"
                         >
                             {department.DPT_Name}
                         </li>
@@ -46,5 +46,4 @@ const DropdownMenu = ({ onSearch }) => {
     );
 };
 
-export default DropdownMenu;
-
+export default DropdownMenuDepartment;
