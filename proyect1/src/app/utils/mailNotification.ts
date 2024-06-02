@@ -2,7 +2,7 @@ import {
   getParameter,
   updateParameter,
 } from "../controllers/rc_parameters/controller";
-import { getUsers } from "../controllers/rc_users/controller";
+import { getUsersByRole } from "../controllers/rc_users/controller";
 import { sendEmail } from "../controllers/mailer/controller";
 import { AppliedSelfAssessment, User } from "../types/entities";
 import {
@@ -15,8 +15,8 @@ export function scheduleJob() {
   const oneDayInMilliseconds = 60 * 1000;
 
   const intervalId = setInterval(() => {
-    //  sendNotification();
-    desactivateAssessment();
+    sendNotification();
+   // desactivateAssessment();
   }, oneDayInMilliseconds);
 
   return () => clearInterval(intervalId);
@@ -26,10 +26,10 @@ async function sendNotification() {
   const parameters = await getParameter(1);
   if (!("error" in parameters)) {
     if (isOneDayAway(parameters.PRM_DeactivationDate)) {
-      const users = await getUsers();
+      const users = await getUsersByRole("admin");
+      console.log(users)
       if (!("error" in users)) {
         users
-          .filter((u) => (u.USR_Role = "admin"))
           .map((u) =>
             sendEmail(
               u.USR_Email,

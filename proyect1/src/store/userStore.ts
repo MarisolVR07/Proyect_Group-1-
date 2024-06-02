@@ -6,6 +6,7 @@ import {
   getUsers,
   updateUser,
   getUsersByName,
+  getUsersByRole
 } from "@/app/controllers/rc_users/controller";
 import { User } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
@@ -19,6 +20,7 @@ interface UserState {
   getUsers: () => Promise<User[] | ErrorResponse>;
   updateUser: (user: User) => Promise<User | ErrorResponse>;
   getUsersByName: (name: string) => Promise<User[]  | ErrorResponse>;
+  getUsersByRole: (role: string) => Promise<User[]  | ErrorResponse>;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -81,4 +83,13 @@ export const useUserStore = create<UserState>((set) => ({
     set((state) => ({ ...state, users }));
     return users;
   },
+  getUsersByRole: async (role: string) => {
+    const users = await getUsersByName(role);
+    if ("error" in users) {
+      return users;
+    }
+    set((state) => ({ ...state, users }));
+    return users;
+  },
+
 }));

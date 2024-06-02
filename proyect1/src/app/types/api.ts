@@ -22,3 +22,10 @@ export type ParameterStatus = {
     };
   
 };
+
+export type ParameterRole = {
+  params: {
+    role: string;
+  };
+
+};

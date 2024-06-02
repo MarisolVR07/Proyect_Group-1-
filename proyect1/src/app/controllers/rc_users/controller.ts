@@ -28,6 +28,19 @@ export async function getUsersByName(
   }
 }
 
+export async function getUsersByRole(
+  role: string
+): Promise<User[] | ErrorResponse> {
+  try {
+    const res: Response = await fetch(API_URL + `rc_users/findRole/${role}`);
+    const users: User[] | ErrorResponse = await res.json();
+    return users;
+  } catch (error: any) {
+    return error;
+  }
+}
+
+
 export async function deleteUser(id: string): Promise<User | ErrorResponse> {
   try {
     const res: Response = await fetch(API_URL + `rc_users/${id}`, {
