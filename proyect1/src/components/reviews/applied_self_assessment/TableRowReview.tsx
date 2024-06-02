@@ -34,7 +34,15 @@ const TableRow: React.FC<TableRowProps> = ({
         <p>{answer}</p>
       </div>
       <div className="border-e-2 border-gray-600 w-40">
-        {reference !== "" && <a href={reference}>Go to document</a>}
+        {reference !== "" && (
+          <a
+            href={reference}
+            target="_blank"
+            className="hover:text-sm hover:text-white"
+          >
+            Document
+          </a>
+        )}
       </div>
       <div className="w-96 border-e-2 border-gray-600">
         <p>{observation}</p>

@@ -4,9 +4,9 @@ import Button from "../../general/PrimaryButton";
 import PageButton from "../../general/PageButton";
 import SecondaryButton from "../../general/SecondaryButton";
 import Table from "./TableReview";
-import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
 import { useExportStore } from "@/store/excelStore";
+import toast from "react-hot-toast";
 import {
   SelfAssessments,
   Section,
@@ -52,7 +52,11 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({
   const handleExport = async () => {
     const { ASA_Id } = appliedSelfAssessment;
     const result = await exportStore.exportAppliedSelfAssessment(ASA_Id);
-    console.log("Self-assessment exported successfully!");
+    if (result && "error" in result) {
+      toast.error("Problems When Exporting!");
+      return;
+    }
+    toast.success("Self-Assessment Exported!");
   };
 
   const loadSelfAssessmentData = () => {
@@ -145,12 +149,12 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({
         appliedSelfAssessmentReviewed
       );
     if ("error" in respASA) {
-      alert("Error update appliedSelfAssessment");
       setSaving(false);
+      toast.error("Problems Updating Self-Assessment!");
       return;
     }
     setSaving(false);
-    alert("Self-assessment sent");
+    toast.success("Revised Self-Assessment!");
     closeModal();
   };
 
@@ -170,8 +174,10 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({
     ));
   };
 
+  const date = new Date(appliedSelfAssessment.ASA_Date).toLocaleDateString();
+
   return (
-    <div className=" bg-gray-700 w-full py-3 px-3 items-center justify-center text-center rounded-xl">
+    <div className=" bg-gray-700 w-full h-full py-3 px-3 items-center justify-center text-center rounded-xl">
       <h2 className="text-white text-xl mb-1">
         {loadedSelfAssessment?.SAT_Audit}
       </h2>
@@ -201,7 +207,7 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({
       <div className="flex mx-16 sm:flex-row flex-col items-center sm:justify-between">
         <div className="text-base my-4">
           <p>Carried Out By: {appliedSelfAssessment.ASA_MadeBy}</p>
-          <p>Date Applied: {appliedSelfAssessment.ASA_Date}</p>
+          <p>Date Applied: {date}</p>
           <p>Reviewed By: {appliedSelfAssessment?.ASA_ReviewedBy}</p>
         </div>
         <div className="flex space-x-5">

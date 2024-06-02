@@ -15,7 +15,7 @@ const BoxButton: React.FC<BoxButtonProps> = ({
 }) => {
   return (
     <div
-      className={`bg-transparent hover:ring-1 ring-white text-center items-center justify-center cursor-pointer ${className}`}
+      className={`bg-transparent hover:ring-1 hover:text-sm hover:text-white ring-white text-center items-center justify-center cursor-pointer ${className}`}
       onClick={onClick}
     >
       {children}

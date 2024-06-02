@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import CardsSection from "./CardsSectionBackoficce";
 import DateTimePicker from "../general/DateTimePicker";
 import SearchBar from "@/components/general/SearchBar";
-import Image from "next/image";
 import InputField from "../general/InputField";
 import PrimaryButton from "../general/PrimaryButton";
 import { useUserContextStore } from "@/store/authStore";

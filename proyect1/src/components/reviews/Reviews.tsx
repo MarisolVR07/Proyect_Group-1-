@@ -8,11 +8,12 @@ import { AppliedSelfAssessment } from "@/app/types/entities";
 import SelfAssessment from "./applied_self_assessment/SelfAssessmentReview";
 import { useExportStore } from "@/store/excelStore";
 import DropdownMenu from "@/components/reviews/DropDownMenuSearch";
+import toast from "react-hot-toast";
 
 const Reviews: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const exportStore = useExportStore();
-  const [appliedSelfAssessments, setAppliedSelfAssessments2] = useState<
+  const [appliedSelfAssessments, setAppliedSelfAssessments] = useState<
     AppliedSelfAssessment[]
   >([]);
   const [selectedSelfAssessment, setSelectedSelfAssessment] =
@@ -29,7 +30,7 @@ const Reviews: React.FC = () => {
       const allAppliedSelfAssessments =
         await appliedSelfAssessmentStore.getCompleteAppliedSelfassessments();
       if (!("error" in allAppliedSelfAssessments)) {
-        setAppliedSelfAssessments2(allAppliedSelfAssessments);
+        setAppliedSelfAssessments(allAppliedSelfAssessments);
       } else {
         console.error(
           "Error fetching AppliedSelfAssessments:",
@@ -46,17 +47,26 @@ const Reviews: React.FC = () => {
 
   const handleExport = async (ASA_Id) => {
     const result = await exportStore.exportAppliedSelfAssessment(ASA_Id);
-    console.log("Self-assessment exported successfully!");
+    if (result && "error" in result) {
+      toast.error("Problems When Exporting!");
+      return;
+    }
+    toast.success("Self-Assessment Exported!");
   };
   const handleDepartmentSearch = async (departmentId) => {
-  const filteredSelfAssessments = await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByDepartment(departmentId);
-  if (!("error" in filteredSelfAssessments)) {
-    setAppliedSelfAssessments2(filteredSelfAssessments);  
-  } else {
-    console.error("Error fetching filtered assessments:", filteredSelfAssessments.error);
-  }
-};
-
+    const filteredSelfAssessments =
+      await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByDepartment(
+        departmentId
+      );
+    if (!("error" in filteredSelfAssessments)) {
+      setAppliedSelfAssessments(filteredSelfAssessments);
+    } else {
+      console.error(
+        "Error fetching filtered assessments:",
+        filteredSelfAssessments.error
+      );
+    }
+  };
 
   const handleRowDoubleClick = (selfAssessment: AppliedSelfAssessment) => {
     setSelectedSelfAssessment(selfAssessment);
@@ -65,6 +75,47 @@ const Reviews: React.FC = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const renderTableContent = () => {
+    return appliedSelfAssessments.map((selfAssessment) => {
+      const date = new Date(selfAssessment.ASA_Date).toLocaleDateString();
+
+      return (
+        <tr
+          key={selfAssessment.ASA_Id}
+          onClick={() => handleRowClick(selfAssessment)}
+          onDoubleClick={() => handleRowDoubleClick(selfAssessment)}
+          className={
+            selectedSelfAssessment?.ASA_Id === selfAssessment.ASA_Id
+              ? "bg-gray-600"
+              : ""
+          }
+        >
+          <td className="px-4 py-2 text-center">{date}</td>
+          <td className="px-4 py-2 text-center">
+            {selfAssessment.rc_departments?.DPT_Name}
+          </td>
+          <td className="px-4 py-2 text-center">
+            {selfAssessment.ASA_Status === "A" ? "Active" : "Inactive"}
+          </td>
+          <td className="flex px-4 py-2 space-x-2 justify-center">
+            <Button
+              onClick={() => handleRowDoubleClick(selfAssessment)}
+              className="rounded-xl w-16"
+            >
+              View
+            </Button>
+            <Button
+              onClick={() => handleExport(selfAssessment.ASA_Id)}
+              className="rounded-xl w-16"
+            >
+              Export
+            </Button>
+          </td>
+        </tr>
+      );
+    });
   };
 
   return (
@@ -84,48 +135,14 @@ const Reviews: React.FC = () => {
               <th className="px-4 py-2">Actions</th>
             </tr>
           </thead>
-          <tbody>
-            {appliedSelfAssessments.map((selfAssessment) => (
-              <tr
-                key={selfAssessment.ASA_Id}
-                onClick={() => handleRowClick(selfAssessment)}
-                onDoubleClick={() => handleRowDoubleClick(selfAssessment)}
-                className={
-                  selectedSelfAssessment?.ASA_Id === selfAssessment.ASA_Id
-                    ? "bg-gray-600"
-                    : ""
-                }
-              >
-                <td className="px-4 py-2">{selfAssessment.ASA_Date}</td>
-                <td className="px-4 py-2">
-                  {selfAssessment.rc_departments?.DPT_Name}
-                </td>
-                <td className="px-4 py-2">
-                  {selfAssessment.ASA_Status === "A" ? "Active" : "Inactive"}
-                </td>
-                <td className="flex px-4 py-2 space-x-2">
-                  <Button
-                    onClick={() => handleRowDoubleClick(selfAssessment)}
-                    className="rounded-xl w-16"
-                  >
-                    View
-                  </Button>
-                  <Button
-                    onClick={() => handleExport(selfAssessment.ASA_Id)}
-                    className="rounded-xl w-16"
-                  >
-                    Export
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+
+          <tbody>{renderTableContent()}</tbody>
         </table>
       </div>
       {isModalOpen && selectedSelfAssessment && (
-        <div className="fixed inset-0 h-screen bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div className="fixed inset-0 h-screen p-4 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
           <button
-            className="absolute top-0 right-0 m-4 text-gray-500 hover:text-gray-700"
+            className="absolute top-0 right-0 my-4 mx-6 text-3xl text-white hover:text-gray-400"
             onClick={closeModal}
           >
             &times;
