@@ -5,7 +5,7 @@ import ListIcon from "../svg/ListIcon";
 import FileExportIcon from "../svg/FileExportIcon";
 import GearIcon from "../svg/GearIcon";
 import { useUserContextStore } from "@/store/authStore";
-import { getAppliedSelfAssessmentByDepartmentAndStatus } from "@/app/controllers/rc_appliedselfassessment/controller";
+
 
 const CardsSection = () => {
   const { currentUser } = useUserContextStore();
@@ -15,21 +15,6 @@ const CardsSection = () => {
       setIsAdmin(true);
     }
   }, [currentUser]);
-  const handleSelfAssessmentClick = async () => {
-    if (currentUser) {
-      const department = currentUser.USR_Department || 0;
-      const status = "A";
-      const selfAssessment =
-        await getAppliedSelfAssessmentByDepartmentAndStatus(department, status);
-      if ("error" in selfAssessment) {
-        window.location.href = "/views/dashboard/self_assessment";
-      } else {
-        alert(
-          "The self-assessment has already been carried out by your department."
-        );
-      }
-    }
-  };
 
   return (
     <section className="text-white font-poppins">
@@ -55,18 +40,17 @@ const CardsSection = () => {
           ) : (
             <></>
           )}
-
-          <CardButton
-            onClick={handleSelfAssessmentClick}
-            icon={
-              <Icon>
-                <ListIcon />
-              </Icon>
-            }
-            title="Self-Assessment"
-            description=""
-            className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2"
-          />
+            <CardButton
+              href="/views/dashboard/self_assessment"
+              icon={
+                <Icon>
+                  <ListIcon />
+                </Icon>
+              }
+              title="Self-Assessment"
+              description=""
+              className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2"
+            />
           <CardButton
             href="/views/self_assessment_review"
             icon={
