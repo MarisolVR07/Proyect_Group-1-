@@ -15,7 +15,6 @@ interface ContextProps {
   setUserData: Dispatch<SetStateAction<User>>;
 }
 
-// Crear el contexto global
 const GlobalContext = createContext<ContextProps>({
   userData: {
     USR_Email: "",
@@ -28,12 +27,12 @@ const GlobalContext = createContext<ContextProps>({
   setUserData: () => {},
 });
 
-// Definir las propiedades del componente SessionProvider
+
 type SessionProviderProps = {
   children: React.ReactNode;
 };
 
-// Componente SessionProvider
+
 export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
   const [to, setTo] = useState('joksanmj.777@gmail.com');
   const [subject, setSubject] = useState('HOLA');
@@ -53,9 +52,8 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
   });
 
   useEffect(() => {
-     
 
-    scheduleJob() // Clear interval on component unmount
+    scheduleJob()
   }, []);
 
   return (
