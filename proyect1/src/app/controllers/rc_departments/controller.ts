@@ -2,7 +2,7 @@ import { Department } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
 //const currentUrl = window.location.href;
 const API_URL =
-  "/api/v5/";
+  "/api/v6/";
 
 
   export async function getDepartment(

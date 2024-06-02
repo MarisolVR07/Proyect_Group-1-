@@ -15,7 +15,7 @@ export function scheduleJob() {
   const oneDayInMilliseconds = 60 * 1000;
 
   const intervalId = setInterval(() => {
-    sendNotification();
+    // sendNotification();
    // desactivateAssessment();
   }, oneDayInMilliseconds);
 

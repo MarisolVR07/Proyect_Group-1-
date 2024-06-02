@@ -23,6 +23,7 @@ import {
 } from "@/store/authStore";
 import { useParameterStore } from "@/store/parameterStore";
 import { initialSectionsData } from "@/app/types/selfAssessmentData";
+import toast from "react-hot-toast";
 
 const MantSelfAssessment: React.FC = () => {
   const { updateParameter } = useParameterStore();
@@ -45,6 +46,24 @@ const MantSelfAssessment: React.FC = () => {
   useEffect(() => {
     loadSelfAssessmentData();
   }, []);
+
+  const customInfoToast = (message) => {
+    toast.custom((t) => (
+      <div
+        className={`${
+          t.visible ? "animate-enter" : "animate-leave"
+        } px-1 py-2 bg-white shadow-lg justify-center items-center rounded-xl pointer-events-auto flex ring-2 ring-violet-600`}
+      >
+        <div className="text-base text-center w-5 h-5 rounded-3xl ring-2 ring-violet-600 text-violet-600 mx-1">
+          <p className="mb-3">!</p>
+        </div>
+
+        <div className="relative flex text-center">
+          <p className="text-sm font-semibold text-violet-600">{message}</p>
+        </div>
+      </div>
+    ));
+  };
 
   const loadSelfAssessmentData = () => {
     try {
@@ -108,7 +127,7 @@ const MantSelfAssessment: React.FC = () => {
     try {
       const updatedSelfAssessment = await updateSelfAssessmentData();
       if ("error" in updatedSelfAssessment) {
-        alert("Error updating the self-assessment");
+        toast.error("Problems Saving The Self-Assessment!");
         setSaving(false);
         return;
       }
@@ -116,14 +135,13 @@ const MantSelfAssessment: React.FC = () => {
         for (let index = 0; index < 5; index++) {
           const sectionDataForCurrentIndex =
             sectionData[(index + 1).toString()];
-
           const updatedSectionResponse = await updateSectionData(
             (index + 1).toString(),
             sectionDataForCurrentIndex.sectionName,
             updatedSelfAssessment.SAT_Id
           );
           if ("error" in updatedSectionResponse) {
-            alert("Error updating section: " + (index + 1));
+            toast.error("Problems Saving The Self-Assessment!");
             setSaving(false);
             return;
           }
@@ -134,7 +152,7 @@ const MantSelfAssessment: React.FC = () => {
               sectionDataForCurrentIndex.questions
             );
             if ("error" in updatedQuestionsResponse) {
-              alert("Error updating section questions: " + index);
+              toast.error("Problems Saving The Self-Assessment!");
               setSaving(false);
               return;
             }
@@ -146,9 +164,9 @@ const MantSelfAssessment: React.FC = () => {
         upSelfAssessmentContext(updatedSelfAssessment.SAT_Id);
       }
       setSaving(false);
-      alert("Form submitted successfully!");
+      toast.success("Saved Self-Assessment!");
     } catch (error) {
-      console.error("Error updating the self-assessment:", error);
+      toast.error("Problems Saving The Self-Assessment!");
     }
   };
 
@@ -159,11 +177,12 @@ const MantSelfAssessment: React.FC = () => {
           currentSelfAssessment
         );
       if ("error" in selfAssessment) {
+        toast.error("Problems Saving The Self-Assessment!");
         return;
       }
       setCurrentSelfAssessment(selfAssessment);
     } catch (error) {
-      console.error("Error fetching self-assessment data:", error);
+      toast.error("Problems Saving The Self-Assessment!");
     }
   };
 
@@ -174,12 +193,12 @@ const MantSelfAssessment: React.FC = () => {
     try {
       const result = await updateParameter(parameterToUpdate);
       if ("error" in result) {
-        console.error("Failed to update parameters:", result.error);
+        toast.error("Problems Saving The Self-Assessment!");
         return;
       }
       setCurrentParameters(result);
     } catch (error) {
-      console.error("Error updating parameters:", error);
+      toast.error("Problems Saving The Self-Assessment!");
     }
   };
 
@@ -243,12 +262,12 @@ const MantSelfAssessment: React.FC = () => {
 
   const verifyFields = () => {
     if (!audit.trim()) {
-      alert("Please fill in the Audit field.");
+      customInfoToast("Please fill in the Audit field");
       return false;
     }
 
     if (!description.trim()) {
-      alert("Please fill in the Description field.");
+      customInfoToast("Please fill in the Description field");
       return false;
     }
 
@@ -258,13 +277,13 @@ const MantSelfAssessment: React.FC = () => {
   const verifySectionFields = () => {
     for (let key in sectionData) {
       if (!sectionData[key].sectionName.trim()) {
-        alert(`Please fill in the Section Name for Section ${key}.`);
+        customInfoToast(`Please fill in the Section Name for Section ${key}`);
         return false;
       }
 
       for (let question of sectionData[key].questions) {
         if (!question.trim()) {
-          alert(`Please fill in all questions for Section ${key}.`);
+          customInfoToast(`Please fill in all questions for Section ${key}`);
           return false;
         }
       }

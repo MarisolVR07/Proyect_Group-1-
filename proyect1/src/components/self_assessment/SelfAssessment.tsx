@@ -15,6 +15,8 @@ import {
   AppliedSelfAssessment,
   Answers,
   ProposedAction,
+  Parameter,
+  User,
 } from "@/app/types/entities";
 import {
   useUserContextStore,
@@ -23,6 +25,7 @@ import {
 } from "@/store/authStore";
 import LoadingCircle from "../skeletons/LoadingCircle";
 import { TableRowData, initialTableData } from "@/app/types/selfAssessmentData";
+import toast from "react-hot-toast";
 
 const SelfAssessment: React.FC = () => {
   const { currentSelfAssessment } = useSelfAssessmentContextStore();
@@ -36,18 +39,25 @@ const SelfAssessment: React.FC = () => {
   const initialQuestions = Array.from({ length: 5 }, () => {
     return Array.from({ length: 4 }, () => "");
   });
-
+    const [user, setUser] = useState<User | null>(null);
+  const [parameters, setParameters] = useState<Parameter | null>(null);
   const [questions, setQuestions] = useState<string[][]>(initialQuestions);
 
   const [loadedSelfAssessment, setLoadedSelfAssessment] =
     useState<SelfAssessments | null>(null);
   const [saving, setSaving] = useState<boolean>(false);
+  const [selfAssessmentStatus, setSelfAssessmentStatus] =
+    useState<boolean>(false);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [allTableData, setAllTableData] =
     useState<TableRowData[][]>(initialTableData);
 
   useEffect(() => {
+    checkSelfAssessmentStatus();
     loadSelfAssessmentData();
+    setParameters(currentParameters);
+    setUser(currentUser);
   }, []);
 
   const loadSelfAssessmentData = () => {
@@ -99,18 +109,16 @@ const SelfAssessment: React.FC = () => {
       const selfAssessment =
         await getAppliedSelfAssessmentByDepartmentAndStatus(department, status);
       if ("error" in selfAssessment) {
+        setSelfAssessmentStatus(false);
         return false;
-      } else {
-        return true;
       }
+      setSelfAssessmentStatus(true);
+      return true;
     }
   };
 
   const handleSave = async () => {
-    if (await checkSelfAssessmentStatus() === true) {
-      alert(
-        "The self-assessment has already been carried out by your department."
-      );
+    if ((await checkSelfAssessmentStatus()) === true) {
       return;
     }
 
@@ -118,7 +126,7 @@ const SelfAssessment: React.FC = () => {
       tableData.every((row) => row.checkedIndex !== null)
     );
     if (!allSelected) {
-      alert("Please make sure all items are selected.");
+      alert("Please Answer All Questions");
       return;
     }
 
@@ -182,6 +190,7 @@ const SelfAssessment: React.FC = () => {
       }
     }
     setSaving(false);
+    toast.success("Self-assessment sent");
     alert("Self-assessment sent");
   };
 
@@ -208,7 +217,7 @@ const SelfAssessment: React.FC = () => {
     <div className="form-control my-3 mx-8 py-5 px-10 w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
       <div className=" bg-gray-700 w-full py-3 px-3 items-center justify-center text-center rounded-xl">
         <h1 className="text-2xl text-white mb-2">
-          {currentParameters?.PRM_Institution}
+          {parameters?.PRM_Institution}
         </h1>
         <h2 className="text-white text-xl mb-1">
           {loadedSelfAssessment?.SAT_Audit}
@@ -238,7 +247,7 @@ const SelfAssessment: React.FC = () => {
         {renderTables()}
         <div className="flex mx-16 sm:flex-row flex-col items-center sm:justify-between">
           <div className="text-base my-4">
-            <p>Carried out by: {currentUser?.USR_FullName}</p>
+            <p>Carried out by: {user?.USR_FullName}</p>
             <p>Date: {currentDate.toLocaleDateString()}</p>
           </div>
           <Button onClick={handleSave} className="rounded-xl w-44">
@@ -246,6 +255,13 @@ const SelfAssessment: React.FC = () => {
           </Button>
         </div>
       </div>
+      {selfAssessmentStatus && (
+        <div className="flex flex-col items-center justify-center h-full rounded-md bg-gray-800 bg-opacity-90 absolute top-0 left-0 right-0 bottom-0 z-50">
+          <p className="text-white text-3xl">
+            Your department has already carried out the self-assessment
+          </p>
+        </div>
+      )}
       {saving && <LoadingCircle text="Sending..." />}
     </div>
   );

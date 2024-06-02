@@ -24,6 +24,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   const { setCurrentUser, currentUser } = useUserContextStore();
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
+  const [user, setUser] = useState<User | null>(null);
   const itemsPerPage = 20;
   const handlePrintClick = () => {
     window.print();
@@ -45,6 +46,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       setIsLoading(false);
     };
     fetchData();
+    setUser(currentUser);
   }, []);
 
   const handleStatusChange = (
@@ -116,7 +118,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       <div className="flex flex-col md:flex-row justify-between items-center">
         <div className="m-5 print-only">
           <h5 className="text-sm text-white text-center mb-4 text-color">
-            Current user: {currentUser?.USR_FullName}
+            Current user: {user?.USR_FullName}
           </h5>
         </div>
         <Button
