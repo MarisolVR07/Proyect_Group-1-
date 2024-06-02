@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
           <span className="ml-3 text-xl">ISC</span>
         </a>
         <p className="text-md text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">
-          © 2024 {parameters?.PRM_Institution} — {parameters?.PRM_Email}qed
+          © 2024 {parameters?.PRM_Institution} — {parameters?.PRM_Email}
         </p>
       </div>
     </footer>

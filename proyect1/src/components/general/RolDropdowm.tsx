@@ -11,7 +11,7 @@ const RolDropdown: React.FC<RolDropdownProps> = ({ onChange, selectedRol }) => {
 
     return (
         <select value={selectedRol} onChange={e => onChange(e.target.value)}>
-            <option value="">none</option>  
+            <option value="">None</option>  
             {roles.map(role => (
                 <option key={role} value={role}>{role}</option>
             ))}

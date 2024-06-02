@@ -23,8 +23,6 @@ const BackOffice = () => {
   const { setCurrentParameters, currentParameters } =
     useParametersContextStore();
   const [searchQuery, setSearchQuery] = useState("");
-  const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [logoURL, setLogoURL] = useState<string | null>(null);
   const { setCurrentUser, currentUser } = useUserContextStore();
   const { users, getUsers, getUsersByName, updateUser } = useUserStore();
 
@@ -39,9 +37,6 @@ const BackOffice = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 20;
 
-  const convertFileToBlob = async (file: File): Promise<Blob> => {
-    return new Blob([file], { type: file.type });
-  };
   const handleStatusChange = (
     user: User,
     event: React.ChangeEvent<HTMLInputElement>
@@ -144,15 +139,6 @@ const BackOffice = () => {
     fetchParameters();
   }, []);
 
-  const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files && event.target.files[0];
-    if (file) {
-      setLogoFile(file);
-      const url = URL.createObjectURL(file);
-      setLogoURL(url);
-    }
-  };
-
   const handleEmailChange = (newEmail: string) => {
     setEmail(newEmail);
   };
@@ -168,7 +154,6 @@ const BackOffice = () => {
       PRM_Institution: institution,
       PRM_ActivationDate: activationDate?.toISOString() ?? null,
       PRM_DeactivationDate: deactivationDate?.toISOString() ?? null,
-      PRM_Logo: logoFile ? await convertFileToBlob(logoFile) : null,
     };
     try {
       const result = await updateParameter(parameterToUpdate);
@@ -260,22 +245,6 @@ const BackOffice = () => {
               value={email}
               onChange={handleEmailChange}
             />
-          </div>
-          <div>
-            <h2 className="text-xl text-white mb-3 font-semibold">LOGO</h2>
-            <input type="file" onChange={handleLogoChange} />
-            {logoFile && (
-              <div className="my-4 flex justify-center">
-                <div className="w-48 h-48 flex items-center justify-center">
-                  <Image
-                    src={URL.createObjectURL(logoFile)}
-                    alt="Logo"
-                    width={200}
-                    height={200}
-                  />
-                </div>
-              </div>
-            )}
           </div>
           <div className="save-section">
             <PrimaryButton
