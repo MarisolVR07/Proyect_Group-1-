@@ -10,8 +10,8 @@ import { useExportStore } from "@/store/excelStore";
 import DropdownMenu from "@/components/reviews/DropDownMenuSearch";
 import toast from "react-hot-toast";
 import { DebugMessage } from "@/app/types/debugData";
-import StateCheckbox from "../general/StateCheckbox";
-
+import StateCheckbox from "@/components/reviews/Checkbox";
+import Spinner from "@/components/skeletons/Spinner";
 interface ReviewsProps {
   onDebugMessage?: (message: DebugMessage) => void;
 }
@@ -19,26 +19,25 @@ interface ReviewsProps {
 const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const exportStore = useExportStore();
-  const [filterActive, setFilterActive] = useState(false);
+  const [filters, setFilters] = useState({
+    active: false,
+    inactive: false,
+  });
+
   const [appliedSelfAssessments, setAppliedSelfAssessments2] = useState<
-  AppliedSelfAssessment[]
->([]);
+    AppliedSelfAssessment[]
+  >([]);
   const [selectedSelfAssessment, setSelectedSelfAssessment] =
     useState<AppliedSelfAssessment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const appliedSelfAssessmentStore = useAppliedSelfAssessmentsStore();
-
-  const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     onDebugMessage({
       content: "Fetching Applied Self-Assessments",
       type: "Info",
     });
-
-
 
     const fetchAppliedSelfAssessments = async () => {
       const allAppliedSelfAssessments =
@@ -59,8 +58,8 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
     fetchAppliedSelfAssessments();
   }, []);
 
-  
   const fetchAppliedSelfAssessments = async () => {
+    setIsLoading(true); 
     const allAppliedSelfAssessments =
       await appliedSelfAssessmentStore.getCompleteAppliedSelfassessments();
     if (!("error" in allAppliedSelfAssessments)) {
@@ -70,10 +69,10 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
         "Error fetching AppliedSelfAssessments:",
         allAppliedSelfAssessments.error
       );
-    }
+    }setIsLoading(false);
   };
   useEffect(() => {
-    fetchAppliedSelfAssessments();  
+    fetchAppliedSelfAssessments();
   }, []);
 
   const handleRowClick = (selfAssessment: AppliedSelfAssessment) => {
@@ -125,20 +124,54 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
     setIsModalOpen(false);
   };
 
-  const toggleActiveFilter = async () => {
-    setFilterActive(!filterActive);
-    if (!filterActive) {
-      const activeSelfAssessments = await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus("A");
+  const toggleFilter = async (filterType: "active" | "inactive") => {
+    setIsLoading(true);
+    const newFilters = {
+      ...filters,
+      [filterType]: !filters[filterType],
+    };
+    setFilters(newFilters);
+
+    let filteredSelfAssessments: AppliedSelfAssessment[] = []; // Properly typed as an array of AppliedSelfAssessment
+
+    if (newFilters.active) {
+      const activeSelfAssessments =
+        await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus("A");
       if (!("error" in activeSelfAssessments)) {
-        setAppliedSelfAssessments2(activeSelfAssessments);
+        // Check if the response is not an error
+        filteredSelfAssessments = activeSelfAssessments;
       } else {
-        console.error("Error fetching active self-assessments:", activeSelfAssessments.error);
+        console.error(
+          "Error fetching active assessments:",
+          activeSelfAssessments.error
+        );
+        return; // Handle error or return to prevent further execution
       }
-    } else {
-      fetchAppliedSelfAssessments();  
     }
+    if (newFilters.inactive) {
+      const inactiveSelfAssessments =
+        await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus("I");
+      if (!("error" in inactiveSelfAssessments)) {
+        // Check if the response is not an error
+        filteredSelfAssessments = [
+          ...filteredSelfAssessments,
+          ...inactiveSelfAssessments,
+        ];
+      } else {
+        console.error(
+          "Error fetching inactive assessments:",
+          inactiveSelfAssessments.error
+        );
+        return; // Handle error or return to prevent further execution
+      }
+    }
+    if (!newFilters.active && !newFilters.inactive) {
+      fetchAppliedSelfAssessments();
+    } else {
+      setAppliedSelfAssessments2(filteredSelfAssessments);
+      setIsLoading(false);}
   };
-  
+
   const renderTableContent = () => {
     return appliedSelfAssessments.map((selfAssessment) => {
       const date = new Date(selfAssessment.ASA_Date).toLocaleDateString();
@@ -182,41 +215,37 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
 
   return (
     <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
-      <h4 className="text-2xl text-white text-center mb-4">
-        Self-Assessments Reviews
-      </h4>
-      <DropdownMenu onSearch={handleDepartmentSearch} />
-      <StateCheckbox isChecked={filterActive} onChange={toggleActiveFilter} />
-      <div className="overflow-x-auto mt-4 rounded-md">
-        <table className="table-auto w-full">
-          <thead className="bg-violet-800 text-white">
-            <tr>
-              <th className="px-4 py-2">Date</th>
-              <th className="px-4 py-2">Department</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Actions</th>
-            </tr>
-          </thead>
+      <h4 className="text-2xl text-white text-center mb-4">Self-Assessments Reviews</h4>
 
-          <tbody>{renderTableContent()}</tbody>
-        </table>
+      <div className="mt-4 rounded-md bg-gradient-to-r from-gray-800 via-violet-600 to-gray-800 p-4 flex items-center space-x-4 z-20">
+        <DropdownMenu onSearch={handleDepartmentSearch} />
+        <StateCheckbox isChecked={filters.active} onChange={() => toggleFilter("active")} label="Active" />
+        <StateCheckbox isChecked={filters.inactive} onChange={() => toggleFilter("inactive")} label="Inactive" />
       </div>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className="overflow-x-auto mt-4 rounded-md">
+          <table className="table-auto w-full">
+            <thead className="bg-violet-800 text-white">
+              <tr>
+                <th className="px-4 py-2">Date</th>
+                <th className="px-4 py-2">Department</th>
+                <th className="px-4 py-2">Status</th>
+                <th className="px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>{renderTableContent()}</tbody>
+          </table>
+        </div>
+      )}
       {isModalOpen && selectedSelfAssessment && (
         <div className="fixed inset-0 h-screen p-4 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-          <button
-            className="absolute top-0 right-0 my-4 mx-6 text-3xl text-white hover:text-gray-400"
-            onClick={closeModal}
-          >
-            &times;
-          </button>
-          <SelfAssessment
-            appliedSelfAssessment={selectedSelfAssessment}
-            closeModal={closeModal}
-          />
+          <button className="absolute top-0 right-0 my-4 mx-6 text-3xl text-white hover:text-gray-400" onClick={closeModal}>&times;</button>
+          <SelfAssessment appliedSelfAssessment={selectedSelfAssessment} closeModal={closeModal} />
         </div>
       )}
     </div>
   );
 };
-
 export default Reviews;

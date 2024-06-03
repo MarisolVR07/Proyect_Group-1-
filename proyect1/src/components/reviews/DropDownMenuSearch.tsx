@@ -30,7 +30,7 @@ const DropdownMenuDepartment = ({ onSearch }) => {
                 {selected || "Select Department"}
             </button>
             {isOpen && (
-                <ul className="absolute text-center w-40 bg-white text-violet-700 py-2 rounded-md mt-1 z-10 max-h-60 overflow-y-auto  overflow-x-hidden">
+                <ul className="absolute text-center w-40 bg-white text-violet-800 py-2 rounded-md mt-1 z-10 max-h-60 overflow-y-auto  overflow-x-hidden">
                     {departments.map((department) => (
                         <li
                             key={department.DPT_Id}  
