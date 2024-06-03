@@ -53,8 +53,8 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
 
   useEffect(() => {
 
-    scheduleJob()
-  }, []);
+   scheduleJob()
+  }, [ ]);
 
   return (
     <GlobalContext.Provider value={{ userData, setUserData }}>

@@ -12,11 +12,11 @@ import {
 } from "../controllers/rc_appliedselfassessment/controller";
 
 export function scheduleJob() {
-  const oneDayInMilliseconds = 60 * 1000;
+  const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
 
   const intervalId = setInterval(() => {
-    // sendNotification();
-   // desactivateAssessment();
+   sendNotification();
+    desactivateAssessment();
   }, oneDayInMilliseconds);
 
   return () => clearInterval(intervalId);
