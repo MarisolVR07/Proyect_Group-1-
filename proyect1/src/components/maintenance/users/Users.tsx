@@ -14,7 +14,7 @@ interface DebugMessage {
   type: "Error" | "Info" | "Warning" | "Success";
 }
 interface UsersProps {
-  onDebugMessage: (message: DebugMessage) => void;
+  onDebugMessage?: (message: DebugMessage) => void;
 }
 const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   useEffect(() => {});

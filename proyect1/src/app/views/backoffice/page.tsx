@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import BackOffice from "@/components/backoffice/BackOficce";
 import DebugModeToggle from "@/components/debug_mode/DebugModeToggle";
 import Footer from "@/components/footer/Footer";
@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import { verifyToken, DecodedToken } from "@/app/utils/verifyToken";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 import { DebugMessage } from "@/app/types/debugData";
 
 export default function Page() {
@@ -17,6 +17,10 @@ export default function Page() {
   );
   const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
   const router = useRouter();
+  const [debugMessages, setDebugMessages] = useState<DebugMessage[]>([]);
+  const handleDebugMessage = (message: DebugMessage) => {
+    setDebugMessages((prevMessages) => [...prevMessages, message]);
+  };
   useEffect(() => {
     if (token) {
       const decoded = verifyToken(token);
@@ -27,10 +31,10 @@ export default function Page() {
   }, [token, router]);
   return (
     <>
-      <DebugModeToggle>
+      <DebugModeToggle debugMessages={debugMessages}>
         <Header />
-        <BackOffice />
-        <Toaster position="top-right"/>
+        <BackOffice onDebugMessage={handleDebugMessage} />
+        <Toaster position="top-right" />
         <Footer />
       </DebugModeToggle>
     </>

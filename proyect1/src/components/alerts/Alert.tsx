@@ -40,7 +40,7 @@ const Alert: React.FC<AlertProps> = ({ type, message }) => {
       </svg>
       <span className="sr-only">{type}</span>
       <div>
-        <span className="font-medium">{type}!</span> {message}
+         {message}
       </div>
     </div>
   );

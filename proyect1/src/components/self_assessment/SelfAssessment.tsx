@@ -8,6 +8,7 @@ import { useAnswersStore } from "@/store/answerStore";
 import { useProposedActionsStore } from "@/store/proposedactionStore";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
 import { getAppliedSelfAssessmentByDepartmentAndStatus } from "@/app/controllers/rc_appliedselfassessment/controller";
+import { customInfoToast } from "@/components/alerts/InfoAlert";
 import {
   SelfAssessments,
   Section,
@@ -126,6 +127,7 @@ const SelfAssessment: React.FC = () => {
       tableData.every((row) => row.checkedIndex !== null)
     );
     if (!allSelected) {
+      //customInfoToast("Please Answer All Questions");
       alert("Please Answer All Questions");
       return;
     }
@@ -190,7 +192,7 @@ const SelfAssessment: React.FC = () => {
       }
     }
     setSaving(false);
-    toast.success("Self-assessment sent");
+    //toast.success("Self-assessment sent");
     alert("Self-assessment sent");
   };
 

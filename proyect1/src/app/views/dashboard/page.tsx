@@ -24,14 +24,18 @@ export default function Page() {
     } else {
       router.push("/");
     }
-  }, [token,router]);
+  }, [token, router]);
+    const [debugMessages, setDebugMessages] = useState<DebugMessage[]>([]);
+    const handleDebugMessage = (message: DebugMessage) => {
+      setDebugMessages((prevMessages) => [...prevMessages, message]);
+    };
 
   return (
     <>
-      <DebugModeToggle>
+      <DebugModeToggle debugMessages={debugMessages}>
         <Header />
         <Dashboard />
-        <Toaster position="top-right"/>
+        <Toaster position="top-right" />
         <Footer />
       </DebugModeToggle>
     </>

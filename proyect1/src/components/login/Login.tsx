@@ -9,8 +9,14 @@ import {
 } from "@/store/authStore";
 import { Parameter } from "@/app/types/entities";
 import { useSelfAssessmentsStore } from "@/store/selfAssessmentStore";
+import { DebugMessage } from "@/app/types/debugData";
 
-const Login = () => {
+
+interface LoginProps {
+  onDebugMessage?: (message: DebugMessage) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onDebugMessage }) => {
   const { getParameter } = useParameterStore();
   const { setCurrentParameters } = useParametersContextStore();
   const { setCurrentSelfAssessment } = useSelfAssessmentContextStore();
@@ -18,9 +24,17 @@ const Login = () => {
   const selfAssessmentStore = useSelfAssessmentsStore();
 
   const loadParameters = async () => {
+    onDebugMessage({
+      content: `Loading parameters (loadParameters)`,
+      type: "Info",
+    });
     try {
       const params = await getParameter(1);
       if ("error" in params) {
+        onDebugMessage({
+          content: `Error loading parameters(loadParameters)->${params.error}`,
+          type: "Error",
+        });
         return;
       }
       setParameter(params);
@@ -28,23 +42,45 @@ const Login = () => {
       if (params.PRM_CurrentSelfAssessment) {
         loadSelfAssessmentData(params.PRM_CurrentSelfAssessment);
       }
+      onDebugMessage({
+        content: `Parameter loading successful (loadParameters)`,
+        type: "Success",
+      });
     } catch (error) {
-      console.error("Failed to fetch parameters:", error);
+      onDebugMessage({
+        content: `Error loading parameters(loadParameters)->${error}`,
+        type: "Error",
+      });
     }
   };
 
   const loadSelfAssessmentData = async (currentSelfAssessment: number) => {
+    onDebugMessage({
+      content: `Loading self-assessment data (loadSelfAssessmentData)`,
+      type: "Info",
+    });
     try {
       const selfAssessment =
         await selfAssessmentStore.getCompleteSelfAssessment(
           currentSelfAssessment
         );
       if ("error" in selfAssessment) {
+        onDebugMessage({
+          content: `Error loading self-assessment data(loadSelfAssessmentData)->${selfAssessment.error}`,
+          type: "Error",
+        });
         return;
       }
       setCurrentSelfAssessment(selfAssessment);
+      onDebugMessage({
+        content: `Self-assessment data loading successful (loadSelfAssessmentData)`,
+        type: "Success",
+      });
     } catch (error) {
-      console.error("Error fetching self-assessment data:", error);
+      onDebugMessage({
+        content: `Error loading self-assessment data(loadSelfAssessmentData)->${error}`,
+        type: "Error",
+      });
     }
   };
 
@@ -70,7 +106,7 @@ const Login = () => {
       <div className="w-full h-full flex flex-col items-center justify-center mt-20">
         <div className="form-control p-6 w-full items-center justify-center bg-gray-700 rounded-2xl font-poppins font-semibold max-w-md drop-shadow-xl text-center">
           <UserIcon />
-          <LoginForm />
+          <LoginForm onDebugMessage={onDebugMessage} />
         </div>
       </div>
     </>

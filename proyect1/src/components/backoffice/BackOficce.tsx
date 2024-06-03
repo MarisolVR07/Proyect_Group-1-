@@ -18,7 +18,13 @@ import SkeletonLoader from "./SkeletonLoader";
 import RolDropdown from "../general/RolDropdowm";
 import StateCheckbox from "../general/StateCheckbox";
 import DepartmentDropdown from "@/components/maintenance/users/DepartmentDropdown";
-const BackOffice = () => {
+import { DebugMessage } from "@/app/types/debugData";
+
+interface BackOfficeProps {
+  onDebugMessage?: (message: DebugMessage) => void;
+}
+
+const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   const { setCurrentParameters, currentParameters } =
     useParametersContextStore();
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,7 +34,9 @@ const BackOffice = () => {
   const { parameters, getParameter, updateParameter, saveParameter } =
     useParameterStore();
   const [isLoading, setIsLoading] = useState(false);
-  const filteredUsers = users.filter((user) => user.USR_Role === "none" || user.USR_Role === "");
+  const filteredUsers = users.filter(
+    (user) => user.USR_Role === "none" || user.USR_Role === ""
+  );
   const [email, setEmail] = useState("");
   const [institution, setInstitution] = useState("");
   const [activationDate, setActivationDate] = useState<Date | null>();
@@ -36,47 +44,81 @@ const BackOffice = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 20;
 
-  const handleStatusChange = (
+  const handleStatusChange = async (
     user: User,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    onDebugMessage({
+      content: `Updating status (handleStatusChange)`,
+      type: "Info",
+    });
     const isChecked = event.target.checked;
-    console.log(
-      `Checkbox para usuario ${user.USR_Id} intenta cambiar a: ${
-        isChecked ? "Active" : "Inactive"
-      }`
-    );
     const updatedUser = {
       ...user,
       USR_Status: isChecked ? "a" : "i",
     };
-    updateUser(updatedUser);
+    const resp = await updateUser(updatedUser);
+    if ("error" in resp) {
+      onDebugMessage({
+        content: `Error updating status (handleStatusChange)->${resp.error}`,
+        type: "Error",
+      });
+      return;
+    }
+    onDebugMessage({
+      content: `Status updated successfully (handleStatusChange)`,
+      type: "Success",
+    });
     toast.success("Status updated successfully");
   };
 
   const handleDepartmentChange = async (user: User, newDeptId: number) => {
-    console.log(
-      `Usuario ${user.USR_Id} intenta cambiar de departamento a: ${newDeptId}`
-    );
+    onDebugMessage({
+      content: `Updating department (handleDepartmentChange)`,
+      type: "Info",
+    });
     const updatedUser: User = {
       ...user,
       USR_Department: newDeptId !== undefined ? newDeptId : null,
     };
     const resp = await updateUser(updatedUser);
     if ("error" in resp) {
-      console.error("Error updating department", resp.error);
+      onDebugMessage({
+        content: `Error updating department (handleDepartmentChange)->${resp.error}`,
+        type: "Error",
+      });
       return;
     }
     if (resp.USR_Id === currentUser?.USR_Id) {
       setCurrentUser(resp);
     }
+    onDebugMessage({
+      content: `Department updated successfully (handleStatusChange)`,
+      type: "Success",
+    });
     toast.success("Department updated successfully");
   };
-  const handleRolChange = (user: User, newRol: string) => {
+
+  const handleRolChange = async (user: User, newRol: string) => {
+    onDebugMessage({
+      content: `Updating rol (handleRolChange)`,
+      type: "Info",
+    });
     const updatedUser: User = { ...user, USR_Role: newRol };
-    updateUser(updatedUser);
+    const resp = await updateUser(updatedUser);
+    if ("error" in resp) {
+      onDebugMessage({
+        content: `Error updating rol (handleRolChange)->${resp.error}`,
+        type: "Error",
+      });
+      return;
+    }
+    onDebugMessage({
+      content: `Rol updated successfully (handleStatusChange)`,
+      type: "Success",
+    });
     toast.success("Rol updated successfully");
-};
+  };
 
   const handleSearchChange = async (query: string) => {
     if (searchQuery === query) return;
@@ -87,7 +129,10 @@ const BackOffice = () => {
       const results =
         query.length > 0 ? await getUsersByName(query) : await getUsers();
     } catch (error) {
-      console.error("Error searching users", error);
+      onDebugMessage({
+        content: `Error searching users (handleSearchChange)->${error}`,
+        type: "Error",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -109,7 +154,10 @@ const BackOffice = () => {
     try {
       await getUsers();
     } catch (error) {
-      console.error("Failed to fetch users", error);
+      onDebugMessage({
+        content: `Error fetching users (fetchData)->${error}`,
+        type: "Error",
+      });
     }
     setIsLoading(false);
   };
@@ -128,7 +176,10 @@ const BackOffice = () => {
         }
       }
     } catch (error) {
-      console.error("Failed to fetch parameters:", error);
+      onDebugMessage({
+        content: `Error fetching parameters (fetchParameters)->${error}`,
+        type: "Error",
+      });
     }
     setIsLoading(false);
   };
@@ -147,7 +198,10 @@ const BackOffice = () => {
   };
 
   const handleSave = async () => {
-    console.log("Save button clicked");
+    onDebugMessage({
+      content: `Saving parameters (handleSave)`,
+      type: "Info",
+    });
     const parameterToUpdate: Parameter = {
       PRM_Email: email,
       PRM_Institution: institution,
@@ -156,17 +210,25 @@ const BackOffice = () => {
     };
     try {
       const result = await updateParameter(parameterToUpdate);
-      toast.success("Parameters updated successfully");
       if ("error" in result) {
-        console.error("Failed to update parameters:", result.error);
+        onDebugMessage({
+          content: `Failed to update parameters (handleSave)->${result.error}`,
+          type: "Error",
+        });
         toast.error("Failed saving parameters, please try again");
       } else {
-        console.log("Parameters updated successfully:", result);
+        onDebugMessage({
+          content: `Parameters updated successfully (handleSave)`,
+          type: "Success",
+        });
         toast.success("Parameters updated successfully");
         setCurrentParameters(result);
       }
     } catch (error) {
-      console.error("Error updating parameters:", error);
+      onDebugMessage({
+        content: `Error updating parameters (handleSave)->${error}`,
+        type: "Error",
+      });
     }
   };
   const renderTableContent = () => {
@@ -182,25 +244,25 @@ const BackOffice = () => {
             <td className="px-4 py-2">{user.USR_Email}</td>
             <td className="px-4 py-2">{user.USR_FullName}</td>
             <td className="no-print">
-                    <DepartmentDropdown
-                      selectedDepartment={user.USR_Department}
-                      onChange={(newDeptId) =>
-                        handleDepartmentChange(user, newDeptId)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <RolDropdown
-                      selectedRol={user.USR_Role}
-                      onChange={(newRol) => handleRolChange(user, newRol)}
-                    />
-                  </td>
-                  <td className="no-print">
-                    <StateCheckbox
-                      isChecked={user.USR_Status === "a"}
-                      onChange={(e) => handleStatusChange(user, e)}
-                    />
-                  </td>
+              <DepartmentDropdown
+                selectedDepartment={user.USR_Department}
+                onChange={(newDeptId) =>
+                  handleDepartmentChange(user, newDeptId)
+                }
+              />
+            </td>
+            <td>
+              <RolDropdown
+                selectedRol={user.USR_Role}
+                onChange={(newRol) => handleRolChange(user, newRol)}
+              />
+            </td>
+            <td className="no-print">
+              <StateCheckbox
+                isChecked={user.USR_Status === "a"}
+                onChange={(e) => handleStatusChange(user, e)}
+              />
+            </td>
           </tr>
         ));
     }
@@ -268,8 +330,8 @@ const BackOffice = () => {
                   <tr>
                     <th className="px-4 py-2">Email</th>
                     <th className="px-4 py-2">FullName</th>
-                     <th className="px-4 py-2">Department</th>
-                     <th className="px-4 py-2">Role</th>
+                    <th className="px-4 py-2">Department</th>
+                    <th className="px-4 py-2">Role</th>
                     <th className="px-4 py-2">Status</th>
                   </tr>
                 </thead>
