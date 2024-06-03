@@ -25,8 +25,16 @@ import { useParameterStore } from "@/store/parameterStore";
 import { initialSectionsData } from "@/app/types/selfAssessmentData";
 import toast from "react-hot-toast";
 import { customInfoToast } from "@/components/alerts/InfoAlert";
+import { on } from "events";
+import { DebugMessage } from "@/app/types/debugData";
 
-const MantSelfAssessment: React.FC = () => {
+interface MantSelfAssessmentProps {
+  onDebugMessage?: (message: DebugMessage) => void;
+}
+
+const MantSelfAssessment: React.FC<MantSelfAssessmentProps> = ({
+  onDebugMessage,
+}) => {
   const { updateParameter } = useParameterStore();
   const { setCurrentParameters } = useParametersContextStore();
   const { setCurrentSelfAssessment, currentSelfAssessment } =
@@ -48,8 +56,11 @@ const MantSelfAssessment: React.FC = () => {
     loadSelfAssessmentData();
   }, []);
 
-
   const loadSelfAssessmentData = () => {
+    onDebugMessage({
+      content: "Loading Self-Assessment data(loadSelfAssessmentData)",
+      type: "Info",
+    });
     try {
       if (currentSelfAssessment) {
         setLoadedSelfAssessment(currentSelfAssessment);
@@ -58,11 +69,19 @@ const MantSelfAssessment: React.FC = () => {
         loadSectionData(currentSelfAssessment, setSectionData);
       }
     } catch (error) {
+      onDebugMessage({
+        content: "Error loading Self-Assessment data(LoadSelfAssessmentData)",
+        type: "Error",
+      });
       console.error("Error fetching self-assessment data:", error);
     }
   };
 
   const loadSectionData = (selfAssessment: any, setSectionData: any) => {
+    onDebugMessage({
+      content: "Loading Section data(loadSectionData)",
+      type: "Info",
+    });
     if (selfAssessment.rc_sections && selfAssessment.rc_sections.length > 0) {
       const updatedSectionData: {
         [key: string]: { sectionName: string; questions: string[] };
@@ -79,7 +98,11 @@ const MantSelfAssessment: React.FC = () => {
       });
       setSectionData(updatedSectionData);
     } else {
-      console.warn("The self-assessment does not have defined sections.");
+      onDebugMessage({
+        content:
+          "The self-assessment does not have defined sections(loadSectionData)",
+        type: "Warning",
+      });
     }
   };
 
@@ -100,6 +123,10 @@ const MantSelfAssessment: React.FC = () => {
   };
 
   const handleSave = async () => {
+    onDebugMessage({
+      content: "Saving Self-Assessment data(handleSave)",
+      type: "Info",
+    });
     if (!verifyFields()) {
       return;
     }
@@ -111,6 +138,10 @@ const MantSelfAssessment: React.FC = () => {
     try {
       const updatedSelfAssessment = await updateSelfAssessmentData();
       if ("error" in updatedSelfAssessment) {
+        onDebugMessage({
+          content: `Error saving the self-assessment(saveSelfAssessment)->${updatedSelfAssessment.error}`,
+          type: "Error",
+        });
         toast.error("Problems Saving The Self-Assessment!");
         setSaving(false);
         return;
@@ -125,6 +156,10 @@ const MantSelfAssessment: React.FC = () => {
             updatedSelfAssessment.SAT_Id
           );
           if ("error" in updatedSectionResponse) {
+            onDebugMessage({
+              content: `Error saving the section(saveSelfAssessment)->${updatedSectionResponse.error}`,
+              type: "Error",
+            });
             toast.error("Problems Saving The Self-Assessment!");
             setSaving(false);
             return;
@@ -136,6 +171,10 @@ const MantSelfAssessment: React.FC = () => {
               sectionDataForCurrentIndex.questions
             );
             if ("error" in updatedQuestionsResponse) {
+              onDebugMessage({
+                content: `Error saving the questions(saveSelfAssessment)->${updatedQuestionsResponse.error}`,
+                type: "Error",
+              });
               toast.error("Problems Saving The Self-Assessment!");
               setSaving(false);
               return;
@@ -147,41 +186,81 @@ const MantSelfAssessment: React.FC = () => {
         setLoadedSelfAssessment(updatedSelfAssessment);
         upSelfAssessmentContext(updatedSelfAssessment.SAT_Id);
       }
+      onDebugMessage({
+        content: "Self-Assessment saved successfully(saveSelfAssessment)",
+        type: "Success",
+      });
       setSaving(false);
       toast.success("Saved Self-Assessment!");
     } catch (error) {
+      onDebugMessage({
+        content: `Error saving the self-assessment(saveSelfAssessment)->${error}`,
+        type: "Error",
+      });
       toast.error("Problems Saving The Self-Assessment!");
     }
   };
 
   const upSelfAssessmentContext = async (currentSelfAssessment: number) => {
+    onDebugMessage({
+      content: "Updating Self-Assessment Context(upSelfAssessmentContext)",
+      type: "Info",
+    });
     try {
       const selfAssessment =
         await selfAssessmentStore.getCompleteSelfAssessment(
           currentSelfAssessment
         );
       if ("error" in selfAssessment) {
+        onDebugMessage({
+          content: `Error updating Self-Assessment context(upSelfAssessmentContext)->${selfAssessment.error}`,
+          type: "Error",
+        });
         toast.error("Problems Saving The Self-Assessment!");
         return;
       }
+      onDebugMessage({
+        content: "Self-Assessment Context updated successfully(upSelfAssessmentContext)",
+        type: "Success",
+      });
       setCurrentSelfAssessment(selfAssessment);
     } catch (error) {
+      onDebugMessage({
+        content: `Error updating Self-Assessment context(upSelfAssessmentContext)->${error}`,
+        type: "Error",
+      });
       toast.error("Problems Saving The Self-Assessment!");
     }
   };
 
   const updateParameterData = async (selfAssessment: number) => {
+    onDebugMessage({
+      content: "Updating Parameter data(updateParameterData)",
+      type: "Info",
+    });
     const parameterToUpdate: Parameter = {
       PRM_CurrentSelfAssessment: selfAssessment,
     };
     try {
       const result = await updateParameter(parameterToUpdate);
       if ("error" in result) {
+        onDebugMessage({
+          content: `Error updating Parameter data(updateParameterData)->${result.error}`,
+          type: "Error",
+        });
         toast.error("Problems Saving The Self-Assessment!");
         return;
       }
+      onDebugMessage({
+        content: "Parameter data updated successfully(updateParameterData)",
+        type: "Success",
+      });
       setCurrentParameters(result);
     } catch (error) {
+      onDebugMessage({
+        content: `Error updating Parameter data(updateParameterData)->${error}`,
+        type: "Error",
+      });
       toast.error("Problems Saving The Self-Assessment!");
     }
   };
@@ -238,6 +317,10 @@ const MantSelfAssessment: React.FC = () => {
         updatedQuestion
       );
       if ("error" in updatedQuestionResponse) {
+        onDebugMessage({
+          content: `Error saving question(updateQuestionsData)->${updatedQuestionResponse.error}`,
+          type: "Error",
+        });
         return updatedQuestionResponse;
       }
     }

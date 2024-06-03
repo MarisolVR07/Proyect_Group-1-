@@ -34,7 +34,7 @@ export default function Page() {
       <DebugModeToggle debugMessages={debugMessages}>
         <Header />
         <Toaster position="top-right" />
-        <MantSelfAssessment />
+        <MantSelfAssessment onDebugMessage={handleDebugMessage} />
       </DebugModeToggle>
     </>
   );

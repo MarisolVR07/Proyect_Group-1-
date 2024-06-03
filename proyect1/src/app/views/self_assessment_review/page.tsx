@@ -33,7 +33,7 @@ export default function Page() {
     <>
       <DebugModeToggle debugMessages={debugMessages}>
         <Header />
-        <Reviews />
+        <Reviews onDebugMessage={handleDebugMessage} />
         <Toaster position="top-right" />
         <Footer />
       </DebugModeToggle>

@@ -9,10 +9,9 @@ import RolDropdown from "@/components/general/RolDropdowm";
 import StateCheckbox from "@/components/general/StateCheckbox";
 import { User } from "@/app/types/entities";
 import toast from "react-hot-toast";
-interface DebugMessage {
-  content: string;
-  type: "Error" | "Info" | "Warning" | "Success";
-}
+import { DebugMessage } from "@/app/types/debugData";
+import { on } from "events";
+
 interface UsersProps {
   onDebugMessage?: (message: DebugMessage) => void;
 }
@@ -49,7 +48,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     setUser(currentUser);
   }, []);
 
-  const handleStatusChange = (
+  const handleStatusChange = async (
     user: User,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -59,7 +58,18 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       USR_Status: isChecked ? "a" : "i",
     };
     toast.success("Status updated successfully");
-    updateUser(updatedUser);
+    const resp = await updateUser(updatedUser);
+    if ("error" in resp) {
+      onDebugMessage({
+        content: `Error updating status(handleStatusChange)->${resp.error}`,
+        type: "Error",
+      });
+      return;
+    }
+    onDebugMessage({
+      content: "Status updated successfully(handleStatusChange)",
+      type: "Success",
+    });
   };
 
   const handleDepartmentChange = async (user: User, newDeptId: number) => {
@@ -68,21 +78,40 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       USR_Department: newDeptId !== undefined ? newDeptId : null,
     };
     const resp = await updateUser(updatedUser);
-    toast.success("Department updated successfully");
+
     if ("error" in resp) {
-      console.error("Error updating department", resp.error);
+      onDebugMessage({
+        content: `Error updating department(handleDepartmentChange)->${resp.error}`,
+        type: "Error",
+      });
       return;
     }
     if (resp.USR_Id === currentUser?.USR_Id) {
       setCurrentUser(resp);
     }
-    //toast.success("Department updated successfully");
+    toast.success("Department updated successfully");
+    onDebugMessage({
+      content: "Department updated successfully(handleDepartmentChange)",
+      type: "Success",
+    });
   };
 
-  const handleRolChange = (user: User, newRol: string) => {
+  const handleRolChange = async (user: User, newRol: string) => {
     const updatedUser: User = { ...user, USR_Role: newRol };
     toast.success("Rol updated successfully");
-    updateUser(updatedUser);
+    const resp = await updateUser(updatedUser);
+    if ("error" in resp) {
+      onDebugMessage({
+        content: `Error updating rol(handleRolChange)->${resp.error}`,
+        type: "Error",
+      });
+      return;
+    }
+    onDebugMessage({
+      content: "Rol updated successfully(handleRolChange)",
+      type: "Success",
+    });
+    toast.success("Rol updated successfully");
   };
 
   const handleSearchChange = async (query: string) => {
@@ -94,8 +123,10 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       const results =
         query.length > 0 ? await getUsersByName(query) : await getUsers();
     } catch (error) {
-      console.error("Error searching users", error);
-      onDebugMessage({ content: "Error searching users", type: "Error" });
+      onDebugMessage({
+        content: `Error searching users(handleSearchChange)->&{error}`,
+        type: "Error",
+      });
     } finally {
       setIsLoading(false);
     }

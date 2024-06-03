@@ -32,7 +32,7 @@ export default function Page() {
     <>
       <DebugModeToggle debugMessages={debugMessages}>
         <Header />
-        <SelfAssessment />
+        <SelfAssessment onDebugMessage={handleDebugMessage} />
       </DebugModeToggle>
     </>
   );

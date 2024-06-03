@@ -9,8 +9,14 @@ import SelfAssessment from "./applied_self_assessment/SelfAssessmentReview";
 import { useExportStore } from "@/store/excelStore";
 import DropdownMenu from "@/components/reviews/DropDownMenuSearch";
 import toast from "react-hot-toast";
+import { DebugMessage } from "@/app/types/debugData";
 
-const Reviews: React.FC = () => {
+
+interface ReviewsProps {
+  onDebugMessage?: (message: DebugMessage) => void;
+}
+
+const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const exportStore = useExportStore();
   const [appliedSelfAssessments, setAppliedSelfAssessments] = useState<
@@ -26,16 +32,24 @@ const Reviews: React.FC = () => {
   };
 
   useEffect(() => {
+    onDebugMessage({
+      content: "Fetching Applied Self-Assessments",
+      type: "Info",
+    });
     const fetchAppliedSelfAssessments = async () => {
       const allAppliedSelfAssessments =
         await appliedSelfAssessmentStore.getCompleteAppliedSelfassessments();
       if (!("error" in allAppliedSelfAssessments)) {
+        onDebugMessage({
+          content: "Successfully Obtained Applied Self-Assessments",
+          type: "Success",
+        });
         setAppliedSelfAssessments(allAppliedSelfAssessments);
       } else {
-        console.error(
-          "Error fetching AppliedSelfAssessments:",
-          allAppliedSelfAssessments.error
-        );
+        onDebugMessage({
+          content: `Failed to Fetch Applied Self-Assessments->${allAppliedSelfAssessments.error}`,
+          type: "Error",
+        });
       }
     };
     fetchAppliedSelfAssessments();
@@ -46,13 +60,26 @@ const Reviews: React.FC = () => {
   };
 
   const handleExport = async (ASA_Id) => {
+    onDebugMessage({
+      content: `Exporting Self-Assessment ${ASA_Id}(handleExport)`,
+      type: "Info",
+    });
     const result = await exportStore.exportAppliedSelfAssessment(ASA_Id);
     if (result && "error" in result) {
+      onDebugMessage({
+        content: `Failed to Export Self-Assessment ${ASA_Id}(handleExport)->${result.error}`,
+        type: "Error",
+      });
       toast.error("Problems When Exporting!");
       return;
     }
+    onDebugMessage({
+      content: `Successfully Exported Self-Assessment ${ASA_Id}(handleExport)`,
+      type: "Success",
+    });
     toast.success("Self-Assessment Exported!");
   };
+
   const handleDepartmentSearch = async (departmentId) => {
     const filteredSelfAssessments =
       await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByDepartment(
@@ -61,10 +88,10 @@ const Reviews: React.FC = () => {
     if (!("error" in filteredSelfAssessments)) {
       setAppliedSelfAssessments(filteredSelfAssessments);
     } else {
-      console.error(
-        "Error fetching filtered assessments:",
-        filteredSelfAssessments.error
-      );
+      onDebugMessage({
+        content: `Failed to Fetch Applied Self-Assessments by Department->${filteredSelfAssessments.error}`,
+        type: "Error",
+      });
     }
   };
 
