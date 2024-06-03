@@ -185,7 +185,6 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
       <h4 className="text-2xl text-white text-center mb-4">
         Self-Assessments Reviews
       </h4>
-      <SearchBar onSearch={handleSearchChange} />
       <DropdownMenu onSearch={handleDepartmentSearch} />
       <StateCheckbox isChecked={filterActive} onChange={toggleActiveFilter} />
       <div className="overflow-x-auto mt-4 rounded-md">

@@ -43,7 +43,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   const [deactivationDate, setDeactivationDate] = useState<Date | null>();
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 20;
-
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const handleStatusChange = async (
     user: User,
     event: React.ChangeEvent<HTMLInputElement>
@@ -196,7 +196,9 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   const handleInstitutionChange = (newInstitution: string) => {
     setInstitution(newInstitution);
   };
-
+  const handleRowClick = (user: User) => {
+    setSelectedUserId(user.USR_Id);
+  };  
   const handleSave = async () => {
     onDebugMessage({
       content: `Saving parameters (handleSave)`,
@@ -240,7 +242,9 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
       return filteredUsers
         .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
         .map((user, index) => (
-          <tr key={index}>
+          <tr key={index}
+          onClick={() => handleRowClick(user)}
+          className={selectedUserId === user.USR_Id ? "bg-gray-600" : ""}>
             <td className="px-4 py-2">{user.USR_Email}</td>
             <td className="px-4 py-2">{user.USR_FullName}</td>
             <td className="no-print">
@@ -262,6 +266,9 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
                 isChecked={user.USR_Status === "a"}
                 onChange={(e) => handleStatusChange(user, e)}
               />
+               <span className="text-white">
+                      {user.USR_Status === "a" ? "Active" : "Inactive"}
+                    </span>
             </td>
           </tr>
         ));

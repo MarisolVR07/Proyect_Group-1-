@@ -25,6 +25,8 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [user, setUser] = useState<User | null>(null);
   const itemsPerPage = 20;
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
   const handlePrintClick = () => {
     window.print();
   };
@@ -143,7 +145,9 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       setCurrentPage(currentPage - 1);
     }
   };
-
+  const handleRowClick = (user: User) => {
+    setSelectedUserId(user.USR_Id);
+  };  
   return (
     <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
       <div className="flex flex-col md:flex-row justify-between items-center">
@@ -192,7 +196,9 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
             </thead>
             <tbody>
               {users.map((userMap, index) => (
-                <tr key={index}>
+                <tr key={index}
+                onClick={() => handleRowClick(userMap)}
+          className={selectedUserId === userMap.USR_Id ? "bg-gray-600" : ""}>
                   <td className="px-4 py-2">{userMap.USR_Email}</td>
                   <td className="px-4 py-2">{userMap.USR_FullName}</td>
                   <td className="no-print">
@@ -209,11 +215,14 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
                       onChange={(newRol) => handleRolChange(userMap, newRol)}
                     />
                   </td>
-                  <td className="no-print">
+                  <td className="no-print flex items-center space-x-2">
                     <StateCheckbox
                       isChecked={userMap.USR_Status === "a"}
                       onChange={(e) => handleStatusChange(userMap, e)}
                     />
+                    <span className="text-white">
+                      {userMap.USR_Status === "a" ? "Active" : "Inactive"}
+                    </span>
                   </td>
                 </tr>
               ))}
