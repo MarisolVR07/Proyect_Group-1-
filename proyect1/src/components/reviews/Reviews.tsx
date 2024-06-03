@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Button from "../general/PrimaryButton";
-import SearchBar from "@/components/general/SearchBar";
-import RolDropDown from "@/components/general/RolDropdowm";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
 import { AppliedSelfAssessment } from "@/app/types/entities";
 import SelfAssessment from "./applied_self_assessment/SelfAssessmentReview";
@@ -101,20 +99,29 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   };
 
   const handleDepartmentSearch = async (departmentId) => {
-    const filteredSelfAssessments =
-      await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByDepartment(
-        departmentId
-      );
-    if (!("error" in filteredSelfAssessments)) {
-      setAppliedSelfAssessments2(filteredSelfAssessments);
-    } else {
+    setIsLoading(true);
+    try {
+      const filteredSelfAssessments = await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByDepartment(departmentId);
+      if (!("error" in filteredSelfAssessments)) {
+        setAppliedSelfAssessments2(filteredSelfAssessments);
+        onDebugMessage({
+          content: `Filtered results for department ${departmentId}`,
+          type: "Success",
+        });
+      } else {
+        throw new Error(filteredSelfAssessments.error);
+      }
+    } catch (error) {
       onDebugMessage({
-        content: `Failed to Fetch Applied Self-Assessments by Department->${filteredSelfAssessments.error}`,
+        content: `Failed to fetch assessments by department -> ${error.message}`,
         type: "Error",
       });
+      toast.error(`Error fetching department data: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
-
+  
   const handleRowDoubleClick = (selfAssessment: AppliedSelfAssessment) => {
     setSelectedSelfAssessment(selfAssessment);
     setIsModalOpen(true);
@@ -145,14 +152,13 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
           "Error fetching active assessments:",
           activeSelfAssessments.error
         );
-        return; // Handle error or return to prevent further execution
+        return; 
       }
     }
     if (newFilters.inactive) {
       const inactiveSelfAssessments =
         await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus("I");
       if (!("error" in inactiveSelfAssessments)) {
-        // Check if the response is not an error
         filteredSelfAssessments = [
           ...filteredSelfAssessments,
           ...inactiveSelfAssessments,
@@ -162,7 +168,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
           "Error fetching inactive assessments:",
           inactiveSelfAssessments.error
         );
-        return; // Handle error or return to prevent further execution
+        return; 
       }
     }
     if (!newFilters.active && !newFilters.inactive) {
@@ -218,7 +224,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
       <h4 className="text-2xl text-white text-center mb-4">Self-Assessments Reviews</h4>
 
       <div className="mt-4 rounded-md bg-gradient-to-r from-gray-800 via-violet-600 to-gray-800 p-4 flex items-center space-x-4 z-20">
-        <DropdownMenu onSearch={handleDepartmentSearch} />
+      
         <StateCheckbox isChecked={filters.active} onChange={() => toggleFilter("active")} label="Active" />
         <StateCheckbox isChecked={filters.inactive} onChange={() => toggleFilter("inactive")} label="Inactive" />
       </div>
