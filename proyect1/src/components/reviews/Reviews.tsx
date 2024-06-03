@@ -10,7 +10,7 @@ import { useExportStore } from "@/store/excelStore";
 import DropdownMenu from "@/components/reviews/DropDownMenuSearch";
 import toast from "react-hot-toast";
 import { DebugMessage } from "@/app/types/debugData";
-
+import StateCheckbox from "../general/StateCheckbox";
 
 interface ReviewsProps {
   onDebugMessage?: (message: DebugMessage) => void;
@@ -19,9 +19,10 @@ interface ReviewsProps {
 const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const exportStore = useExportStore();
-  const [appliedSelfAssessments, setAppliedSelfAssessments] = useState<
-    AppliedSelfAssessment[]
-  >([]);
+  const [filterActive, setFilterActive] = useState(false);
+  const [appliedSelfAssessments, setAppliedSelfAssessments2] = useState<
+  AppliedSelfAssessment[]
+>([]);
   const [selectedSelfAssessment, setSelectedSelfAssessment] =
     useState<AppliedSelfAssessment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,6 +37,9 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
       content: "Fetching Applied Self-Assessments",
       type: "Info",
     });
+
+
+
     const fetchAppliedSelfAssessments = async () => {
       const allAppliedSelfAssessments =
         await appliedSelfAssessmentStore.getCompleteAppliedSelfassessments();
@@ -44,7 +48,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
           content: "Successfully Obtained Applied Self-Assessments",
           type: "Success",
         });
-        setAppliedSelfAssessments(allAppliedSelfAssessments);
+        setAppliedSelfAssessments2(allAppliedSelfAssessments);
       } else {
         onDebugMessage({
           content: `Failed to Fetch Applied Self-Assessments->${allAppliedSelfAssessments.error}`,
@@ -53,6 +57,23 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
       }
     };
     fetchAppliedSelfAssessments();
+  }, []);
+
+  
+  const fetchAppliedSelfAssessments = async () => {
+    const allAppliedSelfAssessments =
+      await appliedSelfAssessmentStore.getCompleteAppliedSelfassessments();
+    if (!("error" in allAppliedSelfAssessments)) {
+      setAppliedSelfAssessments2(allAppliedSelfAssessments);
+    } else {
+      console.error(
+        "Error fetching AppliedSelfAssessments:",
+        allAppliedSelfAssessments.error
+      );
+    }
+  };
+  useEffect(() => {
+    fetchAppliedSelfAssessments();  
   }, []);
 
   const handleRowClick = (selfAssessment: AppliedSelfAssessment) => {
@@ -86,7 +107,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
         departmentId
       );
     if (!("error" in filteredSelfAssessments)) {
-      setAppliedSelfAssessments(filteredSelfAssessments);
+      setAppliedSelfAssessments2(filteredSelfAssessments);
     } else {
       onDebugMessage({
         content: `Failed to Fetch Applied Self-Assessments by Department->${filteredSelfAssessments.error}`,
@@ -104,6 +125,20 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
     setIsModalOpen(false);
   };
 
+  const toggleActiveFilter = async () => {
+    setFilterActive(!filterActive);
+    if (!filterActive) {
+      const activeSelfAssessments = await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus("A");
+      if (!("error" in activeSelfAssessments)) {
+        setAppliedSelfAssessments2(activeSelfAssessments);
+      } else {
+        console.error("Error fetching active self-assessments:", activeSelfAssessments.error);
+      }
+    } else {
+      fetchAppliedSelfAssessments();  
+    }
+  };
+  
   const renderTableContent = () => {
     return appliedSelfAssessments.map((selfAssessment) => {
       const date = new Date(selfAssessment.ASA_Date).toLocaleDateString();
@@ -152,6 +187,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
       </h4>
       <SearchBar onSearch={handleSearchChange} />
       <DropdownMenu onSearch={handleDepartmentSearch} />
+      <StateCheckbox isChecked={filterActive} onChange={toggleActiveFilter} />
       <div className="overflow-x-auto mt-4 rounded-md">
         <table className="table-auto w-full">
           <thead className="bg-violet-800 text-white">
