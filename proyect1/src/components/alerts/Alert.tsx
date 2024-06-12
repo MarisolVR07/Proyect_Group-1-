@@ -23,7 +23,7 @@ const Alert: React.FC<AlertProps> = ({ type, message }) => {
 
   return (
     <div
-      className={`flex items-center py-1 px-3 mb-1 mx-1 text-sm text-white border rounded-lg ${getAlertStyle()} bg-transparent`}
+      className={`flex items-center py-1 px-3 mb-1 mx-1 text-white border rounded-lg ${getAlertStyle()} bg-transparent`}
       role="alert"
     >
       <svg

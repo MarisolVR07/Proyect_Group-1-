@@ -42,23 +42,21 @@ const DebugModeToggle = ({
   return (
     <main className="w-full h-full flex flex-col min-h-screen bg-gradient-to-br from-black via-100% via-violet-900 to-violet-800">
       {debugMode && (
-        <>
-          <div className="flex px-1 h-28 items-center">
-            <div>
-              <p>Email: {currentUser?.USR_Email}</p>
-              <p>FullName: {currentUser?.USR_FullName}</p>
-              <p>Role: {currentUser?.USR_Role}</p>
-            </div>
-            <div
-              className="flex-grow h-full overflow-y-auto p-1"
-              ref={alertsContainerRef}
-            >
-              {renderAlerts()}
-            </div>
+        <div className="fixed z-50 top-1 w-full flex h-24 items-center rounded-3xl py-2 px-4 bg-gray-700 bg-opacity-90 space-x-1">
+          <div className="text-xs text-white font-poppins font-bold space-y-1">
+            <p>Email: {currentUser?.USR_Email}</p>
+            <p>FullName: {currentUser?.USR_FullName}</p>
+            <p>Role: {currentUser?.USR_Role}</p>
           </div>
-        </>
+          <div
+            className="flex-grow h-full overflow-y-auto text-xs text-white font-poppins font-bold "
+            ref={alertsContainerRef}
+          >
+            {renderAlerts()}
+          </div>
+        </div>
       )}
-      {children}
+      <div className={debugMode ? "mt-24" : ""}>{children}</div>
     </main>
   );
 };
