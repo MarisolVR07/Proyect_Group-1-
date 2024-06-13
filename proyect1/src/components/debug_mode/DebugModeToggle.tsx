@@ -42,21 +42,24 @@ const DebugModeToggle = ({
   return (
     <main className="w-full h-full flex flex-col min-h-screen bg-gradient-to-br from-black via-100% via-violet-900 to-violet-800">
       {debugMode && (
-        <div className="fixed z-50 top-1 w-full flex h-24 items-center rounded-3xl py-2 px-4 bg-gray-700 bg-opacity-90 space-x-1">
-          <div className="text-xs text-white font-poppins font-bold space-y-1">
-            <p>Email: {currentUser?.USR_Email}</p>
-            <p>FullName: {currentUser?.USR_FullName}</p>
-            <p>Role: {currentUser?.USR_Role}</p>
+        <>
+          <div className="fixed z-50 top-1 w-full flex h-24 items-center rounded-3xl py-2 px-4 bg-gray-700 bg-opacity-90 space-x-1">
+            <div className="text-xs text-white font-poppins font-bold space-y-1">
+              <p>Email: {currentUser?.USR_Email}</p>
+              <p>FullName: {currentUser?.USR_FullName}</p>
+              <p>Role: {currentUser?.USR_Role}</p>
+            </div>
+            <div
+              className="flex-grow h-full overflow-y-auto text-xs text-white font-poppins font-bold "
+              ref={alertsContainerRef}
+            >
+              {renderAlerts()}
+            </div>
           </div>
-          <div
-            className="flex-grow h-full overflow-y-auto text-xs text-white font-poppins font-bold "
-            ref={alertsContainerRef}
-          >
-            {renderAlerts()}
-          </div>
-        </div>
+          <div className="mt-24">{children}</div>
+        </>
       )}
-      <div className={debugMode ? "mt-24" : ""}>{children}</div>
+      {!debugMode && <>{children}</>}
     </main>
   );
 };

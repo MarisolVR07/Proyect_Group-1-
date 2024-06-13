@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
     }, [currentParameters]);
   
   return (
-    <footer className="text-white bg-black bg-opacity-30 body-font mt-auto">
+    <footer className="text-white bg-black bg-opacity-30 body-font mt-auto bottom-0">
       <div className="container px-5 py-3 mx-auto flex items-center sm:flex-row flex-col">
         <a className="flex title-font font-medium items-center md:justify-start justify-center text-white">
           <svg
