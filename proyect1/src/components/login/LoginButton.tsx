@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
 import { DebugMessage } from "@/app/types/debugData";
-
+import toast from "react-hot-toast";
 interface LoginButtonProps {
   onDebugMessage?: (message: DebugMessage) => void;
 }
@@ -64,9 +64,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({ onDebugMessage }) => {
           content: `User not accepted(handleLogin)->${user}`,
           type: "Error",
         });
-        alert(
-          "Your account has been signed up successfully, please wait to be accepted"
-        );
+        toast.success("Your account has been signed up successfully, please wait to be accepted")
       }
     } catch (error) {
       onDebugMessage({

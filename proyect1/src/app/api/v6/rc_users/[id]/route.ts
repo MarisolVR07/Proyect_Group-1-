@@ -1,7 +1,9 @@
 import prisma from "@/app/lib/prisma";
 import { ParameterId } from "@/app/types/api";
 import { NextRequest, NextResponse } from "next/server";
-
+import jwt from "jsonwebtoken";
+import { serialize } from "cookie";
+const secretKey = "EmKKi2PNCmdn1qhvRsBDolXubPNcK7dl";
 export async function GET(req: NextRequest, { params }: ParameterId) {
   try {
     const fetchedId = params.id;
@@ -11,7 +13,11 @@ export async function GET(req: NextRequest, { params }: ParameterId) {
       },
     });
 
-    if (response) return NextResponse.json(response, { status: 200 });
+    if (response) {
+     
+      return NextResponse.json(response, { status: 200 });
+
+    }
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   } catch (error) {
     return NextResponse.json(
@@ -20,6 +26,7 @@ export async function GET(req: NextRequest, { params }: ParameterId) {
     );
   }
 }
+
 
 export async function PUT(req: NextRequest, { params }: ParameterId) {
   try {

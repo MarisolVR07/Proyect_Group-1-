@@ -16,6 +16,7 @@ export default function Home() {
     <>
       <MsalProvider instance={msalInstance}>
         <DebugModeToggle debugMessages={debugMessages}>
+        <Toaster position="top-right" />
           <Login onDebugMessage={handleDebugMessage} />
         </DebugModeToggle>
       </MsalProvider>

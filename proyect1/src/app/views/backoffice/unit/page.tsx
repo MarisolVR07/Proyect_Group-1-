@@ -11,19 +11,7 @@ import { useEffect, useState } from "react";
 import { DebugMessage } from "@/app/types/debugData";
 
 export default function Page() {
-  const [token, setToken] = useState<string | null>(
-    Cookies.get("auth_token") || null
-  );
-  const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
-  const router = useRouter();
-  useEffect(() => {
-    if (token) {
-      const decoded = verifyToken(token);
-      setDecodedToken(decoded);
-    } else {
-      router.push("/");
-    }
-  }, [token, router]);
+ 
   return (
     <>
       <DebugModeToggle>
