@@ -46,13 +46,13 @@ const CardsSection = () => {
             <></>
           )}
           <CardButton
-            href="/views/dashboard/self_asseslgent"
+            href="/views/dashboard/self_assessment"
             icon={
               <Icon>
                 <ListIcon />
               </Icon>
             }
-            title="Self-Asseslgent"
+            title="Self_Assessment"
             description=""
             className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mb-2 lg:mb-0"
           />

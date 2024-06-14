@@ -33,15 +33,19 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      onDebugMessage({
+        content: "Getting users (fectchData)",
+        type: "Info",
+      });
       setIsLoading(true);
       try {
         await getUsers();
         onDebugMessage({
-          content: "Successfully Obtained Users",
+          content: "Successfully Obtained Users (fectchData)",
           type: "Success",
         });
       } catch (error) {
-        console.error("Failed to fetch users", error);
+        console.error(`Failed to fetch users (fectchData)->${error}`);
         onDebugMessage({ content: "Failed to Fetch Users", type: "Error" });
       }
       setIsLoading(false);
@@ -54,6 +58,10 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     user: User,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    onDebugMessage({
+      content: "Changing user status (handleStatusChange)",
+      type: "Info",
+    });
     const isChecked = event.target.checked;
     const updatedUser = {
       ...user,
@@ -63,18 +71,22 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     const resp = await updateUser(updatedUser);
     if ("error" in resp) {
       onDebugMessage({
-        content: `Error updating status(handleStatusChange)->${resp.error}`,
+        content: `Error updating status (handleStatusChange)->${resp.error}`,
         type: "Error",
       });
       return;
     }
     onDebugMessage({
-      content: "Status updated successfully(handleStatusChange)",
+      content: "Status updated successfully (handleStatusChange)",
       type: "Success",
     });
   };
 
   const handleDepartmentChange = async (user: User, newDeptId: number) => {
+    onDebugMessage({
+      content: "Changing user department (handleDepartmentChange)",
+      type: "Info",
+    });
     const updatedUser: User = {
       ...user,
       USR_Department: newDeptId !== undefined ? newDeptId : null,
@@ -83,7 +95,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
 
     if ("error" in resp) {
       onDebugMessage({
-        content: `Error updating department(handleDepartmentChange)->${resp.error}`,
+        content: `Error updating department (handleDepartmentChange)->${resp.error}`,
         type: "Error",
       });
       return;
@@ -104,13 +116,13 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     const resp = await updateUser(updatedUser);
     if ("error" in resp) {
       onDebugMessage({
-        content: `Error updating rol(handleRolChange)->${resp.error}`,
+        content: `Error updating rol (handleRolChange)->${resp.error}`,
         type: "Error",
       });
       return;
     }
     onDebugMessage({
-      content: "Rol updated successfully(handleRolChange)",
+      content: "Rol updated successfully (handleRolChange)",
       type: "Success",
     });
     toast.success("Rol updated successfully");
@@ -126,7 +138,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
         query.length > 0 ? await getUsersByName(query) : await getUsers();
     } catch (error) {
       onDebugMessage({
-        content: `Error searching users(handleSearchChange)->&{error}`,
+        content: `Error searching users (handleSearchChange)->${error}`,
         type: "Error",
       });
     } finally {
@@ -147,7 +159,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   };
   const handleRowClick = (user: User) => {
     setSelectedUserId(user.USR_Id);
-  };  
+  };
   return (
     <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
       <div className="flex flex-col md:flex-row justify-between items-center">
@@ -196,9 +208,13 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
             </thead>
             <tbody>
               {users.map((userMap, index) => (
-                <tr key={index}
-                onClick={() => handleRowClick(userMap)}
-          className={selectedUserId === userMap.USR_Id ? "bg-gray-600" : ""}>
+                <tr
+                  key={index}
+                  onClick={() => handleRowClick(userMap)}
+                  className={
+                    selectedUserId === userMap.USR_Id ? "bg-gray-600" : ""
+                  }
+                >
                   <td className="px-4 py-2">{userMap.USR_Email}</td>
                   <td className="px-4 py-2">{userMap.USR_FullName}</td>
                   <td className="no-print">

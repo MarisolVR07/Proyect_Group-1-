@@ -420,7 +420,7 @@ const MantSelfAssessment: React.FC<MantSelfAssessmentProps> = ({
           Next
         </SecondaryButton>
       </div>
-      <div className="flex space-x-40">
+      <div className="flex space-x-40 my-1">
         <Button
           className="rounded-xl w-44 sm:mt-4 sm:h-6 h-8"
           onClick={handleSave}
