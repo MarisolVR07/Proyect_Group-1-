@@ -10,7 +10,7 @@ export async function GET(req: NextRequest, { params }: ParameterFullName) {
     const fetchedName = params.name;
     const response = await prisma.rc_unit.findMany({
       where: {
-        UND_Name: { contains: fetchedName },
+        UND_Name: { startsWith: fetchedName },
       },
       skip: (page - 1) * itemsPerPage, 
       take: itemsPerPage,

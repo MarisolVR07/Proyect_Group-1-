@@ -86,11 +86,6 @@ const Departments = () => {
     setCurrentPage(0);
     setIsSearching(!!query);
     setIsLoading(true);
-    console.log(!query.trim());
-    if (!query.trim()) {
-      return await fetchDepartments(currentPage);
-    }
-    setIsLoading(true);
     try {
       if(query){
         await getDepartmentsByName(query,1)

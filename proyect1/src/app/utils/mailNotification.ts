@@ -12,7 +12,7 @@ import {
 } from "../controllers/rc_appliedselfassessment/controller";
 
 export function scheduleJob() {
-  const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+  const oneDayInMilliseconds = 15 * 60 * 1000;
 
   const intervalId = setInterval(() => {
    sendNotification();
