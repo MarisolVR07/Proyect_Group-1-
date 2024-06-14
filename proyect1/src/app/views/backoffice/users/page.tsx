@@ -1,6 +1,6 @@
 "use client";
 import Users from "@/components/maintenance/users/Users";
-import Header from "@/components/header/Header";
+import Header from "@/components/header/NewHeader";
 import DebugModeToggle from "@/components/debug_mode/DebugModeToggle";
 import jwt, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 import Cookies from "js-cookie";
@@ -21,10 +21,10 @@ export default function Page() {
   return (
     <>
       <DebugModeToggle debugMessages={debugMessages}>
-        <Header />
+        <Header currentPage="/views/backoffice/users" />
         <div className="items-center justify-center px-20 py-4">
           <Users onDebugMessage={handleDebugMessage} />
-          <Toaster position="top-right"/>
+          <Toaster position="top-right" />
         </div>
       </DebugModeToggle>
     </>

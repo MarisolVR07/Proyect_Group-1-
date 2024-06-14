@@ -1,7 +1,7 @@
 "use client"
 import Reviews from "@/components/reviews/Reviews";
 import Footer from "@/components/footer/Footer";
-import Header from "@/components/header/Header";
+import Header from "@/components/header/NewHeader";
 import DebugModeToggle from "@/components/debug_mode/DebugModeToggle";
 import jwt, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 import Cookies from "js-cookie";
@@ -19,7 +19,7 @@ export default function Page() {
   return (
     <>
       <DebugModeToggle debugMessages={debugMessages}>
-        <Header />
+        <Header currentPage="/views/self_assessment_review" />
         <Reviews onDebugMessage={handleDebugMessage} />
         <Toaster position="top-right" />
         <Footer />

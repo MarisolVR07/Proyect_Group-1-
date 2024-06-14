@@ -147,8 +147,8 @@ const LoginButton: React.FC<LoginButtonProps> = ({ onDebugMessage }) => {
   };
 
   return (
-    <Button onClick={handleLogin} className="rounded-md w-44 h-8">
-      <WindowsOutlined /> SIGN IN
+    <Button onClick={handleLogin} className="rounded-md w-44 h-8 text-xl">
+      <WindowsOutlined className="me-1"/> SIGN IN
     </Button>
   );
 };

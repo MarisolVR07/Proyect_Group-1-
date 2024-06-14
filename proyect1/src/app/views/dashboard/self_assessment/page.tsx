@@ -1,13 +1,12 @@
 "use client"
 import DebugModeToggle from "@/components/debug_mode/DebugModeToggle";
-import Header from "@/components/header/Header";
-import SelfAssessment from "@/components/self_assessment/SelfAssessment";
-import jwt, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
-import Cookies from "js-cookie";
-import { verifyToken, DecodedToken } from "@/app/utils/verifyToken";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import Header from "@/components/header/NewHeader";
+import SelfAssessment from "@/components/v2/SelfAssessment";
+import { useState } from "react";
 import { DebugMessage } from "@/app/types/debugData";
+import { Toaster } from "react-hot-toast";
+
+
 
 
 export default function Page() {
@@ -20,7 +19,8 @@ export default function Page() {
   return (
     <>
       <DebugModeToggle debugMessages={debugMessages}>
-        <Header />
+        <Header currentPage="/views/dashboard/self_assessment" />
+        <Toaster position="top-right" />
         <SelfAssessment onDebugMessage={handleDebugMessage} />
       </DebugModeToggle>
     </>

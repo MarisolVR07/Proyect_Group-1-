@@ -360,8 +360,8 @@ const MantSelfAssessment: React.FC<MantSelfAssessmentProps> = ({
   };
 
   return (
-    <div className="form-control my-3 mx-8 py-8 px-4 md:px-16 w-full md:w-auto rounded-md items-center justify-center bg-gray-800 font-poppins font-semibold drop-shadow-xl">
-      <h1 className="text-2xl text-white mb-5">
+    <div className="form-control sm:my-3 sm:mx-8 sm:py-8 py-2 px-1 sm:px-16 w-full md:w-auto rounded-md items-center justify-center sm:bg-gray-800 font-poppins font-semibold drop-shadow-xl">
+      <h1 className="sm:text-2xl text-white sm:mb-5 mb-2">
         MAINTENANCE OF SELF-ASSESSMENTS
       </h1>
       <div className="w-full mb-4 text-center">
@@ -395,11 +395,14 @@ const MantSelfAssessment: React.FC<MantSelfAssessmentProps> = ({
           setSectionData({ ...sectionData, [currentPage.toString()]: data })
         }
       />
-      <div className="flex flex-wrap justify-between space-x-0 md:space-x-3 rounded-xl bg-gray-700 py-1 px-3 my-4 items-center">
-        <SecondaryButton onClick={handlePrevPage} className="rounded-xl w-20">
+      <div className="flex sm:flex-row sm:space-x-3 space-x-1 rounded-xl bg-gray-700 py-1 px-1 w-full sm:px-3 my-1 sm:my-2 items-center justify-center">
+        <SecondaryButton
+          onClick={handlePrevPage}
+          className="rounded-xl text-sm sm:text-base sm:w-20 w-16 h-5 sm:mb-0"
+        >
           Previous
         </SecondaryButton>
-        <div className="space-x-3 rounded-xl bg-gray-800 p-1">
+        <div className="flex sm:space-x-3 space-x-1 rounded-xl bg-gray-800 p-1">
           {[1, 2, 3, 4, 5].map((pageNumber) => (
             <PageButton
               key={pageNumber}
@@ -410,12 +413,18 @@ const MantSelfAssessment: React.FC<MantSelfAssessmentProps> = ({
             />
           ))}
         </div>
-        <SecondaryButton onClick={handleNextPage} className="rounded-xl w-20">
+        <SecondaryButton
+          onClick={handleNextPage}
+          className="rounded-xl text-sm sm:text-base sm:w-20 h-5 w-16 sm:mb-0"
+        >
           Next
         </SecondaryButton>
       </div>
       <div className="flex space-x-40">
-        <Button className="rounded-xl w-44 mt-4" onClick={handleSave}>
+        <Button
+          className="rounded-xl w-44 sm:mt-4 sm:h-6 h-8"
+          onClick={handleSave}
+        >
           Save
         </Button>
       </div>

@@ -6,7 +6,6 @@ import FileExportIcon from "../svg/FileExportIcon";
 import GearIcon from "../svg/GearIcon";
 import { useUserContextStore } from "@/store/authStore";
 
-
 const CardsSection = () => {
   const { currentUser } = useUserContextStore();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -24,7 +23,13 @@ const CardsSection = () => {
             Internal System Control
           </h1>
         </div>
-        <div className="flex flex-wrap justify-between items-center text-center w-full px-20">
+        <div
+          className={`flex-none lg:flex lg:flex-wrap${
+            isAdmin
+              ? "space-y-5 lg:space-y-0 lg:justify-between"
+              : "justify-center"
+          } items-center justify-center text-center w-full lg:px-20`}
+        >
           {isAdmin ? (
             <CardButton
               href="/views/backoffice"
@@ -35,33 +40,37 @@ const CardsSection = () => {
               }
               title="Backoffice"
               description=""
-              className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2"
+              className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mb-2 lg:mb-0"
             />
           ) : (
             <></>
           )}
-            <CardButton
-              href="/views/dashboard/self_assessment"
-              icon={
-                <Icon>
-                  <ListIcon />
-                </Icon>
-              }
-              title="Self-Assessment"
-              description=""
-              className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2"
-            />
           <CardButton
-            href="/views/self_assessment_review"
+            href="/views/dashboard/self_asseslgent"
             icon={
               <Icon>
-                <FileExportIcon />
+                <ListIcon />
               </Icon>
             }
-            title={`Reviews`}
+            title="Self-Asseslgent"
             description=""
-            className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mx-2"
+            className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mb-2 lg:mb-0"
           />
+          {isAdmin ? (
+            <CardButton
+              href="/views/self_asseslgent_review"
+              icon={
+                <Icon>
+                  <FileExportIcon />
+                </Icon>
+              }
+              title={`Reviews`}
+              description=""
+              className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg"
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </section>

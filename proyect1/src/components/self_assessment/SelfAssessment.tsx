@@ -40,10 +40,10 @@ const SelfAssessment: React.FC = () => {
   const initialQuestions = Array.from({ length: 5 }, () => {
     return Array.from({ length: 4 }, () => "");
   });
-    const [user, setUser] = useState<User | null>(null);
+
+  const [user, setUser] = useState<User | null>(null);
   const [parameters, setParameters] = useState<Parameter | null>(null);
   const [questions, setQuestions] = useState<string[][]>(initialQuestions);
-
   const [loadedSelfAssessment, setLoadedSelfAssessment] =
     useState<SelfAssessments | null>(null);
   const [saving, setSaving] = useState<boolean>(false);

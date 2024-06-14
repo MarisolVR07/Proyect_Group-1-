@@ -26,7 +26,7 @@ const PageButton: React.FC<PageButtonProps> = ({
   return (
     <button
       onClick={() => handlePageChange(pageNumber)}
-      className={`text-sm  rounded-xl w-16 h-6 ${buttonColor} ${
+      className={`sm:text-sm text-xs rounded-xl sm:w-16 sm:h-6 w-10 h-5 ${buttonColor} ${
         pageNumber === currentPage ? "text-white border-2" : "text-gray-800"
       }`}
     >

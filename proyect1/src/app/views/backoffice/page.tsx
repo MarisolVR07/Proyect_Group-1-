@@ -2,7 +2,7 @@
 import BackOffice from "@/components/backoffice/BackOficce";
 import DebugModeToggle from "@/components/debug_mode/DebugModeToggle";
 import Footer from "@/components/footer/Footer";
-import Header from "@/components/header/Header";
+import Header from "@/components/header/NewHeader";
 import jwt, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 import Cookies from "js-cookie";
 import { verifyToken, DecodedToken } from "@/app/utils/verifyToken";
@@ -20,7 +20,7 @@ export default function Page() {
   return (
     <>
       <DebugModeToggle debugMessages={debugMessages}>
-        <Header />
+        <Header currentPage="/views/backoffice" />
         <BackOffice onDebugMessage={handleDebugMessage} />
         <Toaster position="top-right" />
         <Footer />

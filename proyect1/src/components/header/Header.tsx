@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import PrimaryButton from "../general/PrimaryButton";
-import DropdownMenu from "../general/DropDownMenu";
+import DropdownMenu from "../general/DropdownMenu";
 import DownArrowIcon from "../svg/DownArrowIcon";
 import Link from "next/link";
 import { useUserContextStore } from "@/store/authStore";
@@ -29,10 +29,12 @@ export default function Header() {
   }, [currentUser]);
 
   return (
-    <header className="w-full bg-transparent text-white py-3 top-0 z-10">
+    <header className="w-full bg-transparent text-white sm:py-3 py-1 top-0 z-10">
       <div className="container mx-auto flex justify-between items-center">
         <div className="items-center">
-          <div className="text-4xl font-bold text-color print-only">ISC</div>
+          <div className="sm:text-4xl text-3xl font-bold text-color print-only">
+            ISC
+          </div>
           <div className="text-xs text-color print-only ">
             Internal System Control
           </div>

@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { DebugMessage } from "@/app/types/debugData";
 import StateCheckbox from "@/components/reviews/Checkbox";
 import Spinner from "@/components/skeletons/Spinner";
+
 interface ReviewsProps {
   onDebugMessage?: (message: DebugMessage) => void;
 }
@@ -57,7 +58,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   }, []);
 
   const fetchAppliedSelfAssessments = async () => {
-    setIsLoading(true); 
+    setIsLoading(true);
     const allAppliedSelfAssessments =
       await appliedSelfAssessmentStore.getCompleteAppliedSelfassessments();
     if (!("error" in allAppliedSelfAssessments)) {
@@ -67,7 +68,8 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
         "Error fetching AppliedSelfAssessments:",
         allAppliedSelfAssessments.error
       );
-    }setIsLoading(false);
+    }
+    setIsLoading(false);
   };
   useEffect(() => {
     fetchAppliedSelfAssessments();
@@ -101,7 +103,10 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   const handleDepartmentSearch = async (departmentId) => {
     setIsLoading(true);
     try {
-      const filteredSelfAssessments = await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByDepartment(departmentId);
+      const filteredSelfAssessments =
+        await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByDepartment(
+          departmentId
+        );
       if (!("error" in filteredSelfAssessments)) {
         setAppliedSelfAssessments2(filteredSelfAssessments);
         onDebugMessage({
@@ -121,7 +126,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
       setIsLoading(false);
     }
   };
-  
+
   const handleRowDoubleClick = (selfAssessment: AppliedSelfAssessment) => {
     setSelectedSelfAssessment(selfAssessment);
     setIsModalOpen(true);
@@ -152,7 +157,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
           "Error fetching active assessments:",
           activeSelfAssessments.error
         );
-        return; 
+        return;
       }
     }
     if (newFilters.inactive) {
@@ -168,14 +173,15 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
           "Error fetching inactive assessments:",
           inactiveSelfAssessments.error
         );
-        return; 
+        return;
       }
     }
     if (!newFilters.active && !newFilters.inactive) {
       fetchAppliedSelfAssessments();
     } else {
       setAppliedSelfAssessments2(filteredSelfAssessments);
-      setIsLoading(false);}
+      setIsLoading(false);
+    }
   };
 
   const renderTableContent = () => {
@@ -200,7 +206,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
           <td className="px-4 py-2 text-center">
             {selfAssessment.ASA_Status === "A" ? "Active" : "Inactive"}
           </td>
-          <td className="flex px-4 py-2 space-x-2 justify-center">
+          <td className="px-4 py-2 space-x-2 justify-center hidden sm:flex">
             <Button
               onClick={() => handleRowDoubleClick(selfAssessment)}
               className="rounded-xl w-16"
@@ -220,13 +226,22 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   };
 
   return (
-    <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
-      <h4 className="text-2xl text-white text-center mb-4">Self-Assessments Reviews</h4>
+    <div className="form-control my-auto sm:py-8 py-2 sm:px-4 px-1 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
+      <h4 className="sm:text-2xl text-white text-center sm:mb-4">
+        Self-Assessments Reviews
+      </h4>
 
-      <div className="mt-4 rounded-md bg-gradient-to-r from-gray-800 via-violet-600 to-gray-800 p-4 flex items-center space-x-4 z-20">
-      
-        <StateCheckbox isChecked={filters.active} onChange={() => toggleFilter("active")} label="Active" />
-        <StateCheckbox isChecked={filters.inactive} onChange={() => toggleFilter("inactive")} label="Inactive" />
+      <div className="sm:mt-4 mt-2 rounded-md bg-gradient-to-r text-white from-gray-800 via-violet-600 to-gray-800 sm:p-4 p-2 flex items-center justify-center space-x-4 z-20">
+        <StateCheckbox
+          isChecked={filters.active}
+          onChange={() => toggleFilter("active")}
+          label="Active"
+        />
+        <StateCheckbox
+          isChecked={filters.inactive}
+          onChange={() => toggleFilter("inactive")}
+          label="Inactive"
+        />
       </div>
       {isLoading ? (
         <Spinner />
@@ -235,10 +250,12 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
           <table className="table-auto w-full">
             <thead className="bg-violet-800 text-white">
               <tr>
-                <th className="px-4 py-2">Date</th>
-                <th className="px-4 py-2">Department</th>
-                <th className="px-4 py-2">Status</th>
-                <th className="px-4 py-2">Actions</th>
+                <th className="sm:px-4 sm:py-2">Date</th>
+                <th className="sm:px-4 sm:py-2">Department</th>
+                <th className="sm:px-4 sm:py-2">Status</th>
+                <th className="hidden sm:table-cell sm:px-4 sm:py-2">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>{renderTableContent()}</tbody>
@@ -247,8 +264,16 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
       )}
       {isModalOpen && selectedSelfAssessment && (
         <div className="fixed inset-0 h-screen p-4 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-          <button className="absolute top-0 right-0 my-4 mx-6 text-3xl text-white hover:text-gray-400" onClick={closeModal}>&times;</button>
-          <SelfAssessment appliedSelfAssessment={selectedSelfAssessment} closeModal={closeModal} />
+          <button
+            className="absolute top-0 right-0 my-4 mx-6 text-3xl text-white hover:text-gray-400"
+            onClick={closeModal}
+          >
+            &times;
+          </button>
+          <SelfAssessment
+            appliedSelfAssessment={selectedSelfAssessment}
+            closeModal={closeModal}
+          />
         </div>
       )}
     </div>
