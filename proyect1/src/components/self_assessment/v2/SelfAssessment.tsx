@@ -16,10 +16,12 @@ import {
   SelfAssessments,
   User,
 } from "@/app/types/entities";
-import LoadingCircle from "../skeletons/LoadingCircle";
-import SecondaryButton from "../general/SecondaryButton";
-import PageButton from "../general/PageButton";
-import Button from "../general/PrimaryButton";
+import LoadingCircle from "../../skeletons/LoadingCircle";
+import SecondaryButton from "../../general/SecondaryButton";
+import PageButton from "../../general/PageButton";
+import Button from "../../general/PrimaryButton";
+import SectionP from "./Section";
+import { initialSectionsData } from "@/app/types/selfAssessmentData";
 
 interface SelfAssessmentProps {
   onDebugMessage?: (message: DebugMessage) => void;
@@ -44,6 +46,10 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [saving, setSaving] = useState<boolean>(false);
+
+  const [sectionData, setSectionData] = useState<{
+    [key: string]: { sectionName: string; questions: string[] };
+  }>(initialSectionsData);
 
   useEffect(() => {
     checkSelfAssessmentStatus();
@@ -74,7 +80,7 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
     try {
       if (currentSelfAssessment) {
         setLoadedSelfAssessment(currentSelfAssessment);
-
+        loadSectionData(currentSelfAssessment, setSectionData);
         const loadedQuestions: string[][] =
           currentSelfAssessment.rc_sections?.map(
             (section: Section) =>
@@ -87,6 +93,35 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
       }
     } catch (error) {
       console.error("Error fetching self-assessment data:", error);
+    }
+  };
+
+  const loadSectionData = (selfAssessment: any, setSectionData: any) => {
+    onDebugMessage({
+      content: "Loading Section data(loadSectionData)",
+      type: "Info",
+    });
+    if (selfAssessment.rc_sections && selfAssessment.rc_sections.length > 0) {
+      const updatedSectionData: {
+        [key: string]: { sectionName: string; questions: string[] };
+      } = {};
+      selfAssessment.rc_sections.forEach((section: any, index: number) => {
+        const sectionName = section.SEC_Name;
+        const questions = section.rc_questions
+          ? section.rc_questions.map((question: any) => question.QES_Text)
+          : Array.from({ length: 4 }, () => "");
+        updatedSectionData[(index + 1).toString()] = {
+          sectionName,
+          questions,
+        };
+      });
+      setSectionData(updatedSectionData);
+    } else {
+      onDebugMessage({
+        content:
+          "The self-assessment does not have defined sections(loadSectionData)",
+        type: "Warning",
+      });
     }
   };
 
@@ -106,8 +141,7 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
     }
   };
 
-  const handleSave = async () => {
-  };
+  const handleSave = async () => {};
 
   return (
     <div className="form-control my-3 sm:mx-8 sm:my-1 mx-0 w-auto items-center justify-center font-poppins font-semibold drop-shadow-xl">
@@ -145,6 +179,10 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
             Next
           </SecondaryButton>
         </div>
+        <SectionP
+          number={`${currentPage}`}
+          sectionData={sectionData[currentPage.toString()]}
+        />
         <div className="flex flex-col sm:flex-row sm:justify-between mx-4 sm:mx-16 items-center">
           <div className="sm:text-base text-sm sm:my-4 my-1 text-center sm:text-left">
             <p>Carried out by: {user?.USR_FullName}</p>

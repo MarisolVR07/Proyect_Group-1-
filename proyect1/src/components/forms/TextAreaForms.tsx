@@ -52,7 +52,7 @@ const TextArea: React.FC<TextAreaProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
-        className={`px-3 py-2 text-wrap bg-gray-800 text-white ring-1 ring-white focus:outline-none focus:ring-2 focus:ring-violet-600 focus:rounded-sm ${className}`}
+        className={`px-3 py-2 text-wrap bg-gray-800 text-white text-xs lg:text-base ring-1 ring-white focus:outline-none focus:ring-2 focus:ring-violet-600 focus:rounded-sm ${className}`}
       ></textarea>
     </div>
   );

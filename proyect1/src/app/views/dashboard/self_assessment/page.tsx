@@ -1,7 +1,7 @@
 "use client"
 import DebugModeToggle from "@/components/debug_mode/DebugModeToggle";
 import Header from "@/components/header/NewHeader";
-import SelfAssessment from "@/components/v2/SelfAssessment";
+import SelfAssessment from "@/components/self_assessment/v2/SelfAssessment";
 import { useState } from "react";
 import { DebugMessage } from "@/app/types/debugData";
 import { Toaster } from "react-hot-toast";

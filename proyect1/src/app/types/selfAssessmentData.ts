@@ -5,6 +5,16 @@ export interface ProposedActionData {
   date: Date | null;
 }
 
+export interface AnswerData {
+  answer: number | null;
+  observations: string;
+  url: string;
+  responsible: string;
+  justification: string;
+  preview: string;
+  date: Date | null;
+}
+
 export interface TableRowData {
   checkedIndex: number | null;
   textArea1: string;

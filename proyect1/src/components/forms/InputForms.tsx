@@ -37,7 +37,7 @@ const InputForms: React.FC<InputFormsProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
-        className={`px-3 text-white ring-1 ring-white bg-gray-800 w-full h-10 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:rounded-sm ${className}`}
+        className={`px-3 text-white text-xs lg:text-base ring-1 ring-white bg-gray-800 w-full h-10 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:rounded-sm ${className}`}
       />
     </div>
   );
