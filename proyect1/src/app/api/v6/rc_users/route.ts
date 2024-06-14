@@ -6,8 +6,10 @@ export async function GET(
   req: NextRequest,
   res: NextResponse<String | ErrorResponse | null>
 ) {
+  
   try {
     const users = await prisma.rc_users.findMany({
+    
       //  include: {rc_departments: true}
     });
     return NextResponse.json(users, { status: 200 });

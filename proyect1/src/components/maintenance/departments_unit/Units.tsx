@@ -10,8 +10,7 @@ import toast from "react-hot-toast";
 
 const Units = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { units, getUnits, saveUnit, updateUnit, getUnitsByName } =
-    useUnitStore();
+  const { units, getUnitsPerPage, saveUnit, updateUnit, getUnitsByName } = useUnitStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [unit, setUnit] = useState<Unit>({
@@ -22,19 +21,24 @@ const Units = () => {
   const { setCurrentUnit } = useUnitContextStore();
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10;
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        await getUnits();
+        if (isSearching) {
+          await getUnitsByName(searchQuery, currentPage + 1);
+        } else {
+          await getUnitsPerPage(currentPage + 1);
+        }
       } catch (error) {
         console.error("Failed to fetch units", error);
       }
       setIsLoading(false);
     };
     fetchData();
-  }, []);
+  }, [currentPage, isSearching, searchQuery]);
 
   const handleSaveClickUnit = async () => {
     try {
@@ -49,57 +53,60 @@ const Units = () => {
         setCurrentUnit(savedUnit as Unit);
         toast.success("Unit saved successfully");
       }
-      await getUnits();
+      await getUnitsPerPage(currentPage + 1);
     } catch (error) {
       toast.error("Failed to save or update unit");
       console.error("Failed to save or update unit", error);
     }
   };
+
   const handleSearchChangeUnit = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
-    console.log(!query.trim())
-    if (!query.trim()) {
-      return await getUnits();
-    }
+    setCurrentPage(0);
+    setIsSearching(!!query);
     setIsLoading(true);
     try {
-      const results =
-        query ? await getUnitsByName(query) : await getUnits();
-      console.log("Search results fetched successfully", results);
+      if (query) {
+        await getUnitsByName(query, 1);
+      } else {
+        await getUnitsPerPage(1);
+      }
     } catch (error) {
       console.error("Error searching units", error);
     } finally {
       setIsLoading(false);
     }
   };
+
   const handleChangeName = (e: string) => {
     setUnit((i) => ({ ...i, UND_Name: e }));
   };
+
   const handleChangeEmail = (e: string) => {
     setUnit((i) => ({ ...i, UND_Email: e }));
   };
+
   const handleChangeStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUnit((i) => ({ ...i, UND_Status: e.target.checked ? "a" : "i" }));
   };
+
   const handleUnitClick = (clickedUnit: Unit) => {
     setUnit(clickedUnit);
     setIsEditing(true);
   };
+
   const handleNextPage = () => {
-    if ((currentPage + 1) * itemsPerPage < units.length) {
-      setCurrentPage(currentPage + 1);
+    if(units.length === 10){
+    setCurrentPage(currentPage + 1);
     }
   };
+
   const handlePreviousPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
   };
-  const paginatedUnits = units.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
 
   return (
     <div className="form-control flex-1 max-w-xl p-5 rounded-md bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl text-center">
@@ -153,7 +160,9 @@ const Units = () => {
           <SearchBarDU onSearch={handleSearchChangeUnit} />
         </div>
         {isLoading ? (
-          <Spinner />
+          <div className="flex justify-center items-center h-32">
+            <Spinner />
+          </div>
         ) : (
           <div className="overflow-x-auto mt-1 rounded-md">
             <table className="table-auto w-full">
@@ -164,7 +173,7 @@ const Units = () => {
                 </tr>
               </thead>
               <tbody>
-                {paginatedUnits.map((unit, index) => (
+                {units.map((unit, index) => (
                   <tr
                     key={index}
                     onClick={() => handleUnitClick(unit)}
@@ -189,7 +198,7 @@ const Units = () => {
               <Button
                 className="rounded-xl w-44"
                 onClick={handleNextPage}
-                disabled={(currentPage + 1) * itemsPerPage >= units.length}
+                disabled={units.length < itemsPerPage}
               >
                 Next
               </Button>

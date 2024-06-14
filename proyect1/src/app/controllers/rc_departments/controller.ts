@@ -66,6 +66,19 @@ const API_URL =
   }
 }
 
+export async function getDepartmentsPerPage(page: number): Promise<Department[] | ErrorResponse> {
+  try {
+    const res: Response = await fetch(API_URL + `rc_departments/getperpage?page=${page}`);
+    //validateResponse(res);
+
+    const departments: Department[] | ErrorResponse = await res.json();
+
+    return departments;
+  } catch (error: any) {
+    return error;
+  }
+}
+
 export async function updateDepartment(
     department: Department
   ): Promise<Department | ErrorResponse> {
@@ -89,10 +102,11 @@ export async function updateDepartment(
   }
 
   export async function getDepartmentsByName(
-    name: string
+    name: string,
+    page: number
   ): Promise<Department[] | ErrorResponse> {
     try {
-      const res: Response = await fetch(API_URL + `rc_departments/findname/${name}`);
+      const res: Response = await fetch(API_URL + `rc_departments/findname/${name}?page=${page}`);
       const departments: Department[] | ErrorResponse = await res.json();
       return departments;
     } catch (error: any) {

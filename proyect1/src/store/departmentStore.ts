@@ -6,6 +6,7 @@ import {
     getDepartments,
     updateDepartment,
     getDepartmentsByName,
+    getDepartmentsPerPage
 } from "@/app/controllers/rc_departments/controller";
 import { Department } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
@@ -24,7 +25,8 @@ interface DepartmentState {
     updateDepartment: (
         department: Department
     ) => Promise<Department | ErrorResponse>;
-    getDepartmentsByName: (name: string) => Promise<Department[]  | ErrorResponse>;
+    getDepartmentsByName: (name: string, page: number) => Promise<Department[]  | ErrorResponse>;
+    getDepartmentsPerPage: (page: number) => Promise<Department[] | ErrorResponse>;
   }
 
   
@@ -83,13 +85,21 @@ export const useDepartmentsStore = create<DepartmentState>((set) => ({
       }));
       return updatedDepartment;
     },
-    getDepartmentsByName: async (name: string) => {
-      const departments = await getDepartmentsByName(name);
+    getDepartmentsByName: async (name: string, page: number) => {
+      const departments = await getDepartmentsByName(name,page);
       if ("error" in departments) {
         return departments;
       }
       set((state) => ({ ...state, departments }));
       return departments;
     },
+    getDepartmentsPerPage: async (page:number) => {
+      const departments = await getDepartmentsPerPage(page);
+      if ("error" in departments) {
+        return departments;
+      }
+      set((state) => ({ ...state, departments }));
+      return departments;
+    }
   }));
   

@@ -9,6 +9,7 @@ export async function GET(req: NextRequest, { params }: ParameterFullName) {
       where: {
         USR_FullName: { contains: fetchedName },
       },
+      
     });
 
     if (response) return NextResponse.json(response, { status: 200 });

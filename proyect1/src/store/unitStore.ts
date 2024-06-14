@@ -5,7 +5,8 @@ import {
     saveUnit,
     getUnits,
     updateUnit,
-    getUnitsByName
+    getUnitsByName,
+    getUnitsPerPage
 } from "@/app/controllers/rc_unit/controller";
 import { Unit } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
@@ -24,7 +25,8 @@ interface UnitState {
     updateUnit: (
         unit : Unit
     ) => Promise<Unit | ErrorResponse>;
-    getUnitsByName: (name: string) => Promise<Unit[]  | ErrorResponse>;
+    getUnitsByName: (name: string, page:number) => Promise<Unit[]  | ErrorResponse>;
+    getUnitsPerPage: (page: number) => Promise<Unit[] | ErrorResponse>;
   }
 
   export const useUnitStore = create<UnitState>((set) => ({
@@ -83,14 +85,22 @@ interface UnitState {
       return updatedUnit;
     },
 
-    getUnitsByName: async (name: string) => {
-      const units = await getUnitsByName(name);
+    getUnitsByName: async (name: string, page: number) => {
+      const units = await getUnitsByName(name,page);
       if ("error" in units) {
         return units;
       }
       set((state) => ({ ...state, units }));
       return units;
     },
+    getUnitsPerPage: async (page: number) => {
+      const units = await getUnitsPerPage(page);
+      if ("error" in units) {
+        return units;
+      }
+      set((state) => ({ ...state, units }));
+      return units;
+    }
 
   }));
   

@@ -64,6 +64,19 @@ export async function getUnits(): Promise<Unit[] | ErrorResponse> {
   }
 }
 
+export async function getUnitsPerPage(page: number): Promise<Unit[] | ErrorResponse> {
+  try {
+    const res: Response = await fetch(API_URL + `rc_unit/getperpage?page=${page}`);
+    //validateResponse(res);
+
+    const units: Unit[] | ErrorResponse = await res.json();
+
+    return units;
+  } catch (error: any) {
+    return error;
+  }
+}
+
 export async function updateUnit(unit: Unit): Promise<Unit | ErrorResponse> {
   try {
     const res = await fetch(API_URL + `rc_unit/${unit.UND_Id}`, {
@@ -82,10 +95,11 @@ export async function updateUnit(unit: Unit): Promise<Unit | ErrorResponse> {
 }
 
 export async function getUnitsByName(
-  name: string
+  name: string,
+  page: number
 ): Promise<Unit[] | ErrorResponse> {
   try {
-    const res: Response = await fetch(API_URL + `rc_unit/findname/${name}`);
+    const res: Response = await fetch(API_URL + `rc_unit/findname/${name}?page=${page}`);
     const units: Unit[] | ErrorResponse = await res.json();
     return units;
   } catch (error: any) {

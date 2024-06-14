@@ -11,7 +11,14 @@ import toast from "react-hot-toast";
 
 const Departments = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const {departments,getDepartments,saveDepartment,updateDepartment,getDepartmentsByName} = useDepartmentsStore();
+  const {
+    departments,
+    getDepartments,
+    saveDepartment,
+    updateDepartment,
+    getDepartmentsByName,
+    getDepartmentsPerPage,
+  } = useDepartmentsStore();
   const [isLoading, setIsLoading] = useState(false);
   const { currentUnit } = useUnitContextStore();
   const [isEditing, setIsEditing] = useState(false);
@@ -22,19 +29,25 @@ const Departments = () => {
   });
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10;
+  const [isSearching, setIsSearching] = useState(false);
+
+  const fetchDepartments = async (page: number) => {
+    setIsLoading(true);
+    try {
+      if (isSearching) {
+        await getDepartmentsByName(searchQuery, page );
+      } else {
+        await getDepartmentsPerPage(page);
+      }
+    } catch (error) {
+      console.error("Failed to fetch units", error);
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        await getDepartments();
-      } catch (error) {
-        console.error("Failed to fetch departments", error);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
+    fetchDepartments(currentPage+1);
+  }, [currentPage,isSearching, searchQuery]);
 
   const handleSaveClickDepartment = async () => {
     console.log("Current unit:", currentUnit);
@@ -56,7 +69,7 @@ const Departments = () => {
           });
           toast.success("Department saved successfully");
         }
-        await getDepartments();
+        await fetchDepartments(currentPage);
       } catch (error) {
         toast.error("Failed to save department");
         console.error("Failed to save department", error);
@@ -66,30 +79,39 @@ const Departments = () => {
       console.log("Department not saved, unit id not specified");
     }
   };
+
   const handleSearchChangeDepartment = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
-    console.log(!query.trim())
+    setCurrentPage(0);
+    setIsSearching(!!query);
+    setIsLoading(true);
+    console.log(!query.trim());
     if (!query.trim()) {
-      return await getDepartments();
+      return await fetchDepartments(currentPage);
     }
     setIsLoading(true);
     try {
-      const results =
-        query ? await getDepartmentsByName(query) : await getDepartments();
-        console.log("Search results fetched successfully", results);
+      if(query){
+        await getDepartmentsByName(query,1)
+      }else{
+        await getDepartmentsPerPage(1)
+      }
     } catch (error) {
       console.error("Error searching departments", error);
     } finally {
       setIsLoading(false);
     }
   };
+
   const handleChangeDName = (e: string) => {
     setDepartment((i) => ({ ...i, DPT_Name: e }));
   };
+
   const handleChangeDStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDepartment((i) => ({ ...i, DPT_Status: e.target.checked ? "a" : "i" }));
   };
+
   const handleRowClick = (selectedDepartment: Department) => {
     const temporalDepartment: Department = {
       DPT_Name: selectedDepartment.DPT_Name,
@@ -100,20 +122,16 @@ const Departments = () => {
     setDepartment(temporalDepartment);
     setIsEditing(true);
   };
+
   const handleNextPage = () => {
-    if ((currentPage + 1) * itemsPerPage < departments.length) {
-      setCurrentPage(currentPage + 1);
+    if(departments.length === 10){
+    setCurrentPage((prevPage) => prevPage + 1);
     }
   };
+
   const handlePreviousPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
+    setCurrentPage((prevPage) => (prevPage > 0 ? prevPage - 1 : 0));
   };
-  const paginatedDepartments = departments.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
 
   return (
     <div className="form-control flex-1 max-w-xl p-5 rounded-md bg-gray-800 text-white font-poppins font-semibold drop-shadow-xl text-center">
@@ -127,9 +145,7 @@ const Departments = () => {
           className="w-full rounded-md"
           placeholder="Department Name"
           value={department.DPT_Name}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleChangeDName(e.target.value)
-          }
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeDName(e.target.value)}
         />
       </div>
       <div className="bg-gray-700 w-full px-3 py-3 mb-3 flex items-center justify-between rounded-b-btn">
@@ -156,7 +172,9 @@ const Departments = () => {
       </div>
       <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center mb-5"></div>
       {isLoading ? (
+        <div className="flex justify-center items-center h-32">
         <Spinner />
+      </div>
       ) : (
         <div className="overflow-x-auto mt-1 rounded-md">
           <table className="table-auto w-full">
@@ -168,7 +186,7 @@ const Departments = () => {
               </tr>
             </thead>
             <tbody>
-              {paginatedDepartments.map((department, index) => (
+              {departments.map((department, index) => (
                 <tr
                   key={index}
                   onClick={() => handleRowClick(department)}
@@ -194,7 +212,7 @@ const Departments = () => {
             <Button
               className="rounded-xl w-44"
               onClick={handleNextPage}
-              disabled={(currentPage + 1) * itemsPerPage >= departments.length}
+              disabled={departments.length < itemsPerPage}
             >
               Next
             </Button>
