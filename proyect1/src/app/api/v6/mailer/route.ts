@@ -29,13 +29,12 @@ export async function POST(req: NextRequest) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Correo Electrónico</title>
+    <title>Email</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             background-color: #f4f4f4;
+            font-size: 20px; 
         }
         .container {
             width: 100%;
@@ -47,7 +46,7 @@ export async function POST(req: NextRequest) {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background-color: #4CAF50;
+            background: linear-gradient(to right, #4B0082, #000000);
             color: white;
             text-align: center;
             padding: 20px;
@@ -55,6 +54,7 @@ export async function POST(req: NextRequest) {
         .content {
             padding: 20px;
             line-height: 1.6;
+            text-align: center;
         }
         .footer {
             background-color: #f4f4f4;
@@ -62,15 +62,6 @@ export async function POST(req: NextRequest) {
             padding: 10px;
             font-size: 12px;
             color: #777;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-top: 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
         }
     </style>
 </head>
@@ -81,12 +72,10 @@ export async function POST(req: NextRequest) {
         </div>
         <div class="content">
             <p>${text}</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</p>
-            <a href="#" class="button">Leer más</a>
+            <p>Don't forget how necessary this assessment is for the company.</p>
         </div>
         <div class="footer">
-            <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
-            <p>&copy; 2024 Tu Empresa. Todos los derechos reservados.</p>
+            <p>&copy; 2024 ISC. All rights reserved.</p>
         </div>
     </div>
 </body>
@@ -101,7 +90,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
   }
 }
-
-  
-
-  

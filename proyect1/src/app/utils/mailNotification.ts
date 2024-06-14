@@ -12,7 +12,7 @@ import {
 } from "../controllers/rc_appliedselfassessment/controller";
 
 export function scheduleJob() {
-  const oneDayInMilliseconds = 15 * 60 * 1000;
+  const oneDayInMilliseconds = 30 * 60 * 1000;
 
   const intervalId = setInterval(() => {
    sendNotification();
@@ -34,7 +34,7 @@ async function sendNotification() {
             sendEmail(
               u.USR_Email,
               "REMINDER",
-              "The application is going to be desactivated in 1 day, please verify all the pending assessment"
+              "The application is going to be desactivated in 1 day, please verify all the pending assessment."
             )
           );
       }
