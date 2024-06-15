@@ -29,9 +29,9 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
     useParametersContextStore();
   const [searchQuery, setSearchQuery] = useState("");
   const { setCurrentUser, currentUser } = useUserContextStore();
-  const { users, getUsers, getUsersByName, updateUser } = useUserStore();
+  const { users, getUsers, getUsersPerPage, getUsersByName, updateUser } = useUserStore();
 
-  const { parameters, getParameter, updateParameter, saveParameter } =
+  const { updateParameter,  } =
     useParameterStore();
   const [isLoading, setIsLoading] = useState(false);
   const filteredUsers = users.filter(
@@ -44,6 +44,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 20;
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
   const handleStatusChange = async (
     user: User,
     event: React.ChangeEvent<HTMLInputElement>
@@ -124,11 +125,15 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
     setIsLoading(true);
+    setCurrentPage(0);
+    setIsSearching(!!query);
     if (!query.trim()) return;
     try {
-      const results =
-        query.length > 0 ? await getUsersByName(query) : await getUsers();
-    } catch (error) {
+      if(query){
+        await getUsersByName(query,1)
+      }else{
+        await getUsersPerPage(1)
+      }  } catch (error) {
       onDebugMessage({
         content: `Error searching users (handleSearchChange)->${error}`,
         type: "Error",
@@ -138,21 +143,20 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
     }
   };
   const handleNextPage = () => {
-    if ((currentPage + 1) * itemsPerPage < users.length) {
-      setCurrentPage(currentPage + 1);
-    }
+    if(users.length === 10){setCurrentPage((prevPage) => prevPage + 1);}
   };
 
   const handlePreviousPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
+    setCurrentPage((prevPage) => (prevPage > 0 ? prevPage - 1 : 0));
   };
-
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      await getUsers();
+      if (isSearching && searchQuery) {
+        await getUsersByName(searchQuery, currentPage);
+      } else {
+        await getUsersPerPage(currentPage);
+      }
     } catch (error) {
       onDebugMessage({
         content: `Error fetching users (fetchData)->${error}`,
@@ -355,9 +359,9 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
               Previous
             </Button>
             <Button
-              className="rounded-xl w-44"
-              onClick={handleNextPage}
-              disabled={(currentPage + 1) * itemsPerPage >= users.length}
+            className="rounded-xl w-44 no-print"
+            onClick={handleNextPage}
+            disabled={users.length < itemsPerPage}
             >
               Next
             </Button>
