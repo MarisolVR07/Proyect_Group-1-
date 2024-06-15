@@ -18,14 +18,14 @@ interface UsersProps {
 const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   useEffect(() => {});
   const [searchQuery, setSearchQuery] = useState("");
-  const [editUserId, setEditUserId] = useState<number | null>(null);
-  const { users, getUsers, getUsersByName, updateUser } = useUserStore();
+  const { users, getUsers, getUsersByName, getUsersPerPage, updateUser } = useUserStore();
   const { setCurrentUser, currentUser } = useUserContextStore();
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [user, setUser] = useState<User | null>(null);
   const itemsPerPage = 20;
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
 
   const handlePrintClick = () => {
     window.print();
@@ -33,17 +33,15 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      onDebugMessage({
-        content: "Getting users (fectchData)",
-        type: "Info",
-      });
+      onDebugMessage({ content: "Fetching users (fectchData)", type: "Info",  });
       setIsLoading(true);
       try {
-        await getUsers();
-        onDebugMessage({
-          content: "Successfully Obtained Users (fectchData)",
-          type: "Success",
-        });
+        if (isSearching && searchQuery) {
+          await getUsersByName(searchQuery, currentPage);
+        } else {
+          await getUsersPerPage(currentPage);
+        }
+        onDebugMessage({content: "Users fetched successfully.",type: "Success",});
       } catch (error) {
         console.error(`Failed to fetch users (fectchData)->${error}`);
         onDebugMessage({ content: "Failed to Fetch Users", type: "Error" });
@@ -52,7 +50,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     };
     fetchData();
     setUser(currentUser);
-  }, []);
+  }, [currentPage, searchQuery, isSearching]);
 
   const handleStatusChange = async (
     user: User,
@@ -131,12 +129,17 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   const handleSearchChange = async (query: string) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
+    setCurrentPage(0);
+    setIsSearching(!!query);
+    setIsLoading(true);
     if (!query.trim()) return;
     setIsLoading(true);
     try {
-      const results =
-        query.length > 0 ? await getUsersByName(query) : await getUsers();
-    } catch (error) {
+      if(query){
+        await getUsersByName(query,1)
+      }else{
+        await getUsersPerPage(1)
+      }    } catch (error) {
       onDebugMessage({
         content: `Error searching users (handleSearchChange)->${error}`,
         type: "Error",
@@ -147,15 +150,11 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   };
 
   const handleNextPage = () => {
-    if ((currentPage + 1) * itemsPerPage < users.length) {
-      setCurrentPage(currentPage + 1);
-    }
+    if(users.length === 10){setCurrentPage((prevPage) => prevPage + 1);}
   };
 
   const handlePreviousPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
+    setCurrentPage((prevPage) => (prevPage > 0 ? prevPage - 1 : 0));
   };
   const handleRowClick = (user: User) => {
     setSelectedUserId(user.USR_Id);
@@ -255,8 +254,8 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
             <Button
               className="rounded-xl w-44 no-print"
               onClick={handleNextPage}
-              disabled={(currentPage + 1) * itemsPerPage >= users.length}
-            >
+              disabled={users.length < itemsPerPage}
+              >
               Next
             </Button>
           </div>

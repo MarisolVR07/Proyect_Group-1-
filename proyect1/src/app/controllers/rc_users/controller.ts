@@ -17,10 +17,11 @@ export async function getUser(id: string): Promise<User | ErrorResponse> {
 }
 
 export async function getUsersByName(
-  name: string
+  name: string,
+  page: number
 ): Promise<User[] | ErrorResponse> {
   try {
-    const res: Response = await fetch(API_URL + `rc_users/findname/${name}`);
+    const res: Response = await fetch(API_URL + `rc_users/findname/${name}?page=${page}`);
     const users: User[] | ErrorResponse = await res.json();
     return users;
   } catch (error: any) {
@@ -104,5 +105,17 @@ export async function updateUser(user: User): Promise<User | ErrorResponse> {
     return newUser;
   } catch (error: any) {
     return { error: error.message };
+  }
+}
+export async function getUsersPerPage(page: number): Promise<User[] | ErrorResponse> {
+  try {
+    const res: Response = await fetch(API_URL + `rc_users/getperpage?page=${page}`);
+    //validateResponse(res);
+
+    const users: User[] | ErrorResponse = await res.json();
+
+    return users;
+  } catch (error: any) {
+    return error;
   }
 }

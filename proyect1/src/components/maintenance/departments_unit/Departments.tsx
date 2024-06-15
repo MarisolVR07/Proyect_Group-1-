@@ -13,7 +13,6 @@ const Departments = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const {
     departments,
-    getDepartments,
     saveDepartment,
     updateDepartment,
     getDepartmentsByName,

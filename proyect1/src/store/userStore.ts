@@ -6,7 +6,8 @@ import {
   getUsers,
   updateUser,
   getUsersByName,
-  getUsersByRole
+  getUsersByRole,
+  getUsersPerPage
 } from "@/app/controllers/rc_users/controller";
 import { User } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
@@ -19,8 +20,8 @@ interface UserState {
   saveUser: (user: User) => Promise<User | ErrorResponse>;
   getUsers: () => Promise<User[] | ErrorResponse>;
   updateUser: (user: User) => Promise<User | ErrorResponse>;
-  getUsersByName: (name: string) => Promise<User[]  | ErrorResponse>;
-  getUsersByRole: (role: string) => Promise<User[]  | ErrorResponse>;
+  getUsersByName: (name: string, page: number) => Promise<User[]  | ErrorResponse>;
+  getUsersPerPage: (page: number) => Promise<User[] | ErrorResponse>;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -75,21 +76,21 @@ export const useUserStore = create<UserState>((set) => ({
     }));
     return updatedUser;
   },
-  getUsersByName: async (name: string) => {
-    const users = await getUsersByName(name);
+  getUsersByName: async (name: string, page: number) => {
+    const users = await getUsersByName(name, page);
     if ("error" in users) {
       return users;
     }
     set((state) => ({ ...state, users }));
     return users;
   },
-  getUsersByRole: async (role: string) => {
-    const users = await getUsersByName(role);
+  getUsersPerPage: async (page: number) => {
+    const users = await getUsersPerPage(page);
     if ("error" in users) {
       return users;
     }
     set((state) => ({ ...state, users }));
     return users;
-  },
+  }
 
 }));
