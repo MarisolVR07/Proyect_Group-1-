@@ -282,93 +282,93 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   return (
     <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
       <CardsSection />
-      <div className="flex flex-col lg:flex-row items-start justify-center space-y-4 lg:space-y-0 lg:space-x-4 mx-4">
-        <div className="flex-1 bg-gray-700 p-3 text-center border-2 border-white rounded-xl overflow-hidden min-h-[500px]">
-          <h2 className="text-xl text-white mb-3 font-semibold">
-            APP ACTIVATION/DEACTIVATION DATE-TIME
-          </h2>
-          <div className="flex flex-col md:flex-row space-x-0 md:space-x-10 items-center justify-center">
-            <DateTimePicker
-              text="Select activation date and time:"
-              value={activationDate}
-              onChange={setActivationDate}
-            />
-            <DateTimePicker
-              text="Select deactivation date and time:"
-              value={deactivationDate}
-              onChange={setDeactivationDate}
-            />
-          </div>
-          <div className="mt-3">
-            <InputField
-              type="text"
-              label="Institution"
-              placeholder="Enter the Institution Name"
-              value={institution}
-              onChange={handleInstitutionChange}
-            />
-          </div>
-          <div className="mt-3">
-            <h2 className="text-xl text-white font-semibold">EMAIL</h2>
-            <InputField
-              type="email"
-              label="Email Address"
-              placeholder="Enter your email"
-              value={email}
-              onChange={handleEmailChange}
-            />
-          </div>
-          <div className="save-section">
-            <PrimaryButton
-              onClick={handleSave}
-              className="w-44 rounded-md mt-4 mx-auto"
-            >
-              Save
-            </PrimaryButton>
-          </div>
+      <div className="flex flex-col items-center justify-center space-y-4 mx-4 w-full">
+      <div className="flex-1 bg-gray-700 p-3 text-center border-2 border-white rounded-xl overflow-hidden min-h-[500px] w-full max-w-4xl mx-auto">
+        <h2 className="text-xl text-white mb-3 font-semibold">
+          APP ACTIVATION/DEACTIVATION DATE-TIME
+        </h2>
+        <div className="flex flex-col md:flex-row space-x-0 md:space-x-10 items-center justify-center">
+          <DateTimePicker
+            text="Select activation date and time:"
+            value={activationDate}
+            onChange={setActivationDate}
+          />
+          <DateTimePicker
+            text="Select deactivation date and time:"
+            value={deactivationDate}
+            onChange={setDeactivationDate}
+          />
         </div>
-        <div className="flex-1 bg-gray-700 p-8 rounded-xl border-2 border-white text-white overflow-x-auto min-h-[500px]">
-          <div className="w-full py-1 items-center justify-center text-center">
-            <h2 className="text-xl text-white font-semibold">NEW USERS</h2>
+        <div className="mt-3">
+          <InputField
+            type="text"
+            label="Institution"
+            placeholder="Enter the Institution Name"
+            value={institution}
+            onChange={handleInstitutionChange}
+          />
+        </div>
+        <div className="mt-3">
+          <h2 className="text-xl text-white font-semibold">EMAIL</h2>
+          <InputField
+            type="email"
+            label="Email Address"
+            placeholder="Enter your email"
+            value={email}
+            onChange={handleEmailChange}
+          />
+        </div>
+        <div className="save-section">
+          <PrimaryButton
+            onClick={handleSave}
+            className="w-44 rounded-md mt-4 mx-auto"
+          >
+            Save
+          </PrimaryButton>
+        </div>
+      </div>
+      <div className="flex-1 bg-gray-700 p-8 rounded-xl border-2 border-white text-white overflow-x-auto min-h-[500px] w-full max-w-4xl mx-auto">
+        <div className="w-full py-1 items-center justify-center text-center">
+          <h2 className="text-xl text-white font-semibold">NEW USERS</h2>
+        </div>
+        <SearchBar onSearch={handleSearchChange}/>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <div className="overflow-x-auto mt-4 rounded-md">
+            <table className="table-auto w-full text-color">
+              <thead className="bg-violet-800 text-white">
+                <tr>
+                  <th className="px-4 py-2">Email</th>
+                  <th className="px-4 py-2">FullName</th>
+                  <th className="px-4 py-2">Department</th>
+                  <th className="px-4 py-2">Role</th>
+                  <th className="px-4 py-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>{renderTableContent()}</tbody>
+            </table>
           </div>
-          <SearchBar onSearch={handleSearchChange} />
-          {isLoading ? (
-            <Spinner />
-          ) : (
-            <div className="overflow-x-auto mt-4 rounded-md">
-              <table className="table-auto w-full text-color">
-                <thead className="bg-violet-800 text-white">
-                  <tr>
-                    <th className="px-4 py-2">Email</th>
-                    <th className="px-4 py-2">FullName</th>
-                    <th className="px-4 py-2">Department</th>
-                    <th className="px-4 py-2">Role</th>
-                    <th className="px-4 py-2">Status</th>
-                  </tr>
-                </thead>
-                <tbody>{renderTableContent()}</tbody>
-              </table>
-            </div>
-          )}
-          <div className=" flex justify-between mt-2">
-            <Button
-              className="rounded-xl w-44 "
-              onClick={handlePreviousPage}
-              disabled={currentPage === 0}
-            >
-              Previous
-            </Button>
-            <Button
+        )}
+        <div className="flex justify-between mt-2">
+          <Button
+            className="rounded-xl w-44"
+            onClick={handlePreviousPage}
+            disabled={currentPage === 0}
+          >
+            Previous
+          </Button>
+          <Button
             className="rounded-xl w-44 no-print"
             onClick={handleNextPage}
             disabled={users.length < itemsPerPage}
-            >
-              Next
-            </Button>
-          </div>
+          >
+            Next
+          </Button>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 export default BackOffice;
