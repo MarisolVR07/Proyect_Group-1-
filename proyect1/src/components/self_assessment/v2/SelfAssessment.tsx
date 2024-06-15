@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import { DebugMessage } from "@/app/types/debugData";
 import {
@@ -6,22 +5,22 @@ import {
   useSelfAssessmentContextStore,
   useUserContextStore,
 } from "@/store/authStore";
-import { useProposedActionsStore } from "@/store/proposedactionStore";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
-import { useAnswersStore } from "@/store/answerStore";
-import {
-  Parameter,
-  Question,
-  Section,
-  SelfAssessments,
-  User,
-} from "@/app/types/entities";
+import { Answers, AppliedSelfAssessment, Parameter, ProposedAction, SelfAssessments, User } from "@/app/types/entities";
 import LoadingCircle from "../../skeletons/LoadingCircle";
 import SecondaryButton from "../../general/SecondaryButton";
 import PageButton from "../../general/PageButton";
 import Button from "../../general/PrimaryButton";
 import SectionP from "./Section";
-import { initialSectionsData } from "@/app/types/selfAssessmentData";
+import {
+  AnswerData,
+  initialSectionsData,
+  initialSectionDataQuestions,
+} from "@/app/types/selfAssessmentData";
+import toast from "react-hot-toast";
+import { useProposedActionsStore } from "@/store/proposedactionStore";
+import { useAnswersStore } from "@/store/answerStore";
+import { customInfoToast } from "@/components/alerts/InfoAlert";
 
 interface SelfAssessmentProps {
   onDebugMessage?: (message: DebugMessage) => void;
@@ -31,14 +30,13 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
   const { currentSelfAssessment } = useSelfAssessmentContextStore();
   const { currentUser } = useUserContextStore();
   const { currentParameters } = useParametersContextStore();
-  const currentDate = new Date();
   const appliedSelfAssessmentsStore = useAppliedSelfAssessmentsStore();
+  const currentDate = new Date();
   const proposedActionStore = useProposedActionsStore();
   const answerStore = useAnswersStore();
 
   const [selfAssessmentStatus, setSelfAssessmentStatus] =
     useState<boolean>(false);
-  const [questions, setQuestions] = useState<string[][]>();
   const [loadedSelfAssessment, setLoadedSelfAssessment] =
     useState<SelfAssessments | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -50,6 +48,10 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
   const [sectionData, setSectionData] = useState<{
     [key: string]: { sectionName: string; questions: string[] };
   }>(initialSectionsData);
+
+  const [allSectionData, setAllSectionData] = useState<AnswerData[][]>(
+    initialSectionDataQuestions
+  );
 
   useEffect(() => {
     checkSelfAssessmentStatus();
@@ -80,24 +82,15 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
     try {
       if (currentSelfAssessment) {
         setLoadedSelfAssessment(currentSelfAssessment);
-        loadSectionData(currentSelfAssessment, setSectionData);
-        const loadedQuestions: string[][] =
-          currentSelfAssessment.rc_sections?.map(
-            (section: Section) =>
-              section.rc_questions?.map(
-                (question: Question) => question.QES_Text
-              ) ?? []
-          ) ?? [];
-
-        setQuestions(loadedQuestions);
+        loadSectionData(currentSelfAssessment);
       }
     } catch (error) {
       console.error("Error fetching self-assessment data:", error);
     }
   };
 
-  const loadSectionData = (selfAssessment: any, setSectionData: any) => {
-    onDebugMessage({
+  const loadSectionData = (selfAssessment: SelfAssessments) => {
+    onDebugMessage?.({
       content: "Loading Section data(loadSectionData)",
       type: "Info",
     });
@@ -105,8 +98,11 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
       const updatedSectionData: {
         [key: string]: { sectionName: string; questions: string[] };
       } = {};
-      selfAssessment.rc_sections.forEach((section: any, index: number) => {
-        const sectionName = section.SEC_Name;
+      const updatedSectionAnswers: {
+        [key: string]: AnswerData[];
+      } = {};
+      selfAssessment.rc_sections.forEach((section, index) => {
+        const sectionName = section.SEC_Name || `Section ${index + 1}`;
         const questions = section.rc_questions
           ? section.rc_questions.map((question: any) => question.QES_Text)
           : Array.from({ length: 4 }, () => "");
@@ -114,15 +110,23 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
           sectionName,
           questions,
         };
+        updatedSectionAnswers[(index + 1).toString()] =
+          initialSectionDataQuestions[index];
       });
       setSectionData(updatedSectionData);
     } else {
-      onDebugMessage({
+      onDebugMessage?.({
         content:
           "The self-assessment does not have defined sections(loadSectionData)",
         type: "Warning",
       });
     }
+  };
+
+  const handleSectionDataChange = (pageNumber: number, data: AnswerData[]) => {
+    const updatedAllTableData = [...allSectionData];
+    updatedAllTableData[pageNumber - 1] = data;
+    setAllSectionData(updatedAllTableData);
   };
 
   const handlePageChange = (pageNumber: number) => {
@@ -141,7 +145,99 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
     }
   };
 
-  const handleSave = async () => {};
+  const renderTables = () => {
+    return allSectionData.map((SectionData, index) => (
+      <div
+        key={`table-${index + 1}`}
+        style={{ display: index === currentPage - 1 ? "block" : "none" }}
+      >
+        <SectionP
+          number={`${currentPage}`}
+          sectionData={sectionData[currentPage]}
+          initialData={SectionData}
+          onDataChange={(data: AnswerData[]) =>
+            handleSectionDataChange(currentPage, data)
+          }
+        />
+      </div>
+    ));
+  };
+
+  const handleSave = async () => {
+    if ((await checkSelfAssessmentStatus()) === true) {
+      return;
+    }
+
+    const allSelected = allSectionData.every((tableData) =>
+      tableData.every((row) => row.answer !== null)
+    );
+    if (!allSelected) {
+      customInfoToast("Please Answer All Questions");
+      return;
+    }
+
+    setSaving(true);
+    const appliedSelfAssessment: AppliedSelfAssessment = {
+      ASA_Date: currentDate.toISOString() ?? null,
+      ASA_ReviewedBy: "N/A",
+      ASA_Status: "A",
+      ASA_MadeBy: currentUser?.USR_FullName,
+      ASA_Assessment: currentParameters?.PRM_CurrentSelfAssessment,
+      ASA_Department: currentUser?.USR_Department,
+    };
+
+    const respASA = await appliedSelfAssessmentsStore.saveAppliedSelfAssessment(
+      appliedSelfAssessment
+    );
+    if ("error" in respASA) {
+      toast.error("Error saving Self-Assessment");
+      setSaving(false);
+      return;
+    }
+    for (const [sectionIndex, tableData] of allSectionData.entries()) {
+      for (const [questionIndex, rowData] of tableData.entries()) {
+        const answer: Answers = {
+          ANS_Selection: rowData.answer === 0 ? "y" : "n",
+          ANS_Question:
+            loadedSelfAssessment?.rc_sections?.[sectionIndex]?.rc_questions?.[
+              questionIndex
+            ]?.QES_Id,
+          ANS_SelfAssessment: respASA.ASA_Id,
+          ANS_WorkDocument: rowData.url,
+          ANS_Observations: rowData.observations,
+        };
+
+        const respAnswer = await answerStore.saveAnswer(answer);
+
+        if ("error" in respAnswer) {
+          toast.error("Error saving Self-Assessment");
+          setSaving(false);
+          return;
+        }
+        if (rowData.responsible && rowData.date) {
+          const proposedAction: ProposedAction = {
+            PAC_Responsible: rowData.responsible,
+            PAC_Justification: rowData.justification,
+            PAC_Preview: rowData.preview,
+            PAC_Date: rowData.date.toISOString(),
+            PAC_Answer: respAnswer.ANS_Id,
+            PAC_Status: "A",
+          };
+
+          const respProposedAction =
+            await proposedActionStore.saveProposedAction(proposedAction);
+
+          if ("error" in respProposedAction) {
+            toast.error("Error saving Self-Assessment");
+            setSaving(false);
+            return;
+          }
+        }
+      }
+    }
+    setSaving(false);
+    toast.success("Self-Assessment sent");
+  };
 
   return (
     <div className="form-control my-3 sm:mx-8 sm:my-1 mx-0 w-auto items-center justify-center font-poppins font-semibold drop-shadow-xl">
@@ -179,10 +275,8 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
             Next
           </SecondaryButton>
         </div>
-        <SectionP
-          number={`${currentPage}`}
-          sectionData={sectionData[currentPage.toString()]}
-        />
+        {/* Render each SectionP based on currentPage */}
+        {renderTables()}
         <div className="flex flex-col sm:flex-row sm:justify-between mx-4 sm:mx-16 items-center">
           <div className="sm:text-base text-sm sm:my-4 my-1 text-center sm:text-left">
             <p>Carried out by: {user?.USR_FullName}</p>

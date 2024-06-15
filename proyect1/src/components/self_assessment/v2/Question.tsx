@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import InputForm from "../../forms/InputForms";
 import TextArea from "../../forms/TextAreaForms";
 import CheckBox from "./CheckBox";
@@ -9,36 +9,88 @@ interface QuestionProps {
   number: string;
   question: string;
   onDataChange?: (data: AnswerData) => void;
+  initialData: AnswerData;
 }
 
-const Question: React.FC<QuestionProps> = ({ number, question }) => {
-  const [showProposedAction, setShowProposedAction] = useState(true);
-  const [answerData, setAnswerData] = useState<AnswerData>();
-  const [date, setDate] = useState<Date | null>(null);
+const Question: React.FC<QuestionProps> = ({
+  number,
+  question,
+  initialData,
+  onDataChange,
+}) => {
+  const [answerData, setAnswerData] = useState<AnswerData>(initialData);
 
-  const handleCheckBoxChange = (index: number) => {
+  const handleAnswerChange = (newAnswer: number) => {
     setAnswerData((prevData) => ({
       ...prevData,
-      checkedIndex: index === prevData.answer ? null : index,
+      answer: newAnswer,
     }));
   };
+
+  const handleObservationChange = (value: string) => {
+    setAnswerData((prevData) => ({
+      ...prevData,
+      observations: value,
+    }));
+  };
+
+  const handleUrlChange = (value: string) => {
+    setAnswerData((prevData) => ({
+      ...prevData,
+      url: value,
+    }));
+  };
+
+  const handleResponsibleChange = (value: string) => {
+    setAnswerData((prevData) => ({
+      ...prevData,
+      responsible: value,
+    }));
+  };
+
+  const handleJustificationChange = (value: string) => {
+    setAnswerData((prevData) => ({
+      ...prevData,
+      justification: value,
+    }));
+  };
+
+  const handlePreviewChange = (value: string) => {
+    setAnswerData((prevData) => ({
+      ...prevData,
+      preview: value,
+    }));
+  };
+
+  const handleDateChange = (newDate: Date | null) => {
+    setAnswerData((prevData) => ({
+      ...prevData,
+      date: newDate,
+    }));
+  };
+
+  useEffect(() => {
+    onDataChange?.(answerData);
+  }, [answerData]);
+
+
   return (
     <div className="bg-gray-800 w-full px-3 py-3 rounded-xl">
       <p className="text-white text-start">{`${number} - ${question}`}</p>
       <div className="flex space-x-7 items-center justify-center text-white mt-2">
-        <div className="items-center justify-center border p-2 rounded-xl ">
+        <div className="items-center justify-center border p-2 rounded-xl">
           <p>Yes</p>
           <CheckBox
-            onChange={() => handleCheckBoxChange(0)}
-            //checked={answerData.answer === 0}
+            onChange={() => handleAnswerChange(0)}
+            checked={answerData.answer === 0}
             className="w-7 h-7 hover:border-violet-700"
           />
         </div>
-        <div className="items-center justify-center border p-2 rounded-xl ">
+        <div className="items-center justify-center border p-2 rounded-xl">
           <p>No</p>
           <CheckBox
-            onChange={() => handleCheckBoxChange(1)}
-            //checked={answerData.answer === 1}
+            onChange={() => handleAnswerChange(1)}
+            checked={answerData.answer === 1}
             className="w-7 h-7 hover:border-violet-700"
           />
         </div>
@@ -49,7 +101,9 @@ const Question: React.FC<QuestionProps> = ({ number, question }) => {
           <TextArea
             id={`${number}.Ob`}
             placeholder="Observations"
-            className="w-full rounded-xl text-wrap hover:ring-violet-600"
+            className="w-full rounded-xl h-auto hover:ring-violet-600"
+            value={answerData.observations}
+            onChange={(value) => handleObservationChange(value)}
           />
         </div>
         <div>
@@ -57,11 +111,13 @@ const Question: React.FC<QuestionProps> = ({ number, question }) => {
           <InputForm
             type="text"
             placeholder="Work Papers URL"
-            className="w-full rounded-xl text-wrap hover:ring-violet-600"
+            className="w-full rounded-xl hover:ring-violet-600"
+            value={answerData.url}
+            onChange={(value) => handleUrlChange(value)}
           />
         </div>
       </div>
-      {showProposedAction && (
+      {answerData.answer === 1 && (
         <div className="bg-gray-700 mt-3 rounded-xl py-2">
           <p className="text-white text-base py-2">Proposed Action</p>
           <div className="flex space-x-5 px-4">
@@ -69,8 +125,8 @@ const Question: React.FC<QuestionProps> = ({ number, question }) => {
               <p className="text-white text-xs lg:text-sm">Date</p>
               <DateTimePicker
                 className="hover:ring-violet-600 hover:ring-2 hover:rounded-lg"
-                value={date}
-                onChange={(newDate: Date | null) => setDate(newDate)}
+                value={answerData.date}
+                onChange={handleDateChange}
               />
             </div>
             <div className="w-full">
@@ -78,7 +134,9 @@ const Question: React.FC<QuestionProps> = ({ number, question }) => {
               <InputForm
                 type="text"
                 placeholder="Responsible"
-                className="w-full rounded-xl text-wrap hover:ring-violet-600"
+                className="w-full rounded-xl hover:ring-violet-600"
+                value={answerData.responsible}
+                onChange={(value) => handleResponsibleChange(value)}
               />
             </div>
           </div>
@@ -88,7 +146,9 @@ const Question: React.FC<QuestionProps> = ({ number, question }) => {
               <TextArea
                 id={`${number}.Jus`}
                 placeholder="Justification"
-                className="w-full rounded-xl text-wrap hover:ring-violet-600"
+                className="w-full rounded-xl hover:ring-violet-600"
+                value={answerData.justification}
+                onChange={(value) => handleJustificationChange(value)}
               />
             </div>
             <div className="w-full">
@@ -96,7 +156,9 @@ const Question: React.FC<QuestionProps> = ({ number, question }) => {
               <TextArea
                 id={`${number}.Prev`}
                 placeholder="Preview"
-                className="w-full rounded-xl text-wrap hover:ring-violet-600"
+                className="w-full rounded-xl hover:ring-violet-600"
+                value={answerData.preview}
+                onChange={(value) => handlePreviewChange(value)}
               />
             </div>
           </div>
