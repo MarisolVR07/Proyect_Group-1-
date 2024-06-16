@@ -10,6 +10,7 @@ interface QuestionProps {
   question: string;
   onDataChange?: (data: AnswerData) => void;
   initialData: AnswerData;
+  isUnanswered: boolean;
 }
 
 const Question: React.FC<QuestionProps> = ({
@@ -17,6 +18,7 @@ const Question: React.FC<QuestionProps> = ({
   question,
   initialData,
   onDataChange,
+  isUnanswered,
 }) => {
   const [answerData, setAnswerData] = useState<AnswerData>(initialData);
 
@@ -73,9 +75,12 @@ const Question: React.FC<QuestionProps> = ({
     onDataChange?.(answerData);
   }, [answerData]);
 
-
   return (
-    <div className="bg-gray-800 w-full px-3 py-3 rounded-xl">
+    <div
+      className={`bg-gray-800 w-full px-3 py-3 rounded-xl ${
+        isUnanswered ? "ring-2 ring-red-500" : ""
+      }`}
+    >
       <p className="text-white text-start">{`${number} - ${question}`}</p>
       <div className="flex space-x-7 items-center justify-center text-white mt-2">
         <div className="items-center justify-center border p-2 rounded-xl">

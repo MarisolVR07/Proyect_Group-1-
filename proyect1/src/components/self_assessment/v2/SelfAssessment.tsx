@@ -42,6 +42,10 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
   const currentDate = new Date();
   const proposedActionStore = useProposedActionsStore();
   const answerStore = useAnswersStore();
+  const [unansweredQuestions, setUnansweredQuestions] = useState<{
+    [key: number]: number[];
+  }>({});
+
 
   const [selfAssessmentStatus, setSelfAssessmentStatus] =
     useState<boolean>(false);
@@ -177,6 +181,7 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
           onDataChange={(data: AnswerData[]) =>
             handleSectionDataChange(currentPage, data)
           }
+          unansweredQuestions={unansweredQuestions[currentPage] || []}
         />
       </div>
     ));
@@ -191,13 +196,27 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
       return;
     }
 
-    const allSelected = allSectionData.every((tableData) =>
-      tableData.every((row) => row.answer !== null)
-    );
-    if (!allSelected) {
+    const newUnansweredQuestions: { [key: number]: number[] } = {};
+    let allAnswered = true;
+
+    allSectionData.forEach((tableData, sectionIndex) => {
+      const unanswered = tableData
+        .map((row, questionIndex) => (row.answer === null ? questionIndex : -1))
+        .filter((index) => index !== -1);
+
+      if (unanswered.length > 0) {
+        newUnansweredQuestions[sectionIndex + 1] = unanswered;
+        allAnswered = false;
+      }
+    });
+
+    if (!allAnswered) {
+      setUnansweredQuestions(newUnansweredQuestions);
       customInfoToast("Please Answer All Questions");
       return;
     }
+
+    setUnansweredQuestions({});
 
     setSaving(true);
     const appliedSelfAssessment: AppliedSelfAssessment = {
@@ -274,6 +293,7 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
     toast.success("Self-Assessment sent");
   };
 
+
   return (
     <div className="form-control my-3 sm:mx-8 sm:my-1 mx-0 w-auto items-center justify-center font-poppins font-semibold drop-shadow-xl">
       <div className="bg-gray-700 w-full py-3 px-3 items-center justify-center text-center rounded-xl">
@@ -300,6 +320,9 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
                 pageNumber={pageNumber}
                 currentPage={currentPage}
                 handlePageChange={handlePageChange}
+                hasUnansweredQuestions={Boolean(
+                  unansweredQuestions[pageNumber]
+                )}
               />
             ))}
           </div>

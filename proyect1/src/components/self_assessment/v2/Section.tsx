@@ -7,6 +7,7 @@ interface SectionProps {
   sectionData: { sectionName: string; questions: string[] };
   onDataChange: (data: AnswerData[]) => void;
   initialData: AnswerData[];
+  unansweredQuestions: number[];
 }
 
 const Section: React.FC<SectionProps> = ({
@@ -14,6 +15,7 @@ const Section: React.FC<SectionProps> = ({
   sectionData,
   onDataChange,
   initialData,
+  unansweredQuestions,
 }) => {
   const [answers, setAnswers] = useState<AnswerData[]>(initialData);
 
@@ -37,6 +39,7 @@ const Section: React.FC<SectionProps> = ({
           question={sectionData.questions[index]}
           initialData={data}
           onDataChange={(newData) => handleQuestionDataChange(index, newData)}
+          isUnanswered={unansweredQuestions.includes(index)}
         />
         {index !== sectionData.questions.length - 1 && (
           <div className="w-full bg-violet-900 my-3 h-1"></div>
@@ -50,7 +53,7 @@ const Section: React.FC<SectionProps> = ({
       <div className="bg-gray-800 w-full rounded-xl text-center py-1 mb-2">
         <p className="text-xl text-white">{sectionData.sectionName}</p>
       </div>
-        {renderQuestions()}
+      {renderQuestions()}
     </div>
   );
 };
