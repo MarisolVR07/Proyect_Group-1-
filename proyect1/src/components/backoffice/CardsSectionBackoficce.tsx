@@ -22,7 +22,7 @@ const CardsSection = () => (
           }
           title="Departments Unit"
           description=""
-          className="flex-1 text-center bg-gray-700 rounded-lg shadow-lg mb-2 lg:mb-0"
+          className="flex-1 text-center w-full bg-gray-700 rounded-lg shadow-lg mb-2 lg:mb-0"
         />
       </div>
 
@@ -49,7 +49,7 @@ const CardsSection = () => (
           }
           title="Self-Assessment"
           description=""
-          className="flex-1 lg:w-[500px]  text-center bg-gray-700 rounded-lg shadow-lg mb-2 lg:mb-0"
+          className="flex-1 lg:w-[400px]  text-center bg-gray-700 rounded-lg shadow-lg mb-2 lg:mb-0"
         />
         <CardButton
           href="/views/self_assessment_review"
