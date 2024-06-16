@@ -33,11 +33,11 @@ const TextArea: React.FC<TextAreaProps> = ({
       textArea.style.height = `${textArea.scrollHeight}px`;
     }
   };
-/*
+
   useEffect(() => {
     adjustHeight();
-  }, []);
-*/
+  }, [value]);
+
   return (
     <div className="flex mb-1">
       {spam && (

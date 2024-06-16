@@ -1,6 +1,6 @@
 import React from "react";
 import InputForm from "../../forms/InputForms";
-import TextArea from "../../forms/TextAreaForms";
+import TextArea from "./TextArea";
 
 interface MantSectionProps {
   number: string;

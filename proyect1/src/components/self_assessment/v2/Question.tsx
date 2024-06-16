@@ -106,7 +106,7 @@ const Question: React.FC<QuestionProps> = ({
           <TextArea
             id={`${number}.Ob`}
             placeholder="Observations"
-            className="w-full rounded-xl h-auto hover:ring-violet-600"
+            className="w-full rounded-xl hover:ring-violet-600"
             value={answerData.observations}
             onChange={(value) => handleObservationChange(value)}
           />
