@@ -13,7 +13,7 @@ export async function GET(
     const users = await prisma.rc_users.findMany({
         skip: (page - 1) * itemsPerPage, 
         take: itemsPerPage,
-        include:{rc_departments:true}
+        
       
     });
     return NextResponse.json(users, { status: 200 });

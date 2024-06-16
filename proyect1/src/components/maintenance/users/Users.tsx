@@ -86,6 +86,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   };
 
   const handleDepartmentChange = async (user: User, newDeptId: number) => {
+    console.log(user)
     onDebugMessage({
       content: "Changing user department (handleDepartmentChange)",
       type: "Info",
