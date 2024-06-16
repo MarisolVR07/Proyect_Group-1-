@@ -8,8 +8,13 @@ import { useDepartmentsStore } from "@/store/departmentStore";
 import { Department } from "@/app/types/entities";
 import { useUnitContextStore } from "@/store/authStore";
 import toast from "react-hot-toast";
+import { DebugMessage } from "@/app/types/debugData";
 
-const Departments = () => {
+interface DepartmentsProps {
+  onDebugMessage?: (message: DebugMessage) => void;
+}
+
+const Departments: React.FC<DepartmentsProps> = ({ onDebugMessage }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const {
     departments,
@@ -31,34 +36,52 @@ const Departments = () => {
   const [isSearching, setIsSearching] = useState(false);
 
   const fetchDepartments = async (page: number) => {
+    onDebugMessage?.({
+      type: "Info",
+      content: "Fetching departments(fetchDepartments)",
+    });
     setIsLoading(true);
     try {
       if (isSearching) {
-        await getDepartmentsByName(searchQuery, page );
+        await getDepartmentsByName(searchQuery, page);
       } else {
         await getDepartmentsPerPage(page);
       }
+      onDebugMessage?.({
+        type: "Success",
+        content: "Departments fetched successfully(fetchDepartments)",
+      });
     } catch (error) {
-      console.error("Failed to fetch units", error);
+      onDebugMessage?.({
+        type: "Error",
+        content: "Failed to fetch units(fetchDepartments)=> " + error,
+      });
     }
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchDepartments(currentPage+1);
-  }, [currentPage,isSearching, searchQuery]);
+    fetchDepartments(currentPage + 1);
+  }, [currentPage, isSearching, searchQuery]);
 
   const handleSaveClickDepartment = async () => {
-    console.log("Current unit:", currentUnit);
+    onDebugMessage?.({
+      type: "Info",
+      content: "Saving department(handleSaveClickDepartment)",
+    });
     if (currentUnit !== null && currentUnit.UND_Id) {
       setDepartment((i) => ({
         DPT_Unit: currentUnit.UND_Id,
         ...i,
       }));
-      console.log("Department before save/update:", department);
       try {
         if (isEditing) {
           await updateDepartment(department);
+          onDebugMessage?.({
+            type: "Success",
+            content:
+              "Department updated successfully(handleSaveClickDepartment)",
+          });
           toast.success("Department updated successfully");
           setIsEditing(false);
         } else {
@@ -66,16 +89,28 @@ const Departments = () => {
             ...department,
             DPT_Unit: currentUnit.UND_Id,
           });
+          onDebugMessage?.({
+            type: "Success",
+            content:
+              "Department saved successfully(handleSaveClickDepartment)",
+          });
           toast.success("Department saved successfully");
         }
         await fetchDepartments(currentPage);
       } catch (error) {
+        onDebugMessage?.({
+          type: "Error",
+          content: "Failed to save department(handleSaveClickDepartment)=> " + error,
+        });
         toast.error("Failed to save department");
-        console.error("Failed to save department", error);
       }
     } else {
       toast.error("Department not saved, unit id not specified");
-      console.log("Department not saved, unit id not specified");
+      onDebugMessage?.({
+        type: "Error",
+        content:
+          "Department not saved, unit id not specified(handleSaveClickDepartment)",
+      });
     }
   };
 
@@ -86,13 +121,16 @@ const Departments = () => {
     setIsSearching(!!query);
     setIsLoading(true);
     try {
-      if(query){
-        await getDepartmentsByName(query,1)
-      }else{
-        await getDepartmentsPerPage(1)
+      if (query) {
+        await getDepartmentsByName(query, 1);
+      } else {
+        await getDepartmentsPerPage(1);
       }
     } catch (error) {
-      console.error("Error searching departments", error);
+      onDebugMessage?.({
+        type: "Error",
+        content: "Error searching departments(handleSearchChangeDepartment)=> " + error,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -118,8 +156,8 @@ const Departments = () => {
   };
 
   const handleNextPage = () => {
-    if(departments.length === 10){
-    setCurrentPage((prevPage) => prevPage + 1);
+    if (departments.length === 10) {
+      setCurrentPage((prevPage) => prevPage + 1);
     }
   };
 
@@ -139,7 +177,9 @@ const Departments = () => {
           className="w-full rounded-md"
           placeholder="Department Name"
           value={department.DPT_Name}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeDName(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            handleChangeDName(e.target.value)
+          }
         />
       </div>
       <div className="bg-gray-700 w-full px-3 py-3 mb-3 flex items-center justify-between rounded-b-btn">
@@ -167,8 +207,8 @@ const Departments = () => {
       <div className="w-full px-3 py-3 bg-gray-700 rounded-md items-center justify-center mb-5"></div>
       {isLoading ? (
         <div className="flex justify-center items-center h-32">
-        <Spinner />
-      </div>
+          <Spinner />
+        </div>
       ) : (
         <div className="overflow-x-auto mt-1 rounded-md">
           <table className="table-auto w-full">

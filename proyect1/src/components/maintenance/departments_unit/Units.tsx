@@ -7,10 +7,16 @@ import { useUnitStore } from "@/store/unitStore";
 import { Unit } from "@/app/types/entities";
 import { useUnitContextStore } from "@/store/authStore";
 import toast from "react-hot-toast";
+import { DebugMessage } from "@/app/types/debugData";
 
-const Units = () => {
+interface UnitsProps {
+  onDebugMessage?: (message: DebugMessage) => void;
+}
+
+const Units: React.FC<UnitsProps> = ({ onDebugMessage }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { units, getUnitsPerPage, saveUnit, updateUnit, getUnitsByName } = useUnitStore();
+  const { units, getUnitsPerPage, saveUnit, updateUnit, getUnitsByName } =
+    useUnitStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [unit, setUnit] = useState<Unit>({
@@ -25,6 +31,10 @@ const Units = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      onDebugMessage?.({
+        type: "Info",
+        content: "Fetching units (fetchData)",
+      });
       setIsLoading(true);
       try {
         if (isSearching) {
@@ -32,8 +42,15 @@ const Units = () => {
         } else {
           await getUnitsPerPage(currentPage + 1);
         }
+        onDebugMessage?.({
+          type: "Success",
+          content: "Units fetched successfully (fetchData)",
+        });
       } catch (error) {
-        console.error("Failed to fetch units", error);
+        onDebugMessage?.({
+          type: "Error",
+          content: "Failed to fetch units(fecthData)=> " + error,
+        });
       }
       setIsLoading(false);
     };
@@ -41,22 +58,37 @@ const Units = () => {
   }, [currentPage, isSearching, searchQuery]);
 
   const handleSaveClickUnit = async () => {
+    onDebugMessage?.({
+      type: "Info",
+      content: "Saving or updating unit(handleSaveClickUnit)",
+    });
     try {
       console.log("Unit before save/update:", unit);
       if (isEditing) {
         await updateUnit(unit);
+        onDebugMessage?.({
+          type: "Success",
+          content: "Unit updated successfully (handleSaveClickUnit)",
+        });
         toast.success("Unit updated successfully");
         setIsEditing(false);
       } else {
         const savedUnit = await saveUnit(unit);
         setUnit(savedUnit as Unit);
         setCurrentUnit(savedUnit as Unit);
+        onDebugMessage?.({
+          type: "Success",
+          content: "Unit saved successfully (handleSaveClickUnit)",
+        });
         toast.success("Unit saved successfully");
       }
       await getUnitsPerPage(currentPage + 1);
     } catch (error) {
+      onDebugMessage?.({
+        type: "Error",
+        content: "Failed to save or update unit(handleSaveClickUnit)=> " + error,
+      });
       toast.error("Failed to save or update unit");
-      console.error("Failed to save or update unit", error);
     }
   };
 
@@ -72,8 +104,12 @@ const Units = () => {
       } else {
         await getUnitsPerPage(1);
       }
+
     } catch (error) {
-      console.error("Error searching units", error);
+      onDebugMessage?.({
+        type: "Error",
+        content: "Error searching units(handleSearchChangeUnit)=> " + error,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -97,8 +133,8 @@ const Units = () => {
   };
 
   const handleNextPage = () => {
-    if(units.length === 10){
-    setCurrentPage(currentPage + 1);
+    if (units.length === 10) {
+      setCurrentPage(currentPage + 1);
     }
   };
 
