@@ -10,15 +10,17 @@ import StateCheckbox from "@/components/general/StateCheckbox";
 import { User } from "@/app/types/entities";
 import toast from "react-hot-toast";
 import { DebugMessage } from "@/app/types/debugData";
-import { on } from "events";
 
 interface UsersProps {
   onDebugMessage?: (message: DebugMessage) => void;
 }
+
 const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   useEffect(() => {});
+
   const [searchQuery, setSearchQuery] = useState("");
-  const { users, getUsers, getUsersByName, getUsersPerPage, updateUser } = useUserStore();
+  const { users, getUsers, getUsersByName, getUsersPerPage, updateUser } =
+    useUserStore();
   const { setCurrentUser, currentUser } = useUserContextStore();
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
@@ -33,7 +35,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      onDebugMessage({ content: "Fetching users (fectchData)", type: "Info",  });
+      onDebugMessage({ content: "Fetching users (fetchData)", type: "Info" });
       setIsLoading(true);
       try {
         if (isSearching && searchQuery) {
@@ -41,9 +43,12 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
         } else {
           await getUsersPerPage(currentPage);
         }
-        onDebugMessage({content: "Users fetched successfully.",type: "Success",});
+        onDebugMessage({
+          content: "Users fetched successfully.",
+          type: "Success",
+        });
       } catch (error) {
-        console.error(`Failed to fetch users (fectchData)->${error}`);
+        console.error(`Failed to fetch users (fetchData)->${error}`);
         onDebugMessage({ content: "Failed to Fetch Users", type: "Error" });
       }
       setIsLoading(false);
@@ -135,11 +140,12 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     if (!query.trim()) return;
     setIsLoading(true);
     try {
-      if(query){
-        await getUsersByName(query,1)
-      }else{
-        await getUsersPerPage(1)
-      }    } catch (error) {
+      if (query) {
+        await getUsersByName(query, 1);
+      } else {
+        await getUsersPerPage(1);
+      }
+    } catch (error) {
       onDebugMessage({
         content: `Error searching users (handleSearchChange)->${error}`,
         type: "Error",
@@ -150,20 +156,24 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   };
 
   const handleNextPage = () => {
-    if(users.length === 10){setCurrentPage((prevPage) => prevPage + 1);}
+    if (users.length === 10) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
   };
 
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => (prevPage > 0 ? prevPage - 1 : 0));
   };
+
   const handleRowClick = (user: User) => {
     setSelectedUserId(user.USR_Id);
   };
+
   return (
-    <div className="form-control my-3 py-8 px-4 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
+    <div className="form-control lg:my-3 lg:py-8 px-1 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <div className="m-5 print-only">
-          <h5 className="text-sm text-white text-center mb-4 text-color">
+          <h5 className="text-sm text-white text-center lg:mb-4 text-color">
             Current user: {user?.USR_FullName}
           </h5>
         </div>
@@ -187,7 +197,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
           </svg>
         </Button>
       </div>
-      <h4 className="text-2xl text-white text-center mb-4 print-only text-color">
+      <h4 className="text-2xl text-white text-center lg:mb-4 print-only text-color">
         USERS
       </h4>
       <SearchBar onSearch={handleSearchChange} />
@@ -195,54 +205,66 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
         <Spinner />
       ) : (
         <div className="overflow-x-auto mt-4 rounded-md print-only">
-          <table className="table-auto w-full text-color">
-            <thead className="bg-violet-800 text-white">
-              <tr>
-                <th className="px-4 py-2 text-color">Email</th>
-                <th className="px-4 py-2 text-color">FullName</th>
-                <th className="px-4 py-2 text-color no-print">Department</th>
-                <th className="px-4 py-2 text-color ">Rol</th>
-                <th className="px-4 py-2 text-color no-print">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((userMap, index) => (
-                <tr
-                  key={index}
-                  onClick={() => handleRowClick(userMap)}
-                  className={
-                    selectedUserId === userMap.USR_Id ? "bg-gray-600" : ""
-                  }
-                >
-                  <td className="px-4 py-2">{userMap.USR_Email}</td>
-                  <td className="px-4 py-2">{userMap.USR_FullName}</td>
-                  <td className="no-print">
-                    <DepartmentDropdown
-                      selectedDepartment={userMap.USR_Department}
-                      onChange={(newDeptId) =>
-                        handleDepartmentChange(userMap, newDeptId)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <RolDropdown
-                      selectedRol={userMap.USR_Role}
-                      onChange={(newRol) => handleRolChange(userMap, newRol)}
-                    />
-                  </td>
-                  <td className="no-print flex items-center space-x-2">
-                    <StateCheckbox
-                      isChecked={userMap.USR_Status === "a"}
-                      onChange={(e) => handleStatusChange(userMap, e)}
-                    />
-                    <span className="text-white">
-                      {userMap.USR_Status === "a" ? "Active" : "Inactive"}
-                    </span>
-                  </td>
+            <table className="table-auto w-full text-color ">
+              <thead className="bg-violet-800 text-white mb-2">
+                <tr>
+                  <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
+                    Email
+                  </th>
+                  <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
+                    FullName
+                  </th>
+                  <th className="lg:px-4 lg:py-2 text-xs lg:text-base no-print">
+                    Department
+                  </th>
+                  <th className="lg:px-4 lg:py-2 text-xs lg:text-base">Rol</th>
+                  <th className="lg:px-4 lg:py-2 text-xs lg:text-base no-print">
+                    Status
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {users.map((userMap, index) => (
+                  <tr
+                    key={index}
+                    onClick={() => handleRowClick(userMap)}
+                    className={
+                      selectedUserId === userMap.USR_Id ? "bg-gray-600" : ""
+                    }
+                  >
+                    <td className="lg:px-4 lg:py-2 text-xs lg:text-base text-wrap">
+                      {userMap.USR_Email}
+                    </td>
+                    <td className="lg:px-4 lg:py-2 text-xs lg:text-base">
+                      {userMap.USR_FullName}
+                    </td>
+                    <td className="no-print">
+                      <DepartmentDropdown
+                        selectedDepartment={userMap.USR_Department}
+                        onChange={(newDeptId) =>
+                          handleDepartmentChange(userMap, newDeptId)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <RolDropdown
+                        selectedRol={userMap.USR_Role}
+                        onChange={(newRol) => handleRolChange(userMap, newRol)}
+                      />
+                    </td>
+                    <td className="no-print flex items-center space-x-2">
+                      <StateCheckbox
+                        isChecked={userMap.USR_Status === "a"}
+                        onChange={(e) => handleStatusChange(userMap, e)}
+                      />
+                      <span className="text-white">
+                        {userMap.USR_Status === "a" ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           <div className="flex justify-between mt-2">
             <Button
               className="rounded-xl w-44 no-print"
@@ -255,7 +277,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
               className="rounded-xl w-44 no-print"
               onClick={handleNextPage}
               disabled={users.length < itemsPerPage}
-              >
+            >
               Next
             </Button>
           </div>

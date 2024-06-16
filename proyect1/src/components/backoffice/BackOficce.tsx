@@ -295,10 +295,10 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   };
 
   return (
-    <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
+    <div className="items-center justify-center my-1 font-poppins drop-shadow-xl">
       <CardsSection />
-      <div className="flex flex-col items-center justify-center space-y-4 mx-4 w-full">
-        <div className="flex-1 bg-gray-700 p-8 rounded-xl border-2 border-white text-white overflow-x-auto min-h-[500px] w-full max-w-4xl mx-auto">
+      <div className="flex flex-col items-center justify-center space-y-2 lg:space-y-4 px-4 w-full">
+        <div className="flex-1 bg-gray-700 py-2 px-1 lg:p-4 rounded-xl border-2 border-white text-white  min-h-[500px] w-full mx-auto">
           <div className="w-full py-1 items-center justify-center text-center">
             <h2 className="text-xl text-white font-semibold">NEW USERS</h2>
           </div>
@@ -310,11 +310,21 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
               <table className="table-auto w-full text-color">
                 <thead className="bg-violet-800 text-white">
                   <tr>
-                    <th className="px-4 py-2">Email</th>
-                    <th className="px-4 py-2">FullName</th>
-                    <th className="px-4 py-2">Department</th>
-                    <th className="px-4 py-2">Role</th>
-                    <th className="px-4 py-2">Status</th>
+                    <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
+                      Email
+                    </th>
+                    <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
+                      FullName
+                    </th>
+                    <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
+                      Department
+                    </th>
+                    <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
+                      Role
+                    </th>
+                    <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
+                      Status
+                    </th>
                   </tr>
                 </thead>
                 <tbody>{renderTableContent()}</tbody>
@@ -339,7 +349,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
           </div>
         </div>
 
-        <div className="flex-1 bg-gray-700 p-3 text-center border-2 border-white rounded-xl overflow-hidden min-h-[500px] w-full max-w-4xl mx-auto">
+        <div className="flex-1 bg-gray-700 py-2 px-1 lg:p-3 text-center border-2 border-white rounded-xl overflow-hidden w-full mx-auto">
           <h2 className="text-xl text-white mb-3 font-semibold">
             APP ACTIVATION/DEACTIVATION DATE-TIME
           </h2>
@@ -355,7 +365,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
               onChange={setDeactivationDate}
             />
           </div>
-          <div className="mt-3">
+          <div className="lg:mt-3">
             <InputField
               type="text"
               label="Institution"
@@ -364,8 +374,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
               onChange={handleInstitutionChange}
             />
           </div>
-          <div className="mt-3">
-            <h2 className="text-xl text-white font-semibold">EMAIL</h2>
+          <div className="lg:mt-3">
             <InputField
               type="email"
               label="Email Address"
@@ -377,7 +386,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
           <div className="save-section">
             <PrimaryButton
               onClick={handleSave}
-              className="w-44 rounded-md mt-4 mx-auto"
+              className="w-44 rounded-md mt-4 h-7 mx-auto"
             >
               Save
             </PrimaryButton>

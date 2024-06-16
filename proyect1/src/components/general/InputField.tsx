@@ -23,7 +23,7 @@ const InputField: React.FC<InputFieldProps> = ({
   };
 
   return (
-    <div className="w-full mb-6">
+    <div className="w-full lg:mb-6">
       {label && (
         <label className="label">
           <span className="label-text text-white">{label}</span>

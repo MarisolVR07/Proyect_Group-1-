@@ -22,7 +22,7 @@ export default function Page() {
     <>
       <DebugModeToggle debugMessages={debugMessages}>
         <Header currentPage="/views/backoffice/users" />
-        <div className="items-center justify-center px-20 py-4">
+        <div className="items-center justify-center px-2 lg:px-20 lg:py-4">
           <Users onDebugMessage={handleDebugMessage} />
           <Toaster position="top-right" />
         </div>
