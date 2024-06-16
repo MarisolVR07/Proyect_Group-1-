@@ -6,7 +6,14 @@ import {
   useUserContextStore,
 } from "@/store/authStore";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
-import { Answers, AppliedSelfAssessment, Parameter, ProposedAction, SelfAssessments, User } from "@/app/types/entities";
+import {
+  Answers,
+  AppliedSelfAssessment,
+  Parameter,
+  ProposedAction,
+  SelfAssessments,
+  User,
+} from "@/app/types/entities";
 import LoadingCircle from "../../skeletons/LoadingCircle";
 import SecondaryButton from "../../general/SecondaryButton";
 import PageButton from "../../general/PageButton";
@@ -21,6 +28,7 @@ import toast from "react-hot-toast";
 import { useProposedActionsStore } from "@/store/proposedactionStore";
 import { useAnswersStore } from "@/store/answerStore";
 import { customInfoToast } from "@/components/alerts/InfoAlert";
+
 
 interface SelfAssessmentProps {
   onDebugMessage?: (message: DebugMessage) => void;
@@ -61,6 +69,10 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
   }, []);
 
   const checkSelfAssessmentStatus = async () => {
+    onDebugMessage({
+      content: `Checking the status of the self-assessment(checkSelfAssessmentStatus)`,
+      type: "Info",
+    });
     if (currentUser) {
       const department = currentUser.USR_Department || 0;
       const status = "A";
@@ -85,12 +97,15 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
         loadSectionData(currentSelfAssessment);
       }
     } catch (error) {
-      console.error("Error fetching self-assessment data:", error);
+      onDebugMessage({
+        content: `Error fetching self-assessment data(loadSelfAssessmentData)=>${error}`,
+        type: "Error",
+      });
     }
   };
 
   const loadSectionData = (selfAssessment: SelfAssessments) => {
-    onDebugMessage?.({
+    onDebugMessage({
       content: "Loading Section data(loadSectionData)",
       type: "Info",
     });
@@ -114,8 +129,12 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
           initialSectionDataQuestions[index];
       });
       setSectionData(updatedSectionData);
+      onDebugMessage({
+        content: `Section data loaded correctly(loadSectionData)`,
+        type: "Success",
+      });
     } else {
-      onDebugMessage?.({
+      onDebugMessage({
         content:
           "The self-assessment does not have defined sections(loadSectionData)",
         type: "Warning",
@@ -164,6 +183,10 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
   };
 
   const handleSave = async () => {
+    onDebugMessage?.({
+      content: `Saving self-assessment(handleSave)`,
+      type: "Info",
+    });
     if ((await checkSelfAssessmentStatus()) === true) {
       return;
     }
@@ -191,6 +214,10 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
     );
     if ("error" in respASA) {
       toast.error("Error saving Self-Assessment");
+      onDebugMessage({
+        content: `Error saving self-assessment(handleSave)=>${respASA.error}`,
+        type: "Error",
+      });
       setSaving(false);
       return;
     }
@@ -211,6 +238,10 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
 
         if ("error" in respAnswer) {
           toast.error("Error saving Self-Assessment");
+          onDebugMessage({
+            content: `Error saving self-assessment(handleSave)=>${respAnswer.error}`,
+            type: "Error",
+          });
           setSaving(false);
           return;
         }
@@ -229,6 +260,10 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
 
           if ("error" in respProposedAction) {
             toast.error("Error saving Self-Assessment");
+            onDebugMessage({
+              content: `Error saving self-assessment(handleSave)=>${respProposedAction.error}`,
+              type: "Error",
+            });
             setSaving(false);
             return;
           }
@@ -275,7 +310,6 @@ const SelfAssessment: React.FC<SelfAssessmentProps> = ({ onDebugMessage }) => {
             Next
           </SecondaryButton>
         </div>
-        {/* Render each SectionP based on currentPage */}
         {renderTables()}
         <div className="flex flex-col sm:flex-row sm:justify-between mx-4 sm:mx-16 items-center">
           <div className="sm:text-base text-sm sm:my-4 my-1 text-center sm:text-left">

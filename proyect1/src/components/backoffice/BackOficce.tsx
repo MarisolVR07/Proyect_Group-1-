@@ -29,10 +29,10 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
     useParametersContextStore();
   const [searchQuery, setSearchQuery] = useState("");
   const { setCurrentUser, currentUser } = useUserContextStore();
-  const { users, getUsers, getUsersPerPage, getUsersByName, updateUser } = useUserStore();
+  const { users, getUsers, getUsersPerPage, getUsersByName, updateUser } =
+    useUserStore();
 
-  const { updateParameter,  } =
-    useParameterStore();
+  const { updateParameter } = useParameterStore();
   const [isLoading, setIsLoading] = useState(false);
   const filteredUsers = users.filter(
     (user) => user.USR_Role === "none" || user.USR_Role === ""
@@ -45,6 +45,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   const itemsPerPage = 20;
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+
   const handleStatusChange = async (
     user: User,
     event: React.ChangeEvent<HTMLInputElement>
@@ -129,11 +130,12 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
     setIsSearching(!!query);
     if (!query.trim()) return;
     try {
-      if(query){
-        await getUsersByName(query,1)
-      }else{
-        await getUsersPerPage(1)
-      }  } catch (error) {
+      if (query) {
+        await getUsersByName(query, 1);
+      } else {
+        await getUsersPerPage(1);
+      }
+    } catch (error) {
       onDebugMessage({
         content: `Error searching users (handleSearchChange)->${error}`,
         type: "Error",
@@ -143,12 +145,15 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
     }
   };
   const handleNextPage = () => {
-    if(users.length === 10){setCurrentPage((prevPage) => prevPage + 1);}
+    if (users.length === 10) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
   };
 
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => (prevPage > 0 ? prevPage - 1 : 0));
   };
+
   const fetchData = async () => {
     setIsLoading(true);
     try {
@@ -167,6 +172,10 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   };
 
   const fetchParameters = () => {
+    onDebugMessage({
+      content: `Loading parameters (fetchParameters)`,
+      type: "Info",
+    });
     setIsLoading(true);
     try {
       if (currentParameters) {
@@ -179,6 +188,10 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
           setDeactivationDate(new Date(currentParameters.PRM_DeactivationDate));
         }
       }
+      onDebugMessage({
+        content: `Parameters loaded correctly (fetchParameters)`,
+        type: "Success",
+      });
     } catch (error) {
       onDebugMessage({
         content: `Error fetching parameters (fetchParameters)->${error}`,
@@ -202,7 +215,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   };
   const handleRowClick = (user: User) => {
     setSelectedUserId(user.USR_Id);
-  };  
+  };
   const handleSave = async () => {
     onDebugMessage({
       content: `Saving parameters (handleSave)`,
@@ -246,9 +259,11 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
       return filteredUsers
         .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
         .map((user, index) => (
-          <tr key={index}
-          onClick={() => handleRowClick(user)}
-          className={selectedUserId === user.USR_Id ? "bg-gray-600" : ""}>
+          <tr
+            key={index}
+            onClick={() => handleRowClick(user)}
+            className={selectedUserId === user.USR_Id ? "bg-gray-600" : ""}
+          >
             <td className="px-4 py-2">{user.USR_Email}</td>
             <td className="px-4 py-2">{user.USR_FullName}</td>
             <td className="no-print">
@@ -270,9 +285,9 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
                 isChecked={user.USR_Status === "a"}
                 onChange={(e) => handleStatusChange(user, e)}
               />
-               <span className="text-white">
-                      {user.USR_Status === "a" ? "Active" : "Inactive"}
-                    </span>
+              <span className="text-white">
+                {user.USR_Status === "a" ? "Active" : "Inactive"}
+              </span>
             </td>
           </tr>
         ));
@@ -283,94 +298,93 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
     <div className="items-center justify-center my-4 font-poppins drop-shadow-xl">
       <CardsSection />
       <div className="flex flex-col items-center justify-center space-y-4 mx-4 w-full">
-      <div className="flex-1 bg-gray-700 p-8 rounded-xl border-2 border-white text-white overflow-x-auto min-h-[500px] w-full max-w-4xl mx-auto">
-        <div className="w-full py-1 items-center justify-center text-center">
-          <h2 className="text-xl text-white font-semibold">NEW USERS</h2>
-        </div>
-        <SearchBar onSearch={handleSearchChange}/>
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          <div className="overflow-x-auto mt-4 rounded-md">
-            <table className="table-auto w-full text-color">
-              <thead className="bg-violet-800 text-white">
-                <tr>
-                  <th className="px-4 py-2">Email</th>
-                  <th className="px-4 py-2">FullName</th>
-                  <th className="px-4 py-2">Department</th>
-                  <th className="px-4 py-2">Role</th>
-                  <th className="px-4 py-2">Status</th>
-                </tr>
-              </thead>
-              <tbody>{renderTableContent()}</tbody>
-            </table>
+        <div className="flex-1 bg-gray-700 p-8 rounded-xl border-2 border-white text-white overflow-x-auto min-h-[500px] w-full max-w-4xl mx-auto">
+          <div className="w-full py-1 items-center justify-center text-center">
+            <h2 className="text-xl text-white font-semibold">NEW USERS</h2>
           </div>
-        )}
-        <div className="flex justify-between mt-2">
-          <Button
-            className="rounded-xl w-44"
-            onClick={handlePreviousPage}
-            disabled={currentPage === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            className="rounded-xl w-44 no-print"
-            onClick={handleNextPage}
-            disabled={users.length < itemsPerPage}
-          >
-            Next
-          </Button>
+          <SearchBar onSearch={handleSearchChange} />
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <div className="overflow-x-auto mt-4 rounded-md">
+              <table className="table-auto w-full text-color">
+                <thead className="bg-violet-800 text-white">
+                  <tr>
+                    <th className="px-4 py-2">Email</th>
+                    <th className="px-4 py-2">FullName</th>
+                    <th className="px-4 py-2">Department</th>
+                    <th className="px-4 py-2">Role</th>
+                    <th className="px-4 py-2">Status</th>
+                  </tr>
+                </thead>
+                <tbody>{renderTableContent()}</tbody>
+              </table>
+            </div>
+          )}
+          <div className="flex justify-between mt-2">
+            <Button
+              className="rounded-xl w-44"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              className="rounded-xl w-44 no-print"
+              onClick={handleNextPage}
+              disabled={users.length < itemsPerPage}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex-1 bg-gray-700 p-3 text-center border-2 border-white rounded-xl overflow-hidden min-h-[500px] w-full max-w-4xl mx-auto">
+          <h2 className="text-xl text-white mb-3 font-semibold">
+            APP ACTIVATION/DEACTIVATION DATE-TIME
+          </h2>
+          <div className="flex flex-col md:flex-row space-x-0 md:space-x-10 items-center justify-center">
+            <DateTimePicker
+              text="Select activation date and time:"
+              value={activationDate}
+              onChange={setActivationDate}
+            />
+            <DateTimePicker
+              text="Select deactivation date and time:"
+              value={deactivationDate}
+              onChange={setDeactivationDate}
+            />
+          </div>
+          <div className="mt-3">
+            <InputField
+              type="text"
+              label="Institution"
+              placeholder="Enter the Institution Name"
+              value={institution}
+              onChange={handleInstitutionChange}
+            />
+          </div>
+          <div className="mt-3">
+            <h2 className="text-xl text-white font-semibold">EMAIL</h2>
+            <InputField
+              type="email"
+              label="Email Address"
+              placeholder="Enter your email"
+              value={email}
+              onChange={handleEmailChange}
+            />
+          </div>
+          <div className="save-section">
+            <PrimaryButton
+              onClick={handleSave}
+              className="w-44 rounded-md mt-4 mx-auto"
+            >
+              Save
+            </PrimaryButton>
+          </div>
         </div>
       </div>
-      
-      <div className="flex-1 bg-gray-700 p-3 text-center border-2 border-white rounded-xl overflow-hidden min-h-[500px] w-full max-w-4xl mx-auto">
-        <h2 className="text-xl text-white mb-3 font-semibold">
-          APP ACTIVATION/DEACTIVATION DATE-TIME
-        </h2>
-        <div className="flex flex-col md:flex-row space-x-0 md:space-x-10 items-center justify-center">
-          <DateTimePicker
-            text="Select activation date and time:"
-            value={activationDate}
-            onChange={setActivationDate}
-          />
-          <DateTimePicker
-            text="Select deactivation date and time:"
-            value={deactivationDate}
-            onChange={setDeactivationDate}
-          />
-        </div>
-        <div className="mt-3">
-          <InputField
-            type="text"
-            label="Institution"
-            placeholder="Enter the Institution Name"
-            value={institution}
-            onChange={handleInstitutionChange}
-          />
-        </div>
-        <div className="mt-3">
-          <h2 className="text-xl text-white font-semibold">EMAIL</h2>
-          <InputField
-            type="email"
-            label="Email Address"
-            placeholder="Enter your email"
-            value={email}
-            onChange={handleEmailChange}
-          />
-        </div>
-        <div className="save-section">
-          <PrimaryButton
-            onClick={handleSave}
-            className="w-44 rounded-md mt-4 mx-auto"
-          >
-            Save
-          </PrimaryButton>
-        </div>
-      </div>
-      
     </div>
-  </div>
-);
+  );
 };
 export default BackOffice;
