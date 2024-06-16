@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../general/PrimaryButton";
 import { useAppliedSelfAssessmentsStore } from "@/store/appliedSelfAssessmentStore";
 import { AppliedSelfAssessment } from "@/app/types/entities";
-import SelfAssessment from "./applied_self_assessment/SelfAssessmentReview";
+import SelfAssessment from "./applied_self_assessment/v2/SelfAssessment";
 import { useExportStore } from "@/store/excelStore";
 import DropdownMenu from "@/components/reviews/DropDownMenuSearch";
 import toast from "react-hot-toast";
@@ -55,6 +55,10 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
       }
     };
     fetchAppliedSelfAssessments();
+
+    const intervalId = setInterval(fetchAppliedSelfAssessments, 60000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const fetchAppliedSelfAssessments = async () => {
@@ -226,56 +230,59 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   };
 
   return (
-    <div className="form-control my-auto sm:py-8 py-2 sm:px-4 px-1 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
-      <h4 className="sm:text-2xl text-white text-center sm:mb-4">
-        Self-Assessments Reviews
-      </h4>
+    <div className="lg:py-2 lg:px-2">
+      <div className="form-control  sm:py-8 py-2 sm:px-4 px-1 md:px-8 lg:px-10 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
+        <h4 className="sm:text-2xl text-white text-center sm:mb-4">
+          Self-Assessments Reviews
+        </h4>
 
-      <div className="sm:mt-4 mt-2 rounded-md bg-gradient-to-r text-white from-gray-800 via-violet-600 to-gray-800 sm:p-4 p-2 flex items-center justify-center space-x-4 z-20">
-        <StateCheckbox
-          isChecked={filters.active}
-          onChange={() => toggleFilter("active")}
-          label="Active"
-        />
-        <StateCheckbox
-          isChecked={filters.inactive}
-          onChange={() => toggleFilter("inactive")}
-          label="Inactive"
-        />
-      </div>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <div className="overflow-x-auto mt-4 rounded-md">
-          <table className="table-auto w-full">
-            <thead className="bg-violet-800 text-white">
-              <tr>
-                <th className="sm:px-4 sm:py-2">Date</th>
-                <th className="sm:px-4 sm:py-2">Department</th>
-                <th className="sm:px-4 sm:py-2">Status</th>
-                <th className="hidden sm:table-cell sm:px-4 sm:py-2">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>{renderTableContent()}</tbody>
-          </table>
-        </div>
-      )}
-      {isModalOpen && selectedSelfAssessment && (
-        <div className="fixed inset-0 h-screen p-4 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-          <button
-            className="absolute top-0 right-0 my-4 mx-6 text-3xl text-white hover:text-gray-400"
-            onClick={closeModal}
-          >
-            &times;
-          </button>
-          <SelfAssessment
-            appliedSelfAssessment={selectedSelfAssessment}
-            closeModal={closeModal}
+        <div className="sm:mt-4 mt-2 rounded-md bg-gradient-to-r text-white from-gray-800 via-violet-600 to-gray-800 sm:p-4 p-2 flex items-center justify-center space-x-4 z-20">
+          <StateCheckbox
+            isChecked={filters.active}
+            onChange={() => toggleFilter("active")}
+            label="Active"
+          />
+          <StateCheckbox
+            isChecked={filters.inactive}
+            onChange={() => toggleFilter("inactive")}
+            label="Inactive"
           />
         </div>
-      )}
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <div className="overflow-x-auto mt-4 rounded-md">
+            <table className="table-auto w-full">
+              <thead className="bg-violet-800 text-white">
+                <tr>
+                  <th className="sm:px-4 sm:py-2">Date</th>
+                  <th className="sm:px-4 sm:py-2">Department</th>
+                  <th className="sm:px-4 sm:py-2">Status</th>
+                  <th className="hidden sm:table-cell sm:px-4 sm:py-2">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{renderTableContent()}</tbody>
+            </table>
+          </div>
+        )}
+        {isModalOpen && selectedSelfAssessment && (
+          <div className="fixed inset-0 bg-gray-900 h-screen bg-opacity-75 px-2 py-2 z-50">
+            <button
+              className="absolute top-0 right-0 text-3xl mx-7 my-5 z-50 text-white hover:text-gray-400"
+              onClick={closeModal}
+            >
+              &times;
+            </button>
+            <SelfAssessment
+              appliedSelfAssessment={selectedSelfAssessment}
+              closeModal={closeModal}
+              onDebugMessage={onDebugMessage}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

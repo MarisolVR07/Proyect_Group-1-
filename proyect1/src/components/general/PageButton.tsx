@@ -5,7 +5,7 @@ interface PageButtonProps {
   currentPage: number;
   handlePageChange: (pageNumber: number) => void;
   className?: string;
-  hasUnansweredQuestions: boolean;
+  hasUnansweredQuestions?: boolean;
 }
 
 const PageButton: React.FC<PageButtonProps> = ({

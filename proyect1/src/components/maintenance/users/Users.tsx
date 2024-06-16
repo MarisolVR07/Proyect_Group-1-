@@ -70,7 +70,6 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       ...user,
       USR_Status: isChecked ? "a" : "i",
     };
-    toast.success("Status updated successfully");
     const resp = await updateUser(updatedUser);
     if ("error" in resp) {
       onDebugMessage({
@@ -79,6 +78,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       });
       return;
     }
+    toast.success("Status updated successfully");
     onDebugMessage({
       content: "Status updated successfully (handleStatusChange)",
       type: "Success",
@@ -114,8 +114,11 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   };
 
   const handleRolChange = async (user: User, newRol: string) => {
+    onDebugMessage({
+      content: "Changing user rol (handleRolChange)",
+      type: "Info",
+    });
     const updatedUser: User = { ...user, USR_Role: newRol };
-    toast.success("Rol updated successfully");
     const resp = await updateUser(updatedUser);
     if ("error" in resp) {
       onDebugMessage({

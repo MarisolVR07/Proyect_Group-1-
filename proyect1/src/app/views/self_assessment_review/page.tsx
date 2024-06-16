@@ -19,10 +19,10 @@ export default function Page() {
   return (
     <>
       <DebugModeToggle debugMessages={debugMessages}>
-        <Header currentPage="/views/self_assessment_review" />
-        <Reviews onDebugMessage={handleDebugMessage} />
-        <Toaster position="top-right" />
-        <Footer />
+          <Header currentPage="/views/self_assessment_review" />
+          <Reviews onDebugMessage={handleDebugMessage} />
+          <Toaster position="top-right" />
+          <Footer />
       </DebugModeToggle>
     </>
   );
