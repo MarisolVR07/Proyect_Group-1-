@@ -10,12 +10,18 @@ const RolDropdown: React.FC<RolDropdownProps> = ({ onChange, selectedRol }) => {
     const roles = ["admin", "user", "ti"];
 
     return (
-        <select value={selectedRol} onChange={e => onChange(e.target.value)}>
-            <option value="">None</option>  
-            {roles.map(role => (
-                <option key={role} value={role}>{role}</option>
-            ))}
-        </select>
+      <select
+        className="text-xs lg:text-base"
+        value={selectedRol}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        <option value="">None</option>
+        {roles.map((role) => (
+          <option key={role} value={role}>
+            {role}
+          </option>
+        ))}
+      </select>
     );
 };
 

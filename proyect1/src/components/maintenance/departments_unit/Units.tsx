@@ -204,8 +204,10 @@ const Units: React.FC<UnitsProps> = ({ onDebugMessage }) => {
             <table className="table-auto w-full">
               <thead>
                 <tr className="bg-violet-800 text-white">
-                  <th className="px-4 py-2">Name</th>
-                  <th className="px-4 py-2">Status</th>
+                  <th className="lg:px-4 lg:py-2 text-sm lg:text-base">Name</th>
+                  <th className="lg:px-4 lg:py-2 text-sm lg:text-base">
+                    Status
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -215,8 +217,10 @@ const Units: React.FC<UnitsProps> = ({ onDebugMessage }) => {
                     onClick={() => handleUnitClick(unit)}
                     className="cursor-pointer"
                   >
-                    <td className="px-4 py-2">{unit.UND_Name}</td>
-                    <td className="px-4 py-2">
+                    <td className="lg:px-4 lg:py-2 text-sm lg:text-base">
+                      {unit.UND_Name}
+                    </td>
+                    <td className="lg:px-4 lg:py-2 text-sm lg:text-base">
                       {unit.UND_Status === "a" ? "Active" : "Inactive"}
                     </td>
                   </tr>

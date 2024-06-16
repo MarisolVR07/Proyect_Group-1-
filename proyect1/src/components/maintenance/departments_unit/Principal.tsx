@@ -10,7 +10,7 @@ interface PrincipalProps {
 const Principal: React.FC<PrincipalProps> = ({ onDebugMessage }) => {
   return (
     <div className="relative w-full flex flex-col items-center justify-center my-4 text-white font-poppins font-semibold drop-shadow-xl">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between px-7 max-w-7xl space-y-4 md:space-y-0">
+      <div className="container mx-auto flex flex-col md:flex-row justify-between lg:px-7 max-w-7xl space-y-4 md:space-y-0">
         <Units onDebugMessage={onDebugMessage} />
         <Departments onDebugMessage={onDebugMessage} />
       </div>

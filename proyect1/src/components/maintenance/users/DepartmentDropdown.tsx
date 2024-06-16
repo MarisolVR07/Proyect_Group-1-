@@ -19,7 +19,7 @@ const DepartmentDropdown: React.FC<DepartmentDropdownProps> = ({ onChange, selec
   }, [departments.length, getDepartments]);
 
   return (
-    <select value={Number(selectedDepartment)} onChange={e => onChange(parseInt(e.target.value, 10) || 0)}>
+    <select className='text-xs lg:text-base' value={Number(selectedDepartment)} onChange={e => onChange(parseInt(e.target.value, 10) || 0)}>
       <option value="">None</option>
       {departments.map(dept => (
         dept.DPT_Id != null && <option key={dept.DPT_Id} value={dept.DPT_Id}>{dept.DPT_Name}</option>

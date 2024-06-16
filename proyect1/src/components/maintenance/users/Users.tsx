@@ -204,67 +204,67 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <div className="overflow-x-auto mt-4 rounded-md print-only">
-            <table className="table-auto w-full text-color ">
-              <thead className="bg-violet-800 text-white mb-2">
-                <tr>
-                  <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
-                    Email
-                  </th>
-                  <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
-                    FullName
-                  </th>
-                  <th className="lg:px-4 lg:py-2 text-xs lg:text-base no-print">
-                    Department
-                  </th>
-                  <th className="lg:px-4 lg:py-2 text-xs lg:text-base">Rol</th>
-                  <th className="lg:px-4 lg:py-2 text-xs lg:text-base no-print">
-                    Status
-                  </th>
+        <div className="overflow-auto mt-4 rounded-md print-only">
+          <table className="table-auto w-full text-color ">
+            <thead className="bg-violet-800 text-white mb-2">
+              <tr>
+                <th className="hidden sm:table-cell lg:px-4 lg:py-2 text-xs lg:text-base">
+                  Email
+                </th>
+                <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
+                  FullName
+                </th>
+                <th className="lg:px-4 lg:py-2 text-xs lg:text-base no-print">
+                  Department
+                </th>
+                <th className="lg:px-4 lg:py-2 text-xs lg:text-base">Rol</th>
+                <th className="lg:px-4 lg:py-2 text-xs lg:text-base no-print">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((userMap, index) => (
+                <tr
+                  key={index}
+                  onClick={() => handleRowClick(userMap)}
+                  className={
+                    selectedUserId === userMap.USR_Id ? "bg-gray-600" : ""
+                  }
+                >
+                  <td className="lg:px-4 lg:py-2 text-xs lg:text-base text-wrap hidden sm:flex">
+                    {userMap.USR_Email}
+                  </td>
+                  <td className="lg:px-4 lg:py-2 text-xs lg:text-base ">
+                    {userMap.USR_FullName}
+                  </td>
+                  <td className="no-print">
+                    <DepartmentDropdown
+                      selectedDepartment={userMap.USR_Department}
+                      onChange={(newDeptId) =>
+                        handleDepartmentChange(userMap, newDeptId)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <RolDropdown
+                      selectedRol={userMap.USR_Role}
+                      onChange={(newRol) => handleRolChange(userMap, newRol)}
+                    />
+                  </td>
+                  <td className="no-print flex items-center text-xs lg:text-base lg:space-x-2">
+                    <StateCheckbox
+                      isChecked={userMap.USR_Status === "a"}
+                      onChange={(e) => handleStatusChange(userMap, e)}
+                    />
+                    <span className="text-white">
+                      {userMap.USR_Status === "a" ? "Active" : "Inactive"}
+                    </span>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {users.map((userMap, index) => (
-                  <tr
-                    key={index}
-                    onClick={() => handleRowClick(userMap)}
-                    className={
-                      selectedUserId === userMap.USR_Id ? "bg-gray-600" : ""
-                    }
-                  >
-                    <td className="lg:px-4 lg:py-2 text-xs lg:text-base text-wrap">
-                      {userMap.USR_Email}
-                    </td>
-                    <td className="lg:px-4 lg:py-2 text-xs lg:text-base">
-                      {userMap.USR_FullName}
-                    </td>
-                    <td className="no-print">
-                      <DepartmentDropdown
-                        selectedDepartment={userMap.USR_Department}
-                        onChange={(newDeptId) =>
-                          handleDepartmentChange(userMap, newDeptId)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <RolDropdown
-                        selectedRol={userMap.USR_Role}
-                        onChange={(newRol) => handleRolChange(userMap, newRol)}
-                      />
-                    </td>
-                    <td className="no-print flex items-center space-x-2">
-                      <StateCheckbox
-                        isChecked={userMap.USR_Status === "a"}
-                        onChange={(e) => handleStatusChange(userMap, e)}
-                      />
-                      <span className="text-white">
-                        {userMap.USR_Status === "a" ? "Active" : "Inactive"}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
           <div className="flex justify-between mt-2">
             <Button
               className="rounded-xl w-44 no-print"

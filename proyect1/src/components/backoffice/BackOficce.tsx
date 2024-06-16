@@ -310,7 +310,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
               <table className="table-auto w-full text-color">
                 <thead className="bg-violet-800 text-white">
                   <tr>
-                    <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
+                    <th className="hidden sm:table-cell lg:px-4 lg:py-2 text-xs lg:text-base">
                       Email
                     </th>
                     <th className="lg:px-4 lg:py-2 text-xs lg:text-base">
