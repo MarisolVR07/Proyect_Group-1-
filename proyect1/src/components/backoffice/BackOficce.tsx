@@ -262,11 +262,19 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
           <tr
             key={index}
             onClick={() => handleRowClick(user)}
-            className={selectedUserId === user.USR_Id ? "bg-gray-600" : ""}
+            className={
+              selectedUserId === user.USR_Id
+                ? "bg-gray-600 text-center"
+                : "text-center"
+            }
           >
-            <td className="px-4 py-2">{user.USR_Email}</td>
-            <td className="px-4 py-2">{user.USR_FullName}</td>
-            <td className="no-print">
+            <td className="lg:px-4 lg:py-2 text-xs lg:text-base hidden sm:flex">
+              {user.USR_Email}
+            </td>
+            <td className="lg:px-4 lg:py-2 text-xs lg:text-base">
+              {user.USR_FullName}
+            </td>
+            <td className="lg:px-4 lg:py-2 text-xs lg:text-base no-print">
               <DepartmentDropdown
                 selectedDepartment={user.USR_Department}
                 onChange={(newDeptId) =>
@@ -280,7 +288,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
                 onChange={(newRol) => handleRolChange(user, newRol)}
               />
             </td>
-            <td className="no-print">
+            <td className="no-print lg:px-4 lg:py-2 text-xs lg:text-base lg:space-x-1">
               <StateCheckbox
                 isChecked={user.USR_Status === "a"}
                 onChange={(e) => handleStatusChange(user, e)}
@@ -295,9 +303,9 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   };
 
   return (
-    <div className="items-center justify-center my-1 font-poppins drop-shadow-xl">
+    <div className="items-center justify-center mb-5 font-poppins drop-shadow-xl">
       <CardsSection />
-      <div className="flex flex-col items-center justify-center space-y-2 lg:space-y-4 px-4 w-full">
+      <div className="flex flex-col items-center justify-center space-y-5 px-4 w-full">
         <div className="flex-1 bg-gray-700 py-2 px-1 lg:p-4 rounded-xl border-2 border-white text-white  min-h-[500px] w-full mx-auto">
           <div className="w-full py-1 items-center justify-center text-center">
             <h2 className="text-xl text-white font-semibold">NEW USERS</h2>

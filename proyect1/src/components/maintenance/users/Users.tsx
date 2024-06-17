@@ -174,7 +174,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   };
 
   return (
-    <div className="form-control lg:my-3 lg:py-8 px-1 md:px-8 lg:px-16 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
+    <div className="form-control lg:my-3 lg:py-8 px-1 md:px-8 lg:px-16 w-full rounded-md bg-gray-700 font-poppins font-semibold drop-shadow-xl">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <div className="m-5 print-only">
           <h5 className="text-sm text-white text-center lg:mb-4 text-color">
@@ -233,10 +233,12 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
                   key={index}
                   onClick={() => handleRowClick(userMap)}
                   className={
-                    selectedUserId === userMap.USR_Id ? "bg-gray-600" : ""
+                    selectedUserId === userMap.USR_Id
+                      ? "bg-gray-600 text-center"
+                      : "text-center"
                   }
                 >
-                  <td className="lg:px-4 lg:py-2 text-xs lg:text-base text-wrap hidden sm:flex">
+                  <td className="lg:px-4 lg:py-2 text-xs lg:text-base hidden sm:flex">
                     {userMap.USR_Email}
                   </td>
                   <td className="lg:px-4 lg:py-2 text-xs lg:text-base ">
@@ -256,7 +258,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
                       onChange={(newRol) => handleRolChange(userMap, newRol)}
                     />
                   </td>
-                  <td className="no-print flex items-center text-xs lg:text-base lg:space-x-2">
+                  <td className="no-print flex items-center text-xs lg:text-base lg:space-x-1">
                     <StateCheckbox
                       isChecked={userMap.USR_Status === "a"}
                       onChange={(e) => handleStatusChange(userMap, e)}

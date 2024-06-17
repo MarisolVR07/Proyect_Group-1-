@@ -24,7 +24,7 @@ const SearchBarDU: React.FC<SearchBarProps> = ({ onSearch }) => {
       placeholder="Search by name..."
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
-      className="w-full p-2 rounded-md no-print"
+      className="w-full bg-gray-800 border p-2 rounded-md no-print"
     />
   );
 };

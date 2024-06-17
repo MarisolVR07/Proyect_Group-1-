@@ -11,7 +11,7 @@ const RolDropdown: React.FC<RolDropdownProps> = ({ onChange, selectedRol }) => {
 
     return (
       <select
-        className="text-xs lg:text-base"
+        className="text-xs lg:text-base bg-gray-800 rounded-lg px-1"
         value={selectedRol}
         onChange={(e) => onChange(e.target.value)}
       >

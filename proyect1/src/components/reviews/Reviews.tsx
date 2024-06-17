@@ -68,10 +68,10 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
     if (!("error" in allAppliedSelfAssessments)) {
       setAppliedSelfAssessments2(allAppliedSelfAssessments);
     } else {
-      console.error(
-        "Error fetching AppliedSelfAssessments:",
-        allAppliedSelfAssessments.error
-      );
+      onDebugMessage({
+        content: `Failed to Fetch Applied Self-Assessments->${allAppliedSelfAssessments.error}`,
+        type: "Error",
+      });
     }
     setIsLoading(false);
   };
