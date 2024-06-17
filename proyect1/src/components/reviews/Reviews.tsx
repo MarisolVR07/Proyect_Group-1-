@@ -10,7 +10,6 @@ import toast from "react-hot-toast";
 import { DebugMessage } from "@/app/types/debugData";
 import StateCheckbox from "@/components/reviews/Checkbox";
 import Spinner from "@/components/skeletons/Spinner";
-import { on } from "events";
 
 interface ReviewsProps {
   onDebugMessage?: (message: DebugMessage) => void;
@@ -36,36 +35,37 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   const itemsPerPage = 5;
 
   useEffect(() => {
+    setIsLoading(true);
     onDebugMessage({
       content: "Fetching Applied Self-Assessments",
       type: "Info",
     });
-setIsLoading(true);
+
     filter();
-setIsLoading(false);
+    setIsLoading(false);
     const intervalId = setInterval(fetchAppliedSelfAssessments, 60000);
 
     return () => clearInterval(intervalId);
   }, [currentPage, filters]);
 
-    const fetchAppliedSelfAssessments = async () => {
-      const allAppliedSelfAssessments =
-        await appliedSelfAssessmentStore.getAppliedSelfAssessmentPerPage(
-          currentPage
-        );
-      if (!("error" in allAppliedSelfAssessments)) {
-        onDebugMessage({
-          content: "Successfully Obtained Applied Self-Assessments",
-          type: "Success",
-        });
-        setAppliedSelfAssessments(allAppliedSelfAssessments);
-      } else {
-        onDebugMessage({
-          content: `Failed to Fetch Applied Self-Assessments->${allAppliedSelfAssessments.error}`,
-          type: "Error",
-        });
-      }
-    };
+  const fetchAppliedSelfAssessments = async () => {
+    const allAppliedSelfAssessments =
+      await appliedSelfAssessmentStore.getAppliedSelfAssessmentPerPage(
+        currentPage
+      );
+    if (!("error" in allAppliedSelfAssessments)) {
+      onDebugMessage({
+        content: "Successfully Obtained Applied Self-Assessments",
+        type: "Success",
+      });
+      setAppliedSelfAssessments(allAppliedSelfAssessments);
+    } else {
+      onDebugMessage({
+        content: `Failed to Fetch Applied Self-Assessments->${allAppliedSelfAssessments.error}`,
+        type: "Error",
+      });
+    }
+  };
 
   /*
   const fetchAppliedSelfAssessments = async () => {
@@ -143,18 +143,20 @@ setIsLoading(false);
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  const toggleFilter = (filterType: "active" | "inactive") => {
-    const newFilters = {
-      ...filters,
-      [filterType]: !filters[filterType],
-    };
-    setFilters(newFilters);
-  }
+
+const toggleFilter = (filterType: "active" | "inactive") => {
+  const newFilters = {
+    active: filterType === "active" ? !filters.active : false,
+    inactive: filterType === "inactive" ? !filters.inactive : false,
+  };
+  setFilters(newFilters);
+};
 
   const filter = async () => {
     let filteredSelfAssessments: AppliedSelfAssessment[] = [];
 
     if (filters.active) {
+      setCurrentPage(1);
       const activeSelfAssessments =
         await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus(
           "A",
@@ -162,7 +164,6 @@ setIsLoading(false);
         );
       if (!("error" in activeSelfAssessments)) {
         filteredSelfAssessments = activeSelfAssessments;
-
       } else {
         onDebugMessage({
           content: `Failed to fetch active assessments -> ${activeSelfAssessments.error}`,
@@ -174,6 +175,7 @@ setIsLoading(false);
     }
 
     if (filters.inactive) {
+      setCurrentPage(1);
       const inactiveSelfAssessments =
         await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus(
           "I",
@@ -194,7 +196,6 @@ setIsLoading(false);
       }
     }
     if (!filters.active && !filters.inactive) {
-      currentPage === 1;
       fetchAppliedSelfAssessments();
     } else {
       setAppliedSelfAssessments(filteredSelfAssessments);
