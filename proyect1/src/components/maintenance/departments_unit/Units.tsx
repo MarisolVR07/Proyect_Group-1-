@@ -129,6 +129,7 @@ const Units: React.FC<UnitsProps> = ({ onDebugMessage }) => {
 
   const handleUnitClick = (clickedUnit: Unit) => {
     setUnit(clickedUnit);
+    setCurrentUnit(clickedUnit)
     setIsEditing(true);
   };
 
