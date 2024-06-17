@@ -53,7 +53,7 @@ export async function getAppliedSelfAssessmentsByDepartment(
 
 export async function getAppliedSelfAssessmentsByStatus(
   status: string,
-  page: number
+  page?: number
 ): Promise<AppliedSelfAssessment[] | ErrorResponse> {
     try {
         const response = await fetch(
@@ -65,6 +65,20 @@ export async function getAppliedSelfAssessmentsByStatus(
     } catch (error: any) {
         return { error: error.message };
     }
+}
+
+export async function getAllAppliedSelfAssessmentsByStatus(
+  status: string
+): Promise<AppliedSelfAssessment[] | ErrorResponse> {
+  try {
+    const response = await fetch(
+      API_URL + `rc_appliedselfassessment/findAllByStatus/${status}`
+    );
+    const data: AppliedSelfAssessment[] | ErrorResponse = await response.json();
+    return data;
+  } catch (error: any) {
+    return { error: error.message };
+  }
 }
 
 

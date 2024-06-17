@@ -6,8 +6,7 @@ import { getUsersByRole } from "../controllers/rc_users/controller";
 import { sendEmail } from "../controllers/mailer/controller";
 import { AppliedSelfAssessment, User } from "../types/entities";
 import {
-  getAppliedSelfAssessmentsByStatus,
-  saveAppliedSelfassessment,
+  getAllAppliedSelfAssessmentsByStatus,
   updateAppliedSelfassessment,
 } from "../controllers/rc_appliedselfassessment/controller";
 
@@ -53,7 +52,7 @@ async function desactivateAssessment() {
       console.log("entró");
     } else {
       console.log("no entró");
-      const assessments = await getAppliedSelfAssessmentsByStatus("A");
+      const assessments = await getAllAppliedSelfAssessmentsByStatus("A");
       if (!("error" in assessments)) {
         assessments.map(async (a) => {
           const assessment: AppliedSelfAssessment = {
