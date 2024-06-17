@@ -13,8 +13,23 @@ export async function GET(
     const appliedselfassessment = await prisma.rc_appliedselfassessment.findMany({
         skip: (page - 1) * itemsPerPage, 
         take: itemsPerPage,
-        
-      
+         include: {
+        rc_departments: true,
+        rc_selfassessments: {
+          include: {
+            rc_sections: {
+              include: {
+                rc_questions: true,
+              },
+            },
+          },
+        },
+        rc_answers: {
+          include: {
+            rc_proposedaction: true,
+          },
+        },
+      },
     });
     return NextResponse.json(appliedselfassessment, { status: 200 });
   } catch (error) {

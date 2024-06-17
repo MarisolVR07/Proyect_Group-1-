@@ -23,7 +23,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
     inactive: false,
   });
 
-  const [appliedSelfAssessments, setAppliedSelfAssessments2] = useState<
+  const [appliedSelfAssessments, setAppliedSelfAssessments] = useState<
     AppliedSelfAssessment[]
   >([]);
   const [selectedSelfAssessment, setSelectedSelfAssessment] =
@@ -31,27 +31,33 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const appliedSelfAssessmentStore = useAppliedSelfAssessmentsStore();
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 10;
-  useEffect(() => {
-    fetchAppliedSelfAssessments();
-  }, [currentPage]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   useEffect(() => {
     onDebugMessage({
       content: "Fetching Applied Self-Assessments",
       type: "Info",
     });
-    
+
+    fetchAppliedSelfAssessments();
+
+    const intervalId = setInterval(fetchAppliedSelfAssessments, 60000);
+
+    return () => clearInterval(intervalId);
+  }, [currentPage]);
 
     const fetchAppliedSelfAssessments = async () => {
       const allAppliedSelfAssessments =
-        await appliedSelfAssessmentStore.getAppliedSelfAssessmentPerPage(1);
+        await appliedSelfAssessmentStore.getAppliedSelfAssessmentPerPage(
+          currentPage
+        );
       if (!("error" in allAppliedSelfAssessments)) {
         onDebugMessage({
           content: "Successfully Obtained Applied Self-Assessments",
           type: "Success",
         });
-        setAppliedSelfAssessments2(allAppliedSelfAssessments);
+        setAppliedSelfAssessments(allAppliedSelfAssessments);
       } else {
         onDebugMessage({
           content: `Failed to Fetch Applied Self-Assessments->${allAppliedSelfAssessments.error}`,
@@ -59,13 +65,8 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
         });
       }
     };
-    fetchAppliedSelfAssessments();
 
-    const intervalId = setInterval(fetchAppliedSelfAssessments, 60000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
+  /*
   const fetchAppliedSelfAssessments = async () => {
     setIsLoading(true);
     const allAppliedSelfAssessments =
@@ -80,7 +81,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
     }
     setIsLoading(false);
   };
-
+*/
   const handleRowClick = (selfAssessment: AppliedSelfAssessment) => {
     setSelectedSelfAssessment(selfAssessment);
   };
@@ -114,7 +115,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
           departmentId
         );
       if (!("error" in filteredSelfAssessments)) {
-        setAppliedSelfAssessments2(filteredSelfAssessments);
+        setAppliedSelfAssessments(filteredSelfAssessments);
         onDebugMessage({
           content: `Filtered results for department ${departmentId}`,
           type: "Success",
@@ -184,7 +185,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
     if (!newFilters.active && !newFilters.inactive) {
       fetchAppliedSelfAssessments();
     } else {
-      setAppliedSelfAssessments2(filteredSelfAssessments);
+      setAppliedSelfAssessments(filteredSelfAssessments);
       setIsLoading(false);
     }
   };
