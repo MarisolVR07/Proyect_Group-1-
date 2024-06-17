@@ -119,3 +119,20 @@ export async function getUsersPerPage(page: number): Promise<User[] | ErrorRespo
     return error;
   }
 }
+
+export async function getNewUsersPerPage(
+  page: number
+): Promise<User[] | ErrorResponse> {
+  try {
+    const res: Response = await fetch(
+      API_URL + `rc_users/getnewusers?page=${page}`
+    );
+    //validateResponse(res);
+
+    const users: User[] | ErrorResponse = await res.json();
+
+    return users;
+  } catch (error: any) {
+    return error;
+  }
+}

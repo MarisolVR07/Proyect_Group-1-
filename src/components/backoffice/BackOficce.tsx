@@ -29,7 +29,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
     useParametersContextStore();
   const [searchQuery, setSearchQuery] = useState("");
   const { setCurrentUser, currentUser } = useUserContextStore();
-  const { users, getUsers, getUsersPerPage, getUsersByName, updateUser } =
+  const { users, getUsers, getNewUsersPerPage, getUsersByName, updateUser } =
     useUserStore();
 
   const { updateParameter } = useParameterStore();
@@ -126,14 +126,14 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
     if (searchQuery === query) return;
     setSearchQuery(query);
     setIsLoading(true);
-    setCurrentPage(0);
     setIsSearching(!!query);
     if (!query.trim()) return;
     try {
+      setCurrentPage(0);
       if (query) {
-        await getUsersByName(query, 1);
+        await getUsersByName(query, currentPage);
       } else {
-        await getUsersPerPage(1);
+        await getNewUsersPerPage(currentPage);
       }
     } catch (error) {
       onDebugMessage({
@@ -160,7 +160,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
       if (isSearching && searchQuery) {
         await getUsersByName(searchQuery, currentPage);
       } else {
-        await getUsersPerPage(currentPage);
+        await getNewUsersPerPage(currentPage);
       }
     } catch (error) {
       onDebugMessage({
