@@ -35,9 +35,9 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
   return (
     <div className={classes}>
       {text && <h2 className="text-white">{text}</h2>}
-      <div className="flex items-center space-x-1 p-1 bg-white h-8 rounded-lg justify-between">
+      <div className="flex items-center space-x-1 p-1 bg-gray-800 h-8 rounded-lg justify-between border">
         <DatePicker
-          className="bg-white rounded-md w-full text-gray-700 text-center"
+          className="rounded-md w-full bg-gray-800  text-center"
           selected={selectedDate}
           onChange={handleDateChange}
           showTimeSelect

@@ -310,7 +310,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
     <div className="items-center justify-center mb-5 font-poppins drop-shadow-xl">
       <CardsSection />
       <div className="flex flex-col items-center justify-center space-y-5 px-4 w-full">
-        <div className="flex-1 bg-gray-700 py-2 px-1 lg:p-4 rounded-xl border-2 border-white text-white  min-h-[500px] w-full mx-auto">
+        <div className="flex-1 bg-gray-700 py-2 px-1 lg:p-4 rounded-xl text-white  min-h-[500px] w-full mx-auto">
           <div className="w-full py-1 items-center justify-center text-center">
             <h2 className="text-xl text-white font-semibold">NEW USERS</h2>
           </div>
@@ -361,7 +361,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
           </div>
         </div>
 
-        <div className="flex-1 bg-gray-700 py-2 px-1 lg:p-3 text-center border-2 border-white rounded-xl overflow-hidden w-full mx-auto">
+        <div className="flex-1 bg-gray-700 py-2 px-1 lg:p-3 text-center rounded-xl overflow-hidden w-full mx-auto">
           <h2 className="text-xl text-white mb-3 font-semibold">
             APP ACTIVATION/DEACTIVATION DATE-TIME
           </h2>
@@ -384,6 +384,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
               placeholder="Enter the Institution Name"
               value={institution}
               onChange={handleInstitutionChange}
+              
             />
           </div>
           <div className="lg:mt-3">

@@ -17,18 +17,18 @@ const CardsSection = () => {
 
   return (
     <section className="text-white font-poppins">
-      <div className="container px-5 py-10 mx-auto rounded-t-xl">
+      <div className="py-10 mx-auto rounded-t-xl px-4">
         <div className="flex flex-col text-center w-full mb-10">
           <h1 className="text-3xl text-white font-semibold">
             Internal System Control
           </h1>
         </div>
         <div
-          className={`flex-none lg:flex lg:flex-wrap${
+          className={` ${
             isAdmin
-              ? "space-y-5 lg:space-y-0 lg:justify-between"
+              ? "space-y-5 lg:space-y-0 lg:justify-between flex-none lg:flex lg:flex-wrap"
               : "justify-center"
-          } items-center justify-center text-center w-full lg:px-20`}
+          } items-center justify-center text-center w-full`}
         >
           {isAdmin ? (
             <CardButton
@@ -40,7 +40,7 @@ const CardsSection = () => {
               }
               title="Backoffice"
               description=""
-              className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-800 rounded-lg shadow-lg mb-2 lg:mb-0"
+              className="flex-1 lg:w-[400px] text-center bg-gray-700 rounded-lg shadow-lg mb-2 lg:mb-0"
             />
           ) : (
             <></>
@@ -54,7 +54,9 @@ const CardsSection = () => {
             }
             title="Self-Assessment"
             description=""
-            className="flex-1 min-w-[300px] max-w-[1/3] bg-violet-700 text-center bg- rounded-lg shadow-lg mb-2 lg:mb-0"
+            className={`flex-1  ${
+              isAdmin ? "lg:w-[400px] 2xl:w-[700px]" : "w-full"
+            } bg-gray-700 text-center rounded-lg shadow-lg mb-2 lg:mb-0`}
           />
           {isAdmin ? (
             <CardButton
@@ -66,7 +68,7 @@ const CardsSection = () => {
               }
               title={`Reviews`}
               description=""
-              className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-800 rounded-lg shadow-lg"
+              className="flex-1 lg:w-[400px] text-center bg-gray-700 rounded-lg shadow-lg"
             />
           ) : (
             <></>

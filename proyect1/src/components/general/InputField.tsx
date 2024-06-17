@@ -34,7 +34,7 @@ const InputField: React.FC<InputFieldProps> = ({
         type={type}
         placeholder={placeholder}
         onChange={handleChange}
-        className="input bg-white text-gray-700 input-bordered w-full h-8"
+        className="input bg-gray-800 border-white input-bordered w-full h-8"
       />
     </div>
   );
