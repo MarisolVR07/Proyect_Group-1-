@@ -7,7 +7,7 @@ interface RolDropdownProps {
 
 const RolDropdown: React.FC<RolDropdownProps> = ({ onChange, selectedRol }) => {
   
-    const roles = ["admin", "user", "ti"];
+    const roles = ["admin", "user"];
 
     return (
       <select
