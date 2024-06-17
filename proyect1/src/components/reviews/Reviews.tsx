@@ -35,16 +35,20 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   const itemsPerPage = 5;
 
   useEffect(() => {
-    setIsLoading(true);
-    onDebugMessage({
-      content: "Fetching Applied Self-Assessments",
-      type: "Info",
-    });
+    const fetchAndFilter = async () => {
+      setIsLoading(true);
+      onDebugMessage({
+        content: "Fetching Applied Self-Assessments",
+        type: "Info",
+      });
 
-    filter();
-    setIsLoading(false);
+      await filter();
+
+      setIsLoading(false);
+    };
+
+    fetchAndFilter();
     const intervalId = setInterval(fetchAppliedSelfAssessments, 60000);
-
     return () => clearInterval(intervalId);
   }, [currentPage, filters]);
 
@@ -144,13 +148,13 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
     setIsModalOpen(false);
   };
 
-const toggleFilter = (filterType: "active" | "inactive") => {
-  const newFilters = {
-    active: filterType === "active" ? !filters.active : false,
-    inactive: filterType === "inactive" ? !filters.inactive : false,
+  const toggleFilter = (filterType: "active" | "inactive") => {
+    const newFilters = {
+      active: filterType === "active" ? !filters.active : false,
+      inactive: filterType === "inactive" ? !filters.inactive : false,
+    };
+    setFilters(newFilters);
   };
-  setFilters(newFilters);
-};
 
   const filter = async () => {
     let filteredSelfAssessments: AppliedSelfAssessment[] = [];
@@ -196,7 +200,7 @@ const toggleFilter = (filterType: "active" | "inactive") => {
       }
     }
     if (!filters.active && !filters.inactive) {
-      fetchAppliedSelfAssessments();
+      await fetchAppliedSelfAssessments();
     } else {
       setAppliedSelfAssessments(filteredSelfAssessments);
     }
