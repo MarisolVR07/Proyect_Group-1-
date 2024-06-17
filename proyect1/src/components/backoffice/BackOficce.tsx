@@ -204,6 +204,10 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   useEffect(() => {
     fetchData();
     fetchParameters();
+    
+    const intervalId = setInterval(fetchData, 60000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleEmailChange = (newEmail: string) => {

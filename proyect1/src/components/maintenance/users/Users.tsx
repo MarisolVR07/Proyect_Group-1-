@@ -16,7 +16,6 @@ interface UsersProps {
 }
 
 const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
-  useEffect(() => {});
 
   const [searchQuery, setSearchQuery] = useState("");
   const { users, getUsers, getUsersByName, getUsersPerPage, updateUser } =
@@ -25,7 +24,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [user, setUser] = useState<User | null>(null);
-  const itemsPerPage = 20;
+  const itemsPerPage = 10;
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [isSearching, setIsSearching] = useState(false);
 
@@ -55,6 +54,10 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     };
     fetchData();
     setUser(currentUser);
+
+    const intervalId = setInterval(fetchData, 60000);
+
+    return () => clearInterval(intervalId);
   }, [currentPage, searchQuery, isSearching]);
 
   const handleStatusChange = async (
@@ -86,7 +89,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   };
 
   const handleDepartmentChange = async (user: User, newDeptId: number) => {
-    console.log(user)
+    console.log(user);
     onDebugMessage({
       content: "Changing user department (handleDepartmentChange)",
       type: "Info",

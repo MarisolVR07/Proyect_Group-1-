@@ -31,6 +31,8 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const appliedSelfAssessmentStore = useAppliedSelfAssessmentsStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     onDebugMessage({
@@ -75,9 +77,6 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
     }
     setIsLoading(false);
   };
-  useEffect(() => {
-    fetchAppliedSelfAssessments();
-  }, []);
 
   const handleRowClick = (selfAssessment: AppliedSelfAssessment) => {
     setSelectedSelfAssessment(selfAssessment);
@@ -148,13 +147,12 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
     };
     setFilters(newFilters);
 
-    let filteredSelfAssessments: AppliedSelfAssessment[] = []; // Properly typed as an array of AppliedSelfAssessment
+    let filteredSelfAssessments: AppliedSelfAssessment[] = [];
 
     if (newFilters.active) {
       const activeSelfAssessments =
         await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus("A");
       if (!("error" in activeSelfAssessments)) {
-        // Check if the response is not an error
         filteredSelfAssessments = activeSelfAssessments;
       } else {
         console.error(
@@ -229,6 +227,16 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
     });
   };
 
+  const handleNextPage = () => {
+    if (appliedSelfAssessments.length === 10) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => (prevPage > 0 ? prevPage - 1 : 0));
+  };
+
   return (
     <div className="lg:py-2 lg:px-2">
       <div className="form-control  sm:py-8 py-2 sm:px-4 px-1 md:px-8 lg:px-10 w-full rounded-md bg-gray-800 font-poppins font-semibold drop-shadow-xl">
@@ -265,6 +273,22 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
               </thead>
               <tbody>{renderTableContent()}</tbody>
             </table>
+            <div className="flex justify-between mt-2">
+              <Button
+                className="rounded-xl w-44 no-print"
+                onClick={handlePreviousPage}
+                disabled={currentPage === 0}
+              >
+                Previous
+              </Button>
+              <Button
+                className="rounded-xl w-44 no-print"
+                onClick={handleNextPage}
+                disabled={appliedSelfAssessments.length < itemsPerPage}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         )}
         {isModalOpen && selectedSelfAssessment && (
