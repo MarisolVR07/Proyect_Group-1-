@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { DebugMessage } from "@/app/types/debugData";
 import StateCheckbox from "@/components/reviews/Checkbox";
 import Spinner from "@/components/skeletons/Spinner";
+import { on } from "events";
 
 interface ReviewsProps {
   onDebugMessage?: (message: DebugMessage) => void;
@@ -39,13 +40,13 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
       content: "Fetching Applied Self-Assessments",
       type: "Info",
     });
-
-    fetchAppliedSelfAssessments();
-
+setIsLoading(true);
+    filter();
+setIsLoading(false);
     const intervalId = setInterval(fetchAppliedSelfAssessments, 60000);
 
     return () => clearInterval(intervalId);
-  }, [currentPage]);
+  }, [currentPage, filters]);
 
     const fetchAppliedSelfAssessments = async () => {
       const allAppliedSelfAssessments =
@@ -142,51 +143,61 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
-  const toggleFilter = async (filterType: "active" | "inactive") => {
-    setIsLoading(true);
+  const toggleFilter = (filterType: "active" | "inactive") => {
     const newFilters = {
       ...filters,
       [filterType]: !filters[filterType],
     };
     setFilters(newFilters);
+  }
 
+  const filter = async () => {
     let filteredSelfAssessments: AppliedSelfAssessment[] = [];
 
-    if (newFilters.active) {
+    if (filters.active) {
       const activeSelfAssessments =
-        await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus("A");
+        await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus(
+          "A",
+          currentPage
+        );
       if (!("error" in activeSelfAssessments)) {
         filteredSelfAssessments = activeSelfAssessments;
+
       } else {
-        console.error(
-          "Error fetching active assessments:",
-          activeSelfAssessments.error
-        );
+        onDebugMessage({
+          content: `Failed to fetch active assessments -> ${activeSelfAssessments.error}`,
+          type: "Error",
+        });
+
         return;
       }
     }
-    if (newFilters.inactive) {
+
+    if (filters.inactive) {
       const inactiveSelfAssessments =
-        await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus("I");
+        await appliedSelfAssessmentStore.getAppliedSelfAssessmentsByStatus(
+          "I",
+          currentPage
+        );
       if (!("error" in inactiveSelfAssessments)) {
         filteredSelfAssessments = [
           ...filteredSelfAssessments,
           ...inactiveSelfAssessments,
         ];
       } else {
-        console.error(
-          "Error fetching inactive assessments:",
-          inactiveSelfAssessments.error
-        );
+        onDebugMessage({
+          content: `Failed to fetch inactive assessments -> ${inactiveSelfAssessments.error}`,
+          type: "Error",
+        });
+
         return;
       }
     }
-    if (!newFilters.active && !newFilters.inactive) {
+    if (!filters.active && !filters.inactive) {
+      currentPage === 1;
       fetchAppliedSelfAssessments();
     } else {
       setAppliedSelfAssessments(filteredSelfAssessments);
-      setIsLoading(false);
     }
   };
 

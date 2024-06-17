@@ -34,7 +34,8 @@ interface AppliedSelfAssessmentState {
   ) => Promise<AppliedSelfAssessment | ErrorResponse>;
 
   getAppliedSelfAssessmentsByStatus:  (
-    status: string
+    status: string,
+    page: number
   ) => Promise<AppliedSelfAssessment[] | ErrorResponse>;
 
   getAppliedSelfAssessmentByDepartmentAndStatus: (
@@ -148,10 +149,11 @@ export const useAppliedSelfAssessmentsStore = create<AppliedSelfAssessmentState>
         return { error: error.message };
       }
     },
-    getAppliedSelfAssessmentsByStatus: async (status: string) => {
+    getAppliedSelfAssessmentsByStatus: async (status: string, page: number ) => {
       try {
         const appliedselfassessments = await getAppliedSelfAssessmentsByStatus(
-          status
+          status,
+          page
         );
         if ("error" in appliedselfassessments) {
           return appliedselfassessments;
