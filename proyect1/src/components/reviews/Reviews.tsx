@@ -33,16 +33,19 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10;
-
+  useEffect(() => {
+    fetchAppliedSelfAssessments();
+  }, [currentPage]);
   useEffect(() => {
     onDebugMessage({
       content: "Fetching Applied Self-Assessments",
       type: "Info",
     });
+    
 
     const fetchAppliedSelfAssessments = async () => {
       const allAppliedSelfAssessments =
-        await appliedSelfAssessmentStore.getCompleteAppliedSelfassessments();
+        await appliedSelfAssessmentStore.getAppliedSelfAssessmentPerPage(1);
       if (!("error" in allAppliedSelfAssessments)) {
         onDebugMessage({
           content: "Successfully Obtained Applied Self-Assessments",
@@ -228,7 +231,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onDebugMessage }) => {
   };
 
   const handleNextPage = () => {
-    if (appliedSelfAssessments.length === 10) {
+    if (appliedSelfAssessments.length === 5) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };

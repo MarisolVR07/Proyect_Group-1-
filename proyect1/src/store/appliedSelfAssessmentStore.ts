@@ -8,7 +8,8 @@ import {
   getAppliedSelfAssessmentByDepartmentAndStatus,
   getCompleteAppliedSelfassessments,
   getAppliedSelfAssessmentsByStatus, 
-  getAppliedSelfAssessmentsByDepartment
+  getAppliedSelfAssessmentsByDepartment, 
+  getAppliedSelfAssessmentPerPage
 } from "@/app/controllers/rc_appliedselfassessment/controller";
 import { AppliedSelfAssessment } from "@/app/types/entities";
 import { ErrorResponse } from "@/app/types/api";
@@ -49,6 +50,9 @@ interface AppliedSelfAssessmentState {
     AppliedSelfAssessment[] | ErrorResponse
   >;
   setAppliedSelfAssessments: (selfAssessments: AppliedSelfAssessment[]) => void;
+  getAppliedSelfAssessmentPerPage: (
+    page: number
+  ) => Promise<AppliedSelfAssessment[] | ErrorResponse>;
 }
 
 export const useAppliedSelfAssessmentsStore = create<AppliedSelfAssessmentState>(
@@ -187,6 +191,19 @@ export const useAppliedSelfAssessmentsStore = create<AppliedSelfAssessmentState>
           appliedselfassessments: completeSelfAssessments,
         }));
         return completeSelfAssessments;
+      } catch (error: any) {
+        return { error: error.message };
+      }
+    },
+    getAppliedSelfAssessmentPerPage: async (page: number) => {
+      try {
+        const appliedselfassessments =
+          await getAppliedSelfAssessmentPerPage(page);
+        if ("error" in appliedselfassessments) {
+          return appliedselfassessments;
+        }
+        set((state) => ({ ...state, appliedselfassessments }));
+        return appliedselfassessments;
       } catch (error: any) {
         return { error: error.message };
       }

@@ -169,3 +169,17 @@ export async function getCompleteAppliedSelfassessments(): Promise<
     return { error: error.message };
   }
 }
+
+
+export async function getAppliedSelfAssessmentPerPage(page: number): Promise<AppliedSelfAssessment[] | ErrorResponse> {
+  try {
+    const res: Response = await fetch(API_URL + `rc_appliedselfassessment/getperpage?page=${page}`);
+    //validateResponse(res);
+
+    const appliedSelfassessments: AppliedSelfAssessment[] | ErrorResponse = await res.json();
+
+    return appliedSelfassessments;
+  } catch (error: any) {
+    return error;
+  }
+}
