@@ -42,7 +42,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
   const [activationDate, setActivationDate] = useState<Date | null>();
   const [deactivationDate, setDeactivationDate] = useState<Date | null>();
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 20;
+  const itemsPerPage = 5;
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [isSearching, setIsSearching] = useState(false);
 
@@ -145,7 +145,7 @@ const BackOffice: React.FC<BackOfficeProps> = ({ onDebugMessage }) => {
     }
   };
   const handleNextPage = () => {
-    if (users.length === 10) {
+    if (users.length === itemsPerPage) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };

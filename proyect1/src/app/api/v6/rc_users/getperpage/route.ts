@@ -8,7 +8,7 @@ export async function GET(
 ) {
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get('page')) || 1;
-    const itemsPerPage = 10;
+    const itemsPerPage = 5;
   try {
     const users = await prisma.rc_users.findMany({
         skip: (page - 1) * itemsPerPage, 

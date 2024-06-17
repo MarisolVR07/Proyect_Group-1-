@@ -24,7 +24,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [user, setUser] = useState<User | null>(null);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [isSearching, setIsSearching] = useState(false);
 
@@ -58,7 +58,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
     const intervalId = setInterval(fetchData, 60000);
 
     return () => clearInterval(intervalId);
-  }, [currentPage, searchQuery, isSearching]);
+  }, [currentPage, searchQuery, isSearching, currentUser]);
 
   const handleStatusChange = async (
     user: User,
@@ -163,7 +163,7 @@ const Users: React.FC<UsersProps> = ({ onDebugMessage }) => {
   };
 
   const handleNextPage = () => {
-    if (users.length === 10) {
+    if (users.length === 5) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };

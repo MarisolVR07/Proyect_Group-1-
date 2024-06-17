@@ -40,7 +40,7 @@ const CardsSection = () => {
               }
               title="Backoffice"
               description=""
-              className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mb-2 lg:mb-0"
+              className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-800 rounded-lg shadow-lg mb-2 lg:mb-0"
             />
           ) : (
             <></>
@@ -54,7 +54,7 @@ const CardsSection = () => {
             }
             title="Self-Assessment"
             description=""
-            className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg mb-2 lg:mb-0"
+            className="flex-1 min-w-[300px] max-w-[1/3] bg-violet-700 text-center bg- rounded-lg shadow-lg mb-2 lg:mb-0"
           />
           {isAdmin ? (
             <CardButton
@@ -66,7 +66,7 @@ const CardsSection = () => {
               }
               title={`Reviews`}
               description=""
-              className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-700 rounded-lg shadow-lg"
+              className="flex-1 min-w-[300px] max-w-[1/3] text-center bg-gray-800 rounded-lg shadow-lg"
             />
           ) : (
             <></>
